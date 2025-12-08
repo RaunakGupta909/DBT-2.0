@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DBT Card</title>
+<title>Citizen Dashboard</title>
 
 <style>
     :root {
@@ -40,7 +40,7 @@
 
     .role-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        grid-template-columns: repeat(2, minmax(280px, 1fr));
         gap: 25px;
         justify-content: center;
         margin-top: 60px;
@@ -122,7 +122,6 @@
 </head>
 <body>
 
-
     <a href="index.html" class="back-btn">← Back to Home</a>
 
 <style>
@@ -152,60 +151,26 @@ body.dark-mode .back-btn {
 
 <div class="role-grid">
 
-  <!-- DBT Card -->
-  <article class="role-card student" onclick="location.href='dbt_status_card_student.html'">
-    <div class="role-badge">🎓</div>
-    <h3>DBT Status Card</h3>
-    <p>Displays DBT status with color indicators.</p>
-    <a class="proceed-btn" href="dbt_status_card_student.html">Proceed →</a>
+  <!-- DBT Status Card -->
+  <article class="role-card citizen"onclick="location.href='dbt_status.html'">
+    <div class="role-badge">📊</div>
+    <h3>DBT Status</h3>
+    <p>View your DBT status and benefits.</p>
+    <a class="proceed-btn" href="dbt_status.html">Proceed →</a>
   </article>
 
-
-<article class="role-card student" onclick="location.href='gamified_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Gamified Zone</h3>
-    <p>Quizzes, leaderboard,and badges for engagement</p>
-    <a class="proceed-btn" href="gamified_zone.html">Proceed →</a>
+  <!-- Toolkit Card -->
+  <article class="role-card citizen"onclick="location.href='toolkit.html'">
+    <div class="role-badge">📚</div>
+    <h3>Toolkit</h3>
+    <p>Access resources and materials for DBT awareness.</p>
+    <a class="proceed-btn" href="toolkit.html">Proceed →</a>
   </article>
-
-
-<article class="role-card student" onclick="location.href='raise_issue.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Raise Issue</h3>
-    <p>Submit DBT mismatch complaints</p>
-    <a class="proceed-btn" href="raise_issue.html">Proceed →</a>
-  </article>
-
-<article class="role-card student" onclick="location.href='student_ambassador_resources.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Student Ambassador</h3>
-    <p>Spreading Awareness about DBT linked account</p>
-    <a class="proceed-btn" href="student_ambassador_resources.html">Proceed →</a>
-</article>
-
-  
-
-  <article class="role-card student" onclick="location.href='learning_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Learning Zone</h3>
-    <p>Infographics, explainers, and voice guides</p>
-    <a class="proceed-btn" href="learning_zone.html">Proceed →</a>
-  </article>
-
-<article class="role-card student" onclick="location.href='parent_share.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Parent Share</h3>
-    <p>One-tap WhatsApp sharing of DBT status</p>
-    <a class="proceed-btn" href="parent_share.html">Proceed →</a>
-  </article>
-
-
 
 </div>
 
-<script src="script.js"></script>
 <script>
-// Apply dark mode based on localStorage (connected to home page toggle)
+// Check for dark mode preference on page load
 document.addEventListener('DOMContentLoaded', function() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {

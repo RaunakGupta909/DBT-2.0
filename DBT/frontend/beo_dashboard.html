@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – True Benefit</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef4ff;
+        }
+
+        /* Top utility strap */
+        .top-strap {
+            background: #f0f4f8;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .strap-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .strap-controls button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .strap-controls button:focus {
+            outline: 2px solid var(--accent, #1e6fb8);
+            outline-offset: 2px;
+        }
+
+        .container {
+            width: 90%;
+            margin: 80px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .desc {
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 18px;
+            background: #2563eb;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #1e4fc0;
+        }
+
+        /* Dark mode for all elements */
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
+        body.dark-mode .top-strap {
+            background: #2d2d2d;
+            border-bottom-color: #444;
+        }
+
+        body.dark-mode .strap-controls button {
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .container {
+            background: #1a1a1a;
+        }
+
+        body.dark-mode .card {
+            background: #2d2d2d;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+
+        body.dark-mode .title {
+            color: #ffffff;
+        }
+
+        body.dark-mode .desc {
+            color: #b0b0b0;
+        }
+
+        body.dark-mode .btn {
+            background: #1e5db8;
+        }
+
+        body.dark-mode .btn:hover {
+            background: #1a4a8f;
+        }
+
+        body.dark-mode .back-btn {
+            background: #1e5db8;
+            color: #ffffff;
+        }
+
+        body.dark-mode .back-btn:hover {
+            background: #1a4a8f;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 14px;
+            margin: 0 0 20px 0;
+            font-size: 14px;
+            color: white;
+            background: #005bbb;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #004a99;
+        }
+    </style>
+
+    <script>
+// Apply dark mode immediately on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+});
+
+// Sync theme across tabs/windows when `darkMode` in localStorage changes
+window.addEventListener('storage', function(e) {
+    if (e.key === 'darkMode') {
+        const isDark = e.newValue === 'true';
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+});
+</script>
+
+
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back to Home</a>
+
+    <div class="container">
+
+        <div class="card">
+            <div class="icon">📊</div>
+            <div class="title">Block Summary</div>
+            <div class="desc">View overall block performance and DBT status summary.</div>
+            <a href="block_summary.html" class="btn">Proceed →</a>
+            
+        </div>
+
+        <div class="card">
+            <div class="icon">🗺️</div>
+            <div class="title">Block Heatmap</div>
+            <div class="desc">Visualize DBT coverage and issues across the block.</div>
+            <a href="block_heatmap.html" class="btn">Proceed →</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🏫</div>
+            <div class="title">School List / Actions</div>
+            <div class="desc">Manage schools, view lists, and take administrative actions.</div>
+            <a href="school status.html" class="btn">Proceed →</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🎯</div>
+            <div class="title">Campaign Wizard</div>
+            <div class="desc">Create and manage DBT awareness campaigns for the block.</div>
+            <a href="campaignwizard.html" class="btn">Proceed →</a>
+        </div>
+
+        <div class="card">
+            <div class="icon">🏆</div>
+            <div class="title">Recognition Panel</div>
+            <div class="desc">Award and recognize top performers in DBT initiatives.</div>
+            <a href="recognition_panel.html" class="btn">Proceed →</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

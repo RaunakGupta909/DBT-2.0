@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming DBT Campaign Schedule</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@300;400;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* App Theme Colors - #005bbb (Blue/Indigo) */
+        .bg-theme { background-color: #005bbb; }
+        .text-theme { color: #005bbb; }
+        .hover-text-theme:hover { color: #004a99; }
+        .border-theme { border-color: #005bbb; }
+        .ring-theme:focus { --tw-ring-color: #005bbb; }
+
+        .card-image { filter: brightness(95%); transition: transform 0.3s ease, filter 0.3s ease; }
+        .campaign-card:hover .card-image { transform: scale(1.05); filter: brightness(100%); }
+
+        /* Agenda/Notice Styles */
+        .font-notice { font-family: 'Merriweather', serif; }
+        .notice-header { border-bottom: 4px solid #10b981; /* Green for Official */ }
+        .breaking-news { animation: ticker 20s linear infinite; }
+        
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- APP VIEW: Main Campaign List -->
+    <div id="appView" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <span class="bg-theme text-white p-2 rounded-lg flex items-center justify-center">
+                        <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                    </span>
+                    Upcoming DBT Campaign Schedule (2024)
+                </h1>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            
+            <!-- Filters Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+                <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+                    <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-5 h-5 text-gray-500"></i>
+                        Filter Scheduled Drives
+                    </h2>
+                    <div class="flex gap-3">
+                        <button onclick="generateData()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md text-gray-600 transition-colors">
+                            Reload Schedule
+                        </button>
+                        <button onclick="resetFilters()" class="text-sm text-theme hover-text-theme font-medium hover:underline">
+                            Reset Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- State Filter -->
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">State</label>
+                        <div class="relative">
+                            <select id="stateSelect" onchange="handleStateChange()" class="w-full appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 ring-theme focus:border-transparent block p-3 pr-8 outline-none transition-all shadow-sm">
+                                <option value="">All States</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- District Filter -->
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">District</label>
+                        <div class="relative">
+                            <select id="districtSelect" onchange="handleDistrictChange()" class="w-full appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 ring-theme focus:border-transparent block p-3 pr-8 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm" disabled>
+                                <option value="">All Districts</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Month Filter -->
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Month (2024)</label>
+                        <div class="relative">
+                            <select id="monthSelect" onchange="handleMonthChange()" class="w-full appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 ring-theme focus:border-transparent block p-3 pr-8 outline-none transition-all shadow-sm">
+                                <option value="">All Months</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <div class="mb-6 flex items-center justify-between border-b border-gray-200 pb-2">
+                <p class="text-gray-600 text-sm">
+                    Showing <span id="count" class="font-bold text-theme text-lg">0</span> upcoming campaigns
+                </p>
+            </div>
+
+            <!-- Campaigns List -->
+            <div id="campaignsContainer" class="space-y-6">
+                <!-- Cards injected by JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-16 bg-white rounded-lg border border-dashed border-gray-300 mt-4">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-4">
+                    <i data-lucide="search-x" class="w-8 h-8 text-blue-400"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900">No campaigns scheduled</h3>
+                <p class="text-gray-500 mt-1 max-w-sm mx-auto">The detailed schedule for this region or month has not yet been finalized.</p>
+                <button onclick="resetFilters()" class="mt-6 px-6 py-2 bg-theme text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm">
+                    Clear all filters
+                </button>
+            </div>
+
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 mt-auto py-8">
+            <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+                &copy; 2023 DBT Mission. Schedule for 2024.
+            </div>
+        </footer>
+    </div>
+
+    <!-- NOTICE VIEW: Simulated Official Agenda -->
+    <div id="newsView" class="hidden bg-white min-h-screen text-black">
+        <!-- Official Notice Bar -->
+        <div class="bg-indigo-700 text-white text-xs py-1 px-4 overflow-hidden whitespace-nowrap relative">
+            <div class="inline-block breaking-news">
+                OFFICIAL NOTICE: DBT MISSION - 2024 ANNUAL ACTION PLAN DRAFTED — IMPLEMENTATION GUIDELINES FOR PHASE 1 TO BE RELEASED SHORTLY — PUBLIC CONSULTATION INVITED — 
+            </div>
+        </div>
+        
+        <header class="bg-white notice-header border-b-2 border-gray-200 sticky top-0 z-50">
+            <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <button onclick="closeNewsView()" class="flex items-center gap-1 text-sm font-bold text-gray-600 hover:text-indigo-700 border-r pr-4 border-gray-300">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> BACK TO SCHEDULE
+                    </button>
+                    <h1 class="font-notice font-black text-2xl md:text-3xl tracking-tighter text-indigo-700">OFFICIAL <span class="text-black font-light">AGENDA</span></h1>
+                </div>
+                <div class="hidden sm:flex text-xs font-bold gap-4 text-gray-500">
+                    <span>PLANNING</span>
+                    <span>LOGISTICS</span>
+                    <span class="text-indigo-600">SCHEDULING</span>
+                    <span>PUBLIC RELATIONS</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notice Content -->
+        <article class="max-w-3xl mx-auto px-4 py-8">
+            <div class="mb-4">
+                <span id="newsCategory" class="bg-yellow-100 text-yellow-800 px-2 py-1 text-xs font-bold uppercase tracking-wider">Draft Notice - Internal Use</span>
+                <span class="text-gray-400 text-xs ml-2">VERSION 1.2</span>
+            </div>
+
+            <h1 id="newsHeadline" class="font-notice text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-gray-900">
+                Official Scheduling Notice: Preparation for Upcoming Campaign
+            </h1>
+
+            <div class="flex items-center justify-between mb-8 border-y border-gray-100 py-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                        <img src="https://i.pravatar.cc/150?img=13" alt="Official" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-900 uppercase">ISSUED BY <span id="newsAuthor">The Planning Commission</span></p>
+                        <p class="text-xs text-gray-500">Ministry of Finance (DBT Cell)</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p id="newsDate" class="text-xs font-bold text-gray-600">Date of Issue: Today's Date</p>
+                    <p id="newsLocation" class="text-xs text-gray-400">New Delhi Secretariat</p>
+                </div>
+            </div>
+
+            <figure class="mb-8">
+                <img id="newsImage" src="" alt="Campaign Image" class="w-full h-64 md:h-96 object-cover rounded-sm border border-gray-200">
+                <figcaption class="text-xs text-gray-500 mt-2 italic border-l-2 border-indigo-500 pl-2">
+                    Proposed site for the campaign in <span id="newsDistrictHighlight">District</span>. Images are placeholders for planning.
+                </figcaption>
+            </figure>
+
+            <div class="font-notice text-lg leading-relaxed text-gray-800 space-y-6">
+                <p class="first-letter:text-5xl first-letter:font-bold first-letter:text-indigo-700 first-letter:float-left first-letter:mr-3 first-letter:mt-[-10px]">
+                    This official notice confirms the **preparatory phase** for the upcoming <strong id="newsSchemeName">campaign</strong> scheduled for the <span id="newsMonthBody">Month, 2024</span> period.
+                </p>
+                
+                <p>
+                    The drive, titled <span id="newsTitleBody" class="font-bold">Title</span>, is designated for <span id="newsDistrictBody">District</span> in <span id="newsStateBody">State</span>. The focus will be on ensuring all necessary logistical and communication channels are established before the execution date.
+                </p>
+
+                <div class="bg-indigo-50 p-6 border-l-4 border-indigo-700 my-8">
+                    <h3 class="text-sm font-bold text-gray-700 uppercase mb-3">Preliminary Agenda Items</h3>
+                    <ul class="list-disc pl-5 space-y-2 text-base">
+                        <li><strong>Target Date:</strong> <span class="font-bold text-indigo-800" id="agendaDate">Date</span></li>
+                        <li><strong>Required Resources:</strong> Biometric devices, 5 Field Coordinators, Bank Representatives.</li>
+                        <li><strong>Key Action Item:</strong> Reviewing the list of non-compliant beneficiaries in the <span id="newsDistrictHighlight2">District</span>.</li>
+                    </ul>
+                </div>
+
+                <p id="newsDescriptionBody">
+                    This campaign, leveraging lessons from the successful 2022 drives, is primarily targeting regions with identified low Aadhaar-Bank account seeding rates, particularly among marginal farmers and daily wage earners. The primary goal is to achieve 100% saturation in the target area within a 3-day operational window.
+                </p>
+                
+                <p>
+                    Local administrators are advised to finalize venue booking, secure necessary security clearances, and ensure all connectivity devices are tested at least seven days prior to the scheduled date. Further guidelines regarding personnel training and public awareness will be circulated in the next draft.
+                </p>
+
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <h4 class="font-bold text-gray-900 mb-4">Planning Documentation</h4>
+                    <div class="flex gap-2">
+                        <button class="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs font-medium hover:bg-gray-300 transition-colors">Logistics Checklist (PDF)</button>
+                        <button class="px-3 py-1 bg-gray-200 text-gray-800 rounded-md text-xs font-medium hover:bg-gray-300 transition-colors">Target Beneficiary List</button>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <section class="bg-gray-100 py-12 mt-12">
+            <div class="max-w-5xl mx-auto px-4">
+                <h3 class="font-bold text-xl mb-6">Related Planning Documents</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-4 shadow-sm">
+                        <div class="h-32 bg-gray-300 mb-3"></div>
+                        <h4 class="font-bold text-sm mb-1">2024 Annual Budget Allocation</h4>
+                        <p class="text-xs text-gray-500">Draft 3.0</p>
+                    </div>
+                    <div class="bg-white p-4 shadow-sm">
+                        <div class="h-32 bg-gray-300 mb-3"></div>
+                        <h4 class="font-bold text-sm mb-1">Inter-Departmental MOU Draft</h4>
+                        <p class="text-xs text-gray-500">For Phase 1 Operations</p>
+                    </div>
+                    <div class="bg-white p-4 shadow-sm">
+                        <div class="h-32 bg-gray-300 mb-3"></div>
+                        <h4 class="font-bold text-sm mb-1">Resource Deployment Strategy</h4>
+                        <p class="text-xs text-gray-500">Field Unit Guidelines</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Configuration ---
+        const CAMPAIGN_YEAR = 2024; // All upcoming campaigns are set to 2024
+        
+        const STATES = ["Gujarat", "Bihar", "West Bengal", "Odisha", "Assam", "Madhya Pradesh"];
+        
+        const DISTRICTS = {
+            "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+            "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur"],
+            "West Bengal": ["Kolkata", "Howrah", "Bardhaman", "Durgapur"],
+            "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela", "Sambalpur"],
+            "Assam": ["Guwahati", "Dibrugarh", "Silchar", "Jorhat"],
+            "Madhya Pradesh": ["Bhopal", "Indore", "Gwalior", "Jabalpur"]
+        };
+
+        const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        const IMAGES = [
+            "https://images.unsplash.com/photo-1543269865-cbe42578508a?auto=format&fit=crop&q=80&w=400", // Planning meeting
+            "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=400", // Teamwork
+            "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?auto=format&fit=crop&q=80&w=400", // Group discussion
+            "https://images.unsplash.com/photo-1531538615496-e91b58535492?auto=format&fit=crop&q=80&w=400", // Map analysis
+            "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=400", // Data review
+            "https://images.unsplash.com/photo-1558494949-c16f2c00a9fa?auto=format&fit=crop&q=80&w=400", // Technology setup
+            "https://images.unsplash.com/photo-1488998427799-e3362cec87c3?auto=format&fit=crop&q=80&w=400", // Logistical diagram
+            "https://images.unsplash.com/photo-1589133481078-43e33f373188?auto=format&fit=crop&q=80&w=400" // Office setup
+        ];
+
+        const TEMPLATES = [
+            { t: "DBT KYC Saturation Drive", c: "Finance", desc: "Scheduled for Phase 1 to ensure 100% Aadhaar-seeding in rural banking accounts." },
+            { t: "PDS Modernization & Card Linkage", c: "Food Security", desc: "Preparatory meeting for rolling out biometric authentication at PDS outlets." },
+            { t: "MGNREGA Digital Payment Camp", c: "Employment", desc: "Focused drive to resolve outstanding payment failures and mandate direct transfers." },
+            { t: "PM-JAY Enrollment & Revalidation", c: "Health", desc: "Planning the enrollment process for newly eligible families under the national health scheme." },
+            { t: "Kisan Credit Card (KCC) e-KYC", c: "Agriculture", desc: "Setting the timeline for mandatory digital verification for all KCC beneficiaries." },
+            { t: "Skill Development Stipend Disbursement", c: "Education", desc: "Logistics check for the first installment release to vocational training participants." },
+            { t: "Widow/Disability Pension Enrollment", c: "Social Welfare", desc: "Site identification for the special enrollment camp targeting vulnerable groups." },
+            { t: "Housing Subsidy Verification", c: "Housing", desc: "Field survey planning for phase 2 beneficiaries of the urban housing scheme." }
+        ];
+
+        let CAMPAIGNS = [];
+
+        // --- Data Generation ---
+        function generateData() {
+            CAMPAIGNS = [];
+            let idCounter = 1;
+
+            STATES.forEach(state => {
+                if(DISTRICTS[state]) {
+                    DISTRICTS[state].forEach(district => {
+                        // Generate ~20 campaigns per district
+                        for(let i=0; i<20; i++) {
+                            const template = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
+                            const monthIndex = Math.floor(Math.random() * MONTHS.length);
+                            const month = MONTHS[monthIndex];
+                            const day = Math.floor(Math.random() * 28) + 1;
+                            
+                            CAMPAIGNS.push({
+                                id: idCounter++,
+                                title: `${template.t} - Phase ${Math.floor(Math.random()*3)+1}`,
+                                image: IMAGES[Math.floor(Math.random() * IMAGES.length)],
+                                state: state,
+                                district: district,
+                                month: month,
+                                monthIndex: monthIndex,
+                                date: `${month} ${day}, ${CAMPAIGN_YEAR}`,
+                                fullDate: `${day}/${monthIndex+1}/${CAMPAIGN_YEAR}`,
+                                description: template.desc,
+                                fullDescription: `The Planning Commission has finalized the budget and resource allocation for this critical campaign. The main objective, defined by the Ministry, is to achieve full financial inclusion in the identified blocks. Key metrics include the number of biometric transactions processed and the reduction in last-mile connectivity failures. ${template.desc} All field coordinators must undergo mandatory training prior to deployment.`,
+                                category: template.c,
+                                categoryColor: getCategoryColor(template.c)
+                            });
+                        }
+                    });
+                }
+            });
+            console.log(`Generated ${CAMPAIGNS.length} upcoming campaigns for ${CAMPAIGN_YEAR}.`);
+            // Sort by month index (to show earlier dates first)
+            CAMPAIGNS.sort((a, b) => a.monthIndex - b.monthIndex);
+            init();
+        }
+
+        function getCategoryColor(category) {
+            const map = {
+                "Agriculture": "bg-green-100 text-green-800",
+                "Education": "bg-blue-100 text-blue-800",
+                "Social Welfare": "bg-orange-100 text-orange-800",
+                "Health": "bg-purple-100 text-purple-800",
+                "Food Security": "bg-teal-100 text-teal-800",
+                "Employment": "bg-red-100 text-red-800",
+                "Finance": "bg-indigo-100 text-indigo-800",
+                "Housing": "bg-yellow-100 text-yellow-800"
+            };
+            return map[category] || "bg-gray-100 text-gray-800";
+        }
+
+        // --- State Variables ---
+        let selectedState = "";
+        let selectedDistrict = "";
+        let selectedMonth = "";
+
+        // --- Elements ---
+        const stateSelect = document.getElementById('stateSelect');
+        const districtSelect = document.getElementById('districtSelect');
+        const monthSelect = document.getElementById('monthSelect');
+        const campaignsContainer = document.getElementById('campaignsContainer');
+        const countSpan = document.getElementById('count');
+        const emptyState = document.getElementById('emptyState');
+        const appView = document.getElementById('appView');
+        const newsView = document.getElementById('newsView');
+
+        // --- Initialization ---
+        function init() {
+            populateSelect(stateSelect, STATES);
+            populateSelect(monthSelect, MONTHS);
+            
+            // Initial render - restrict to first 50 to prevent lag before filtering
+            renderCampaigns(50);
+            
+            lucide.createIcons();
+        }
+
+        // --- Helpers ---
+        function populateSelect(element, items) {
+            const firstOption = element.options[0];
+            element.innerHTML = '';
+            element.appendChild(firstOption);
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                if(element.id === 'stateSelect' && item === selectedState) option.selected = true;
+                if(element.id === 'districtSelect' && item === selectedDistrict) option.selected = true;
+                if(element.id === 'monthSelect' && item === selectedMonth) option.selected = true;
+                element.appendChild(option);
+            });
+        }
+
+        function createCardHTML(campaign) {
+            return `
+            <div class="campaign-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
+                <div class="flex flex-col sm:flex-row">
+                    <!-- Image Side -->
+                    <div class="sm:w-48 h-48 sm:h-auto relative overflow-hidden flex-shrink-0 bg-gray-100">
+                        <img src="${campaign.image}" alt="${campaign.title}" loading="lazy" class="card-image w-full h-full object-cover">
+                        <span class="absolute top-2 right-2 px-2 py-1 text-xs font-bold rounded-full bg-indigo-700 text-white shadow-lg">
+                            <i data-lucide="bell" class="w-3 h-3 inline-block mr-1"></i>
+                            SCHEDULED
+                        </span>
+                    </div>
+                    
+                    <!-- Content Side -->
+                    <div class="flex-1 p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-gray-900 line-clamp-1">${campaign.title}</h3>
+                                <span class="hidden sm:inline-block px-2 py-1 text-xs font-semibold rounded-md ${campaign.categoryColor}">
+                                    ${campaign.category}
+                                </span>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-500 mb-3">
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-theme"></i>
+                                    ${campaign.district}, ${campaign.state}
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="calendar" class="w-4 h-4 text-theme"></i>
+                                    Planned Date: ${campaign.date}
+                                </div>
+                            </div>
+                            
+                            <p class="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-4">
+                                ${campaign.description}
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-center justify-end">
+                            <button onclick="openNewsView(${campaign.id})" class="inline-flex items-center gap-2 text-sm font-bold text-indigo-700 hover:text-indigo-900 transition-colors group">
+                                View Planning Agenda
+                                <i data-lucide="file-text" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- Logic: Notice View ---
+        function openNewsView(id) {
+            const campaign = CAMPAIGNS.find(c => c.id === id);
+            if(!campaign) return;
+
+            // Populate Agenda Template
+            document.getElementById('newsHeadline').textContent = `Official Scheduling Notice: Preparation for ${campaign.title}`;
+            document.getElementById('newsCategory').textContent = campaign.category + " Planning";
+            
+            const today = new Date();
+            const dateString = `${MONTHS[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+            document.getElementById('newsDate').textContent = `Date of Issue: ${dateString}`;
+            document.getElementById('newsLocation').textContent = `New Delhi Secretariat - Ref: ${campaign.fullDate.replace(/\//g, '-')}`;
+
+            document.getElementById('newsImage').src = campaign.image.replace("w=400", "w=800"); 
+            document.getElementById('newsSchemeName').textContent = campaign.title;
+            document.getElementById('newsTitleBody').textContent = campaign.title;
+            document.getElementById('newsDistrictBody').textContent = campaign.district;
+            document.getElementById('newsStateBody').textContent = campaign.state;
+            document.getElementById('newsDistrictHighlight').textContent = campaign.district;
+            document.getElementById('newsDistrictHighlight2').textContent = campaign.district;
+            document.getElementById('newsDescriptionBody').textContent = campaign.fullDescription;
+            document.getElementById('newsMonthBody').textContent = campaign.month;
+            document.getElementById('agendaDate').textContent = campaign.date;
+
+            // Generate a fake author
+            const authors = ["The Planning Commission", "Joint Secretary (DBT)", "Director of Operations", "Budgeting Authority"];
+            document.getElementById('newsAuthor').textContent = authors[Math.floor(Math.random() * authors.length)];
+
+            // Switch Views
+            window.scrollTo(0,0);
+            appView.classList.add('hidden');
+            newsView.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeNewsView() {
+            newsView.classList.add('hidden');
+            appView.classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        // --- Logic: Filters ---
+        function handleStateChange() {
+            selectedState = stateSelect.value;
+            if (selectedState && DISTRICTS[selectedState]) {
+                districtSelect.disabled = false;
+                populateSelect(districtSelect, DISTRICTS[selectedState]);
+            } else {
+                districtSelect.disabled = true;
+                districtSelect.innerHTML = '<option value="">All Districts</option>';
+            }
+            selectedDistrict = "";
+            districtSelect.value = "";
+            renderCampaigns();
+        }
+
+        function handleDistrictChange() {
+            selectedDistrict = districtSelect.value;
+            renderCampaigns();
+        }
+
+        function handleMonthChange() {
+            selectedMonth = monthSelect.value;
+            renderCampaigns();
+        }
+
+        function resetFilters() {
+            selectedState = "";
+            selectedDistrict = "";
+            selectedMonth = "";
+            stateSelect.value = "";
+            monthSelect.value = "";
+            districtSelect.value = "";
+            districtSelect.disabled = true;
+            districtSelect.innerHTML = '<option value="">All Districts</option>';
+            renderCampaigns();
+        }
+
+        function renderCampaigns(limit = null) {
+            let filtered = CAMPAIGNS.filter(c => {
+                const stateMatch = selectedState ? c.state === selectedState : true;
+                const districtMatch = selectedDistrict ? c.district === selectedDistrict : true;
+                const monthMatch = selectedMonth ? c.month === selectedMonth : true;
+                return stateMatch && districtMatch && monthMatch;
+            });
+
+            countSpan.textContent = filtered.length;
+            campaignsContainer.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                const displaySet = limit ? filtered.slice(0, limit) : filtered;
+
+                displaySet.forEach(campaign => {
+                    campaignsContainer.innerHTML += createCardHTML(campaign);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // Start
+        window.addEventListener('DOMContentLoaded', generateData);
+
+    </script>
+</body>
+</html>

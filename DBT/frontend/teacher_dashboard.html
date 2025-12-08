@@ -120,7 +120,7 @@
 </style>
 
 </head>
-<body>
+<body class="dark-mode">
 
     <a href="index.html" class="back-btn">← Back to Home</a>
 
@@ -143,12 +143,16 @@
 .back-btn:hover {
     background: var(--btn-hover);
 }
+
+body.dark-mode .back-btn {
+    color: var(--text);
+}
 </style>
 
 <div class="role-grid">
 
   <!-- Bulk Upload Card -->
-  <article class="role-card teacher">
+  <article class="role-card teacher"onclick="location.href='bulk_upload.html'">
     <div class="role-badge">📤</div>
     <h3>Bulk Upload</h3>
     <p>Upload student data in bulk for efficient processing.</p>
@@ -156,7 +160,7 @@
   </article>
 
   <!-- Class Summary Card -->
-  <article class="role-card teacher">
+  <article class="role-card teacher"onclick="location.href='class_summary.html'">
     <div class="role-badge">📊</div>
     <h3>Class Summary</h3>
     <p>View overall class performance and DBT status summary.</p>
@@ -164,7 +168,7 @@
   </article>
 
   <!-- Awareness Toolkit Card -->
-  <article class="role-card teacher">
+  <article class="role-card teacher"onclick="location.href='teacher_awareness_toolkit.html'">
     <div class="role-badge">📚</div>
     <h3>Awareness Toolkit</h3>
     <p>Access resources and materials for DBT awareness.</p>
@@ -172,7 +176,7 @@
   </article>
 
   <!-- Class Statistics Card -->
-  <article class="role-card teacher">
+  <article class="role-card teacher"onclick="location.href='class_statistics.html'">
     <div class="role-badge">📈</div>
     <h3>Class Statistics</h3>
     <p>Detailed statistics on class DBT enrollment and benefits.</p>
@@ -189,6 +193,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
         document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
     }
 });
 </script>

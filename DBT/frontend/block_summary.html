@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Summary | True Benefit</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s ease;
+        }
+
+        /* Top utility strap */
+        .top-strap {
+            background: #f0f4f8;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .strap-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .strap-controls button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .strap-controls button:focus {
+            outline: 2px solid var(--accent, #1e6fb8);
+            outline-offset: 2px;
+        }
+        header {
+            background: var(--accent);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            margin-top: 20px;
+        }
+        .card {
+            background: var(--card);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: var(--text);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table th, table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+        }
+        table th {
+            background: var(--accent);
+            color: white;
+        }
+        table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        /* Dark mode adjustments */
+        body.dark-mode table th, body.dark-mode table td {
+            border-color: #334155;
+        }
+        body.dark-mode table tr:nth-child(even) {
+            background: #1e293b;
+        }
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        body.dark-mode header {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
+        body.dark-mode .card {
+            background-color: #2d2d2d;
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+        }
+        body.dark-mode table th {
+            background-color: #334155;
+            color: #ffffff;
+        }
+        body.dark-mode table tr:nth-child(even) {
+            background-color: #1e293b;
+        }
+        body.dark-mode .top-strap {
+            background: #071426;
+            border-bottom-color: #071426;
+        }
+        body.dark-mode .strap-controls button {
+            color: #e6f0fb;
+        }
+    </style>
+
+    <script>
+// Check for dark mode preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+});
+</script>
+</head>
+<body>
+
+
+    <a href="beo_dashboard.html" class="back-btn"> ← Back To BEO Dashboard</a>
+<header>
+    Block Summary
+</header>
+<div class="container">
+    <div class="card">
+        <h2>Block Overview</h2>
+        <p><strong>Total Schools:</strong> 25</p>
+        <p><strong>Schools with DBT Enabled:</strong> 22</p>
+        <p><strong>Total Students:</strong> 4500</p>
+        <p><strong>Students with DBT Verified:</strong> 3800</p>
+    </div>
+    <div class="card">
+        <h2>DBT Awareness and Compliance</h2>
+        <p>This section provides block-level insights for DBT implementation:</p>
+        <ul>
+            <li>Monitor school-wise Aadhaar seeding and DBT enrollment rates.</li>
+            <li>Track compliance with government DBT directives.</li>
+            <li>Identify schools needing additional support for awareness campaigns.</li>
+            <li>Analyze block performance against state-level targets.</li>
+        </ul>
+    </div>
+    <div class="card">
+        <h2>School Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>School Name</th>
+                    <th>Total Students</th>
+                    <th>DBT Verified</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Government High School A</td>
+                    <td>180</td>
+                    <td>165</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Government High School B</td>
+                    <td>220</td>
+                    <td>200</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Government High School C</td>
+                    <td>150</td>
+                    <td>120</td>
+                    <td>Pending</td>
+                </tr>
+                <tr>
+                    <td>Government High School D</td>
+                    <td>190</td>
+                    <td>180</td>
+                    <td>Active</td>
+                </tr>
+                <tr>
+                    <td>Government High School E</td>
+                    <td>160</td>
+                    <td>140</td>
+                    <td>Active</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+</body>
+</html>
