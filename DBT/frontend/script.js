@@ -359,6 +359,101 @@ document.addEventListener('DOMContentLoaded', () => {
   updateVisitorCount();
 });
 
+// -------------------------
+// Letter Generator functionality
+// -------------------------
+function updateLetter() {
+  // Get input values
+  const name = document.getElementById('inputName').value || '[Student Name]';
+  const bank = document.getElementById('inputBank').value || '[Bank Name]';
+  const branch = document.getElementById('inputBranch').value || '[Branch Name]';
+  const account = document.getElementById('inputAccount').value || '[Account Number]';
+  const aadhaar = document.getElementById('inputAadhaar').value || '[Aadhaar Number]';
+
+  // Update letter preview
+  document.getElementById('letterBank').textContent = bank;
+  document.getElementById('letterBranch').textContent = branch;
+  document.getElementById('letterAccount1').textContent = account;
+  document.getElementById('letterAccount2').textContent = account;
+  document.getElementById('letterName').textContent = name;
+  document.getElementById('letterAadhaar').textContent = aadhaar;
+}
+
+function printLetter() {
+  // Get the letter content
+  const letterElement = document.getElementById('print-letter');
+  const name = document.getElementById('inputName').value || 'Bank_Seeding_Letter';
+  
+  // Check if html2pdf library is available
+  if (typeof html2pdf === 'undefined') {
+    // Fallback: Use browser's print functionality
+    const printWindow = window.open('', '_blank');
+    const letterContent = letterElement.innerHTML;
+    
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Bank Seeding Letter</title>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            color: #333;
+          }
+          p {
+            margin: 0 0 10px 0;
+          }
+          strong {
+            font-weight: bold;
+          }
+          .mandate {
+            border: 2px solid #000;
+            padding: 15px;
+            margin: 20px 0;
+            background: #f8fafc;
+          }
+          h4 {
+            text-align: center;
+            text-decoration: underline;
+            margin-bottom: 10px;
+          }
+          .details {
+            margin-top: 30px;
+          }
+          @media print {
+            body {
+              padding: 10px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        ${letterContent}
+      </body>
+      </html>
+    `);
+    
+    printWindow.document.close();
+    
+    setTimeout(() => {
+      printWindow.print();
+    }, 250);
+  } else {
+    // Use html2pdf library for direct PDF download
+    const opt = {
+      margin: 10,
+      filename: `${name || 'Bank_Seeding_Letter'}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+    
+    html2pdf().set(opt).from(letterElement).save();
+  }
+}
+
 // End of frontend script
 
 // -------------------------
@@ -616,3 +711,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }
   }
 });
+
+
