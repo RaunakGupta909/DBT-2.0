@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DBT Card</title>
+<title>DEO Dashboard</title>
 
 <style>
     :root {
@@ -40,7 +40,7 @@
 
     .role-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 25px;
         justify-content: center;
         margin-top: 60px;
@@ -122,8 +122,7 @@
 </head>
 <body>
 
-
-    <a href="index.html" class="back-btn">← Back to Home</a>
+    <a href="index.html" class="back-btn">← Back to Dashboard</a>
 
 <style>
 .back-btn {
@@ -146,66 +145,66 @@
 }
 
 body.dark-mode .back-btn {
-    color: var(--text);
+    color: white;
 }
 </style>
 
 <div class="role-grid">
 
-  <!-- DBT Card -->
-  <article class="role-card student" onclick="location.href='dbt_status_card_student.html'">
-    <div class="role-badge">🎓</div>
-    <h3>DBT Status Card</h3>
-    <p>Displays DBT status with color indicators.</p>
-    <a class="proceed-btn" href="dbt_status_card_student.html">Proceed →</a>
+  <!-- Distinct Snapshot Card -->
+  <article class="role-card deo"onclick="location.href='Distinct_Snapshot.html'">
+    <div class="role-badge">📊</div>
+    <h3>Distinct Snapshot</h3>
+    <p>View a comprehensive snapshot of district-level DBT data.</p>
+    <a class="proceed-btn" href="Distinct_Snapshot.html">Proceed →</a>
   </article>
 
-
-<article class="role-card student" onclick="location.href='gamified_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Gamified Zone</h3>
-    <p>Quizzes, leaderboard,and badges for engagement</p>
-    <a class="proceed-btn" href="gamified_zone.html">Proceed →</a>
+  <!-- Interactive Heatmap Card -->
+  <article class="role-card deo"onclick="location.href='Interactive_Heatmap.html'">
+    <div class="role-badge">🗺️</div>
+    <h3>Interactive Heatmap</h3>
+    <p>Explore interactive heatmaps for regional insights.</p>
+    <a class="proceed-btn" href="Interactive_Heatmap.html">Proceed →</a>
   </article>
 
-
-<article class="role-card student" onclick="location.href='raise_issue.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Raise Issue</h3>
-    <p>Submit DBT mismatch complaints</p>
-    <a class="proceed-btn" href="raise_issue.html">Proceed →</a>
+  <!-- Campaign Oversight Card -->
+  <article class="role-card deo"onclick="location.href='campaign_oversight.html'">
+    <div class="role-badge">📋</div>
+    <h3>Campaign Oversight</h3>
+    <p>Monitor and oversee DBT campaigns across the district.</p>
+    <a class="proceed-btn" href="campaign_oversight.html">Proceed →</a>
   </article>
 
-<article class="role-card student" onclick="location.href='student_ambassador_resources.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Student Ambassador</h3>
-    <p>Spreading Awareness about DBT linked account</p>
-    <a class="proceed-btn" href="student_ambassador_resources.html">Proceed →</a>
-</article>
+  <!-- Policy Tools Card -->
+  <article class="role-card deo"onclick="location.href='policy.html'">
+    <div class="role-badge">⚙️</div>
+    <h3>Policy Tools</h3>
+    <p>Access tools for policy implementation and management.</p>
+    <a class="proceed-btn" href="policy.html">Proceed →</a>
+  </article>
+
+  <!-- Issue Resolution Board Card -->
+  <article class="role-card deo"onclick="location.href='issue_resolution_board.html'">
+    <div class="role-badge">🛠️</div>
+    <h3>Issue Resolution Board</h3>
+    <p>Manage and resolve issues related to DBT processes.</p>
+    <a class="proceed-btn" href="issue_resolution_board.html">Proceed →</a>
+  </article>
 
   
 
-  <article class="role-card student" onclick="location.href='learning_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Learning Zone</h3>
-    <p>Infographics, explainers, and voice guides</p>
-    <a class="proceed-btn" href="learning_zone.html">Proceed →</a>
+  <!-- campus wizard-->
+  <article class="role-card deo"onclick="location.href='campus_wizard.html'">
+    <div class="role-badge">🏫</div>
+    <h3>Campus Wizard</h3>
+    <p>Create and manage DBT awareness campaigns for educational institutions.</p>
+    <a class="proceed-btn" href="campus_wizard.html">Proceed →</a>
   </article>
-
-<article class="role-card student" onclick="location.href='parent_share.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Parent Share</h3>
-    <p>One-tap WhatsApp sharing of DBT status</p>
-    <a class="proceed-btn" href="parent_share.html">Proceed →</a>
-  </article>
-
-
 
 </div>
 
-<script src="script.js"></script>
 <script>
-// Apply dark mode based on localStorage (connected to home page toggle)
+// Dark mode initialization - check localStorage and apply if enabled
 document.addEventListener('DOMContentLoaded', function() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
@@ -213,5 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
 </body>
 </html>

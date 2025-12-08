@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBT Integration Alerts Monitoring</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* Custom Styles */
+        :root {
+            --bg: #f8f9fa;
+            --text: #212529;
+            --muted: #6c757d;
+            --card-bg: #ffffff;
+            --card-border: #dee2e6;
+            --header-bg: #4e617d;
+            --shadow: rgba(0,0,0,0.05);
+        }
+
+        body.dark {
+            --bg: #1a1a1a;
+            --text: #ffffff;
+            --muted: #cccccc;
+            --card-bg: #2d2d2d;
+            --card-border: #444444;
+            --header-bg: #4e617d;
+            --shadow: rgba(255,255,255,0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .dashboard-header {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .dark-mode-toggle {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+        .dark-mode-toggle button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+        .dark-mode-toggle button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .section-container {
+            background-color: var(--card-bg);
+            color: var(--text);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--card-border);
+        }
+        .section-container h3 {
+            color: var(--text);
+        }
+        /* Alert Cards Styling */
+        .alert-card {
+            box-shadow: 0 2px 4px var(--shadow);
+            text-align: center;
+        }
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .card-down .card-value { color: #4e617d; }
+        .card-degraded .card-value { color: #4e617d; }
+        .card-operational .card-value { color: #4e617d; }
+
+        /* Status Badge Styling for Table */
+        .status-down { background-color: #4e617d; color: white; }
+        .status-degraded { background-color: #4e617d; color: white; }
+        .status-operational { background-color: #4e617d; color: white; }
+        /* Bootstrap overrides for dark mode */
+        body.dark .table {
+            color: var(--text);
+        }
+        body.dark .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(255,255,255,0.05);
+        }
+        body.dark .table-hover tbody tr:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        body.dark .table thead th {
+            background-color: var(--card-bg);
+            color: var(--text);
+            border-color: var(--card-border);
+        }
+        body.dark .table td {
+            border-color: var(--card-border);
+        }
+        body.dark .card {
+            background-color: var(--card-bg);
+            color: var(--text);
+            border-color: var(--card-border);
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: white;
+            background-color: #0d6efd;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background 0.3s;
+            z-index: 1000;
+        }
+        .back-btn:hover {
+            background-color: #0b5ed7;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <a href="state_dbt_officer_dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+    <header class="dashboard-header text-center">
+        <div class="container">
+            <h1>Integration Alerts & Health Monitor </h1>
+            <p class="lead">Monitoring status and performance of critical external systems</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="row g-4 mb-4">
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card alert-card card-operational">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">Systems Operational</p>
+                        <h2 class="card-value" id="kpi-operational">9/10</h2>
+                        <small class="text-success">All core systems functioning</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card alert-card card-degraded">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">Degraded Performance</p>
+                        <h2 class="card-value" id="kpi-degraded">1</h2>
+                        <small class="text-warning">High latency or partial failure</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card alert-card card-down">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">System Down</p>
+                        <h2 class="card-value" id="kpi-down">0</h2>
+                        <small class="text-danger">Total outages</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card alert-card">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">Avg. Transaction Latency</p>
+                        <h2 class="card-value text-info" id="kpi-latency">1.1 Sec</h2>
+                        <small class="text-muted">Last 1-hour average</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4 mb-4">
+            <div class="col-lg-12">
+                <div class="section-container">
+                    <h3>Integration Performance Trend (Last 24 Hours)</h3>
+                    <canvas id="integrationTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-container">
+                    <h3>Critical Integration Points Status</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="integrationTable">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>Integration Name</th>
+                                    <th>Status</th>
+                                    <th>Last Check</th>
+                                    <th>Latency (ms)</th>
+                                    <th>Failure Rate (%)</th>
+                                    <th>Alert Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Dark mode initialization - check localStorage and apply if enabled
+document.addEventListener('DOMContentLoaded', function() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark');
+    }
+});
+</script>
+
+    <script>
+        // --- JavaScript for Data Handling and Charting ---
+
+        // Sample Data for Trend Chart (Hourly data)
+        const trendData = {
+            labels: ['11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM'],
+            latency: [1.0, 1.1, 1.5, 1.2, 1.8, 1.3], // Latency in seconds
+            failure: [0.5, 0.6, 1.2, 0.8, 1.5, 0.9]  // Failure Rate %
+        };
+        
+        // Sample Data for Detailed Integration Table
+        const integrationTableData = [
+            { name: 'Aadhaar Authentication Service', status: 'Operational', lastCheck: 'Now', latency: 850, failure: 0.2, details: 'Normal' },
+            { name: 'State Treasury Gateway', status: 'Degraded', lastCheck: '5 min ago', latency: 3500, failure: 1.5, details: 'High Latency since 3 PM' },
+            { name: 'National Payment Gateway (NPCI)', status: 'Operational', lastCheck: 'Now', latency: 1100, failure: 0.5, details: 'Normal' },
+            { name: 'Scheme Portal X Data Sync', status: 'Operational', lastCheck: '1 hr ago', latency: 1500, failure: 0.1, details: 'Delayed sync: Data OK' },
+        ];
+
+
+        // --- 1. Initialize Integration Trend Line Chart ---
+        const trendCtx = document.getElementById('integrationTrendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: trendData.labels,
+                datasets: [
+                    {
+                        label: 'Avg. Latency (sec)',
+                        data: trendData.latency,
+                        borderColor: '#4e617d', // Blue
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        tension: 0.3,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Failure Rate (%)',
+                        data: trendData.failure,
+                        borderColor: '#dc3545', // Red
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        tension: 0.3,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Latency (sec)' },
+                        beginAtZero: true
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: 'Failure Rate (%)' },
+                        grid: { drawOnChartArea: false }, // Only draw the grid for the left axis
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // --- 2. Populate Detailed Integration Table ---
+        function populateTable(data) {
+            const tbody = document.querySelector('#integrationTable tbody');
+            tbody.innerHTML = ''; // Clear existing rows
+            
+            data.forEach(item => {
+                const row = tbody.insertRow();
+                row.insertCell().innerText = item.name;
+                
+                // Status Badge
+                let badgeClass = 'bg-secondary';
+                if (item.status === 'Operational') badgeClass = 'status-operational';
+                else if (item.status === 'Degraded') badgeClass = 'status-degraded';
+                else if (item.status === 'Down') badgeClass = 'status-down';
+                
+                row.insertCell().innerHTML = `<span class="badge ${badgeClass}">${item.status}</span>`;
+                
+                row.insertCell().innerText = item.lastCheck;
+                row.insertCell().innerText = item.latency;
+                
+                // Failure Rate Alert Formatting
+                const failureCell = row.insertCell();
+                let failureTextColor = item.failure > 1.0 ? 'text-danger fw-bold' : 'text-success';
+                failureCell.innerHTML = `<span class="${failureTextColor}">${item.failure.toFixed(1)}%</span>`;
+                
+                row.insertCell().innerText = item.details;
+            });
+        }
+        populateTable(integrationTableData);
+    </script>
+</body>
+</html>

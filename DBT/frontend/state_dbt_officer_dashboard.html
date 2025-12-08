@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+
+ml>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DBT Card</title>
+<title>State DBT Officer Dashboard</title>
 
 <style>
     :root {
@@ -18,7 +19,7 @@
         --shadow-hover: rgba(0,0,0,0.18);
     }
 
-    body.dark-mode {
+    body.dark {
         --bg: #1a1a1a;
         --text: #ffffff;
         --muted: #cccccc;
@@ -40,7 +41,7 @@
 
     .role-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        grid-template-columns: repeat(2, minmax(280px, 1fr));
         gap: 25px;
         justify-content: center;
         margin-top: 60px;
@@ -122,7 +123,6 @@
 </head>
 <body>
 
-
     <a href="index.html" class="back-btn">← Back to Home</a>
 
 <style>
@@ -145,73 +145,81 @@
     background: var(--btn-hover);
 }
 
-body.dark-mode .back-btn {
+body.dark .back-btn {
     color: var(--text);
+}
+
+.dark-mode-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.dark-mode-toggle button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+
+.dark-mode-toggle button:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+body.dark-mode .dark-mode-toggle button:hover {
+    background: rgba(255,255,255,0.1);
 }
 </style>
 
 <div class="role-grid">
 
-  <!-- DBT Card -->
-  <article class="role-card student" onclick="location.href='dbt_status_card_student.html'">
-    <div class="role-badge">🎓</div>
-    <h3>DBT Status Card</h3>
-    <p>Displays DBT status with color indicators.</p>
-    <a class="proceed-btn" href="dbt_status_card_student.html">Proceed →</a>
+  <!-- State Heatmapping Card -->
+  <article class="role-card deo"onclick="location.href='State_Heatmapping.html'">
+    <div class="role-badge">🌍</div>
+    <h3>State Heatmapping</h3>
+    <p>Visualize DBT distribution and performance across the state.</p>
+    <a class="proceed-btn" href="State_Heatmapping.html">Proceed →</a>
   </article>
 
-
-<article class="role-card student" onclick="location.href='gamified_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Gamified Zone</h3>
-    <p>Quizzes, leaderboard,and badges for engagement</p>
-    <a class="proceed-btn" href="gamified_zone.html">Proceed →</a>
+  <!-- Strategic Insights Engine Card -->
+  <article class="role-card deo"onclick="location.href='Strategic_Insights_Engine.html'">
+    <div class="role-badge">🧠</div>
+    <h3>Strategic Insights Engine</h3>
+    <p>Analyze data for strategic decisions and insights on DBT programs.</p>
+    <a class="proceed-btn" href="Strategic_Insights_Engine.html">Proceed →</a>
   </article>
 
-
-<article class="role-card student" onclick="location.href='raise_issue.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Raise Issue</h3>
-    <p>Submit DBT mismatch complaints</p>
-    <a class="proceed-btn" href="raise_issue.html">Proceed →</a>
+  <!-- Campaign Alerts Card -->
+ <article class="role-card deo"onclick="location.href='Campaign_Alerts.html'">
+    <div class="role-badge">🔔</div>
+    <h3>Campaign Alerts</h3>
+    <p>Monitor and manage alerts for DBT campaigns and initiatives.</p>
+    <a class="proceed-btn" href="Campaign_Alerts.html">Proceed →</a>
   </article>
 
-<article class="role-card student" onclick="location.href='student_ambassador_resources.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Student Ambassador</h3>
-    <p>Spreading Awareness about DBT linked account</p>
-    <a class="proceed-btn" href="student_ambassador_resources.html">Proceed →</a>
-</article>
-
-  
-
-  <article class="role-card student" onclick="location.href='learning_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Learning Zone</h3>
-    <p>Infographics, explainers, and voice guides</p>
-    <a class="proceed-btn" href="learning_zone.html">Proceed →</a>
+  <!-- Integration Panel Card -->
+ <article class="role-card deo"onclick="location.href='Integration_Alerts.html'">
+    <div class="role-badge">🧩</div>
+    <h3>Integration Panel</h3>
+    <p>Integrate and manage external systems and data sources.</p>
+    <a class="proceed-btn" href="Integration_Alerts.html">Proceed →</a>
   </article>
-
-<article class="role-card student" onclick="location.href='parent_share.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Parent Share</h3>
-    <p>One-tap WhatsApp sharing of DBT status</p>
-    <a class="proceed-btn" href="parent_share.html">Proceed →</a>
-  </article>
-
-
 
 </div>
 
-<script src="script.js"></script>
 <script>
-// Apply dark mode based on localStorage (connected to home page toggle)
+// Dark mode initialization - check localStorage and apply if enabled
 document.addEventListener('DOMContentLoaded', function() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
-        document.body.classList.add('dark-mode');
+        document.body.classList.add('dark');
     }
 });
 </script>
+
 </body>
 </html>

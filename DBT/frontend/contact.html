@@ -5,17 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Contact Us - DBT Portal</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Dark mode overrides */
+    body.dark-mode {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    body.dark-mode .contact-form-section,
+    body.dark-mode .contact-info-card {
+        background-color: #1e1e1e;
+        border: 1px solid #333;
+        color: #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    body.dark-mode input, 
+    body.dark-mode textarea {
+        background-color: #2d2d2d;
+        border: 1px solid #444;
+        color: #fff;
+    }
+    body.dark-mode input::placeholder,
+    body.dark-mode textarea::placeholder {
+        color: #888;
+    }
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3, 
+    body.dark-mode label {
+        color: #e0e0e0;
+    }
+    body.dark-mode .back-button {
+        color: #a0cfff;
+    }
+    body.dark-mode a {
+        color: #6ea8fe;
+    }
+    body.dark-mode .footer {
+        background-color: #1f1f1f;
+        border-top-color: #333;
+        color: #aaa;
+    }
+  </style>
 </head>
 <body>
   <!-- Contact Us Content -->
   <main class="contact-container contact-main">
     <div class="contact-content">
-      <div class="toggle-container" style="position: absolute; top: 20px; right: 20px;">
-        <label class="toggle-switch">
-          <input type="checkbox" id="darkModeToggle">
-          <span class="slider"></span>
-        </label>
-      </div>
       <a href="index.html" class="back-button">← Back to Home</a>
       <h1>Contact Us</h1>
       <p class="contact-intro">We're here to help! Get in touch with us using the following methods:</p>
@@ -125,25 +160,22 @@
 
   <script src="script.js"></script>
   <script>
-    // Dark mode toggle for contact page
-    const toggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-
-    // Check for saved theme preference or default to light mode
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (isDarkMode) {
-      body.classList.add('dark');
-      toggle.checked = true;
+    // Dark mode initialization - check localStorage and apply if enabled
+    function applyDarkMode() {
+      const isDarkMode = localStorage.getItem('darkMode') === 'true';
+      if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+      } else {
+        document.body.classList.remove('dark-mode');
+      }
     }
 
-    // Toggle dark mode
-    toggle.addEventListener('change', function() {
-      if (this.checked) {
-        body.classList.add('dark');
-        localStorage.setItem('darkMode', 'true');
-      } else {
-        body.classList.remove('dark');
-        localStorage.setItem('darkMode', 'false');
+    document.addEventListener('DOMContentLoaded', applyDarkMode);
+
+    // Listen for storage changes to sync dark mode across tabs
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'darkMode') {
+        applyDarkMode();
       }
     });
   </script>

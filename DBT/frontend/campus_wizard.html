@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Wizard - DEO Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Custom Styles */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        /* Top utility strap */
+        .top-strap {
+            background: #f0f4f8;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .strap-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .strap-controls button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .strap-controls button:focus {
+            outline: 2px solid var(--accent, #1e6fb8);
+            outline-offset: 2px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: white;
+            background: #005bbb;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #004a99;
+        }
+
+        .dashboard-header {
+            background-color: #4e617d;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+
+        .section-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(92, 32, 153, 0.05);
+            margin-bottom: 20px;
+        }
+
+        /* Wizard Styles */
+        .wizard-step {
+            display: none;
+        }
+
+        .wizard-step.active {
+            display: block;
+        }
+
+        .wizard-progress {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .step-circle.active {
+            background-color: #005bbb;
+            color: white;
+        }
+
+        .step-circle.completed {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .wizard-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .wizard-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background-color: #005bbb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #004a99;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .summary-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        /* Dark mode styles */
+        body.dark {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        body.dark .dashboard-header {
+            background-color: #2d2d2d;
+            color: #ffffff;
+        }
+
+        body.dark .section-container {
+            background-color: #2d2d2d;
+            color: #ffffff;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark .step-circle {
+            background-color: #444444;
+            color: #cccccc;
+        }
+
+        body.dark .step-circle.active {
+            background-color: #007bff;
+        }
+
+        body.dark .summary-section {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        body.dark .form-group input,
+        body.dark .form-group select,
+        body.dark .form-group textarea {
+            background-color: #333333;
+            color: #ffffff;
+            border-color: #555555;
+        }
+    </style>
+</head>
+<body>
+    <a href="deo_dashboard.html" class="back-btn"><-- Back To Dashboard</a>
+
+    <header class="dashboard-header text-center">
+        <div class="container">
+            <h1>Campus Wizard</h1>
+            <p class="lead">Create and manage DBT awareness campaigns for educational institutions</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="section-container">
+            <div class="wizard-progress">
+                <div class="step-circle active" id="step1-circle">1</div>
+                <div class="step-circle" id="step2-circle">2</div>
+                <div class="step-circle" id="step3-circle">3</div>
+                <div class="step-circle" id="step4-circle">4</div>
+            </div>
+
+            <div class="wizard-content">
+                <!-- Step 1: Campaign Setup -->
+                <div class="wizard-step active" id="step1">
+                    <h3>Step 1: Campaign Setup</h3>
+                    <div class="form-group">
+                        <label for="campaign-name">Campaign Name:</label>
+                        <input type="text" id="campaign-name" placeholder="e.g., DBT Awareness Drive 2024">
+                    </div>
+                    <div class="form-group">
+                        <label for="campaign-type">Campaign Type:</label>
+                        <select id="campaign-type">
+                            <option value="">Select Type</option>
+                            <option value="awareness">Awareness Campaign</option>
+                            <option value="enrollment">Enrollment Drive</option>
+                            <option value="training">Training Workshop</option>
+                            <option value="monitoring">Monitoring Initiative</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="target-audience">Target Audience:</label>
+                        <select id="target-audience">
+                            <option value="">Select Audience</option>
+                            <option value="students">Students</option>
+                            <option value="teachers">Teachers</option>
+                            <option value="parents">Parents</option>
+                            <option value="all">All Stakeholders</option>
+                        </select>
+                    </div>
+                    <div class="wizard-buttons">
+                        <div></div>
+                        <button class="btn btn-primary" onclick="nextStep(1)">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Target Selection -->
+                <div class="wizard-step" id="step2">
+                    <h3>Step 2: Target Selection</h3>
+                    <div class="form-group">
+                        <label for="schools-list">Select Schools/Colleges:</label>
+                        <select id="schools-list" multiple size="5">
+                            <option value="school1">Government Higher Secondary School A</option>
+                            <option value="school2">Government Higher Secondary School B</option>
+                            <option value="school3">Government College C</option>
+                            <option value="school4">Private School D</option>
+                            <option value="school5">Technical Institute E</option>
+                        </select>
+                        <small>Hold Ctrl/Cmd to select multiple</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="geographic-scope">Geographic Scope:</label>
+                        <select id="geographic-scope">
+                            <option value="">Select Scope</option>
+                            <option value="district">Entire District</option>
+                            <option value="blocks">Specific Blocks</option>
+                            <option value="urban">Urban Areas Only</option>
+                            <option value="rural">Rural Areas Only</option>
+                        </select>
+                    </div>
+                    <div class="wizard-buttons">
+                        <button class="btn btn-secondary" onclick="prevStep(2)">Previous</button>
+                        <button class="btn btn-primary" onclick="nextStep(2)">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Content and Materials -->
+                <div class="wizard-step" id="step3">
+                    <h3>Step 3: Content and Materials</h3>
+                    <div class="form-group">
+                        <label for="campaign-message">Key Message:</label>
+                        <textarea id="campaign-message" rows="3" placeholder="Enter the main message for the campaign"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="materials-needed">Materials Needed:</label>
+                        <select id="materials-needed" multiple size="4">
+                            <option value="posters">Posters</option>
+                            <option value="brochures">Brochures</option>
+                            <option value="videos">Video Content</option>
+                            <option value="workshops">Workshop Materials</option>
+                            <option value="digital">Digital Assets</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeline">Timeline:</label>
+                        <input type="date" id="start-date"> to <input type="date" id="end-date">
+                    </div>
+                    <div class="wizard-buttons">
+                        <button class="btn btn-secondary" onclick="prevStep(3)">Previous</button>
+                        <button class="btn btn-primary" onclick="nextStep(3)">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Review and Launch -->
+                <div class="wizard-step" id="step4">
+                    <h3>Step 4: Review and Launch</h3>
+                    <div class="summary-section" id="campaign-summary">
+                        <h4>Campaign Summary</h4>
+                        <p id="summary-content">Please complete previous steps to see summary.</p>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="confirm-launch"> I confirm that all details are correct and ready to launch the campaign.
+                        </label>
+                    </div>
+                    <div class="wizard-buttons">
+                        <button class="btn btn-secondary" onclick="prevStep(4)">Previous</button>
+                        <button class="btn btn-primary" onclick="launchCampaign()" id="launch-btn" disabled>Launch Campaign</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function nextStep(step) {
+            if (validateStep(step)) {
+                document.getElementById('step' + step).classList.remove('active');
+                document.getElementById('step' + step + '-circle').classList.add('completed');
+                document.getElementById('step' + step + '-circle').classList.remove('active');
+
+                currentStep = step + 1;
+                document.getElementById('step' + currentStep).classList.add('active');
+                document.getElementById('step' + currentStep + '-circle').classList.add('active');
+
+                if (currentStep === 4) {
+                    generateSummary();
+                }
+            }
+        }
+
+        function prevStep(step) {
+            document.getElementById('step' + step).classList.remove('active');
+            document.getElementById('step' + step + '-circle').classList.remove('active');
+
+            currentStep = step - 1;
+            document.getElementById('step' + currentStep).classList.add('active');
+            document.getElementById('step' + currentStep + '-circle').classList.add('active');
+        }
+
+        function validateStep(step) {
+            let isValid = true;
+            if (step === 1) {
+                const name = document.getElementById('campaign-name').value;
+                const type = document.getElementById('campaign-type').value;
+                const audience = document.getElementById('target-audience').value;
+                if (!name || !type || !audience) {
+                    alert('Please fill in all required fields.');
+                    isValid = false;
+                }
+            } else if (step === 2) {
+                const schools = document.getElementById('schools-list').selectedOptions;
+                const scope = document.getElementById('geographic-scope').value;
+                if (schools.length === 0 || !scope) {
+                    alert('Please select at least one school and geographic scope.');
+                    isValid = false;
+                }
+            } else if (step === 3) {
+                const message = document.getElementById('campaign-message').value;
+                const materials = document.getElementById('materials-needed').selectedOptions;
+                const startDate = document.getElementById('start-date').value;
+                const endDate = document.getElementById('end-date').value;
+                if (!message || materials.length === 0 || !startDate || !endDate) {
+                    alert('Please fill in all required fields.');
+                    isValid = false;
+                }
+            }
+            return isValid;
+        }
+
+        function generateSummary() {
+            const name = document.getElementById('campaign-name').value;
+            const type = document.getElementById('campaign-type').value;
+            const audience = document.getElementById('target-audience').value;
+            const schools = Array.from(document.getElementById('schools-list').selectedOptions).map(opt => opt.text);
+            const scope = document.getElementById('geographic-scope').value;
+            const message = document.getElementById('campaign-message').value;
+            const materials = Array.from(document.getElementById('materials-needed').selectedOptions).map(opt => opt.text);
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+
+            const summary = `
+                <strong>Name:</strong> ${name}<br>
+                <strong>Type:</strong> ${type}<br>
+                <strong>Audience:</strong> ${audience}<br>
+                <strong>Schools:</strong> ${schools.join(', ')}<br>
+                <strong>Scope:</strong> ${scope}<br>
+                <strong>Message:</strong> ${message}<br>
+                <strong>Materials:</strong> ${materials.join(', ')}<br>
+                <strong>Timeline:</strong> ${startDate} to ${endDate}
+            `;
+            document.getElementById('summary-content').innerHTML = summary;
+        }
+
+        function launchCampaign() {
+            if (document.getElementById('confirm-launch').checked) {
+                alert('Campaign launched successfully! You will be redirected to the monitoring dashboard.');
+                // Here you could redirect to a monitoring page or reset the wizard
+                window.location.href = 'deo_dashboard.html';
+            } else {
+                alert('Please confirm that all details are correct.');
+            }
+        }
+
+        // Enable/disable launch button based on checkbox
+        document.getElementById('confirm-launch').addEventListener('change', function() {
+            document.getElementById('launch-btn').disabled = !this.checked;
+        });
+
+        // Dark mode initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark');
+                updateDarkModeIcon(true);
+            } else {
+                updateDarkModeIcon(false);
+            }
+        });
+
+        // Update toggle button icon
+        function updateDarkModeIcon(isDark) {
+            const toggle = document.getElementById('dark-toggle');
+            if (toggle) {
+                toggle.textContent = isDark ? '☀️' : '🌙';
+                toggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+            }
+        }
+
+        // Toggle dark mode
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDarkMode);
+            updateDarkModeIcon(isDarkMode);
+        }
+    </script>
+</body>
+</html>

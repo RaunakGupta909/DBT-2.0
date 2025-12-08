@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBT Issue Board</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Custom Styles */
+        body {
+            background-color: #f8f9fa;
+        }
+        .dashboard-header {
+            background-color: #0b3b66; /* blue color for utility section */
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        .section-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        .issue-card {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .issue-card .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .card-open .card-value { color: #0b3b66; } /* blue for Open */
+        .card-progress .card-value { color: #0b3b66; } /* blue for In Progress */
+        .card-closed .card-value { color: #0b3b66; } /* blue for Closed */
+        
+        .priority-high { background-color: #0b3b66; color: white; }
+        .priority-medium { background-color: #0b3b66; color: white; }
+        .priority-low { background-color: #0b3b66; color: white; }
+    </style>
+
+    <style>
+    /* Dark mode styles */
+    body.dark-mode {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+    body.dark-mode .dashboard-header {
+        background-color: #2d2d2d;
+        color: #ffffff;
+    }
+    body.dark-mode .section-container {
+        background-color: var(--card);
+        color: #ffffff;
+        box-shadow: 0 4px 8px rgba(2, 6, 23, 0.5);
+    }
+    body.dark-mode .card {
+        background-color: var(--card);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    body.dark-mode .table {
+        color: #ffffff;
+    }
+    body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    body.dark-mode .table-hover tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    body.dark-mode .table-dark {
+        background-color: #0b3b66;
+        color: #ffffff;
+    }
+    body.dark-mode .badge {
+        background-color: #0b3b66;
+        color: #ffffff;
+    }
+    </style>
+
+    <style>
+    .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 14px;
+        margin: 0;
+        font-size: 14px;
+        color: white;
+        background: #005bbb;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.3s;
+        z-index: 1000;
+    }
+
+    .back-btn:hover {
+        background: #004a99;
+    }
+
+    body.dark-mode .back-btn {
+        background: #0f5a9f;
+        color: #e6f0fb;
+    }
+
+    body.dark-mode .back-btn:hover {
+        background: #0e4d87;
+    }
+    /* Top utility strap */
+    .top-strap {
+        background: #f0f4f8;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 8px 20px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    body.dark-mode .top-strap {
+        background: #041421;
+        border-bottom-color: rgba(255, 255, 255, 0.04);
+    }
+    .strap-controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+    .strap-controls button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+    .strap-controls button:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+    </style>
+</head>
+<body>
+    
+
+    <a href="ministry_dashboard.html" class="back-btn">← Back to MosJE Dashboard</a>
+
+    <header class="dashboard-header text-center">
+        <div class="container">
+            <h1>DBT Issue Board Monitoring</h1>
+            <p class="lead">Tracking Technical and Operational Issues</p>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="row g-4 mb-4">
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="card issue-card card-open">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">Total Open Issues</p>
+                        <h2 class="card-value" id="kpi-open">124</h2>
+                        <small class="text-danger">Awaiting Assignment</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card issue-card card-progress">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">In Progress</p>
+                        <h2 class="card-value" id="kpi-progress">58</h2>
+                        <small class="text-warning">Being Resolved</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card issue-card card-closed">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">Closed This Month</p>
+                        <h2 class="card-value" id="kpi-closed">412</h2>
+                        <small class="text-success">Successfully Resolved</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="card issue-card">
+                    <div class="card-body">
+                        <p class="text-muted mb-1">Avg. Resolution Time</p>
+                        <h2 class="card-value text-info" id="kpi-avg-time">1.8 Days</h2>
+                        <small class="text-info">Current Performance</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4 mb-4">
+            <div class="col-lg-12">
+                <div class="section-container">
+                    <h3>Monthly Issue Trend: Logged vs. Resolved</h3>
+                    <canvas id="issueTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="section-container">
+                    <h3>Top Prioritized Issues (High/Critical)</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="issueTable">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Summary</th>
+                                    <th>Assigned To</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                    <th>Age</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        initDarkMode();
+    </script>
+</body>
+</html>

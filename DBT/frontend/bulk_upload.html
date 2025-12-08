@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Upload | True Benefit</title>
+    <style>
+        :root {
+            --bg: #f4f6f9;
+            --bg-dark: #1a1a1a;
+            --header-bg: #0033cc;
+            --header-bg-dark: #005bbb;
+            --header-text: white;
+            --card-bg: white;
+            --card-bg-dark: #2d2d2d;
+            --text: #333;
+            --text-dark: #ffffff;
+            --muted: #555;
+            --muted-dark: #cccccc;
+            --h2-color: #0033cc;
+            --h2-color-dark: #007bff;
+            --upload-box-border: #0033cc;
+            --upload-box-bg: #e6f0ff;
+            --upload-box-bg-dark: #2d3748;
+            --upload-box-hover: #d9e6ff;
+            --upload-box-hover-dark: #4a5568;
+            --btn-bg: #005bbb;
+            --btn-bg-dark: #3182ce;
+            --btn-hover: #002699;
+            --btn-hover-dark: #0056b3;
+            --table-border: #ccc;
+            --table-border-dark: #444;
+            --table-th-bg: #0033cc;
+            --table-th-bg-dark: #007bff;
+            --table-even-bg: #f2f2f2;
+            --table-even-bg-dark: #333;
+            --shadow: rgba(0,0,0,0.1);
+            --shadow-dark: rgba(255,255,255,0.1);
+        }
+
+        body.dark {
+            --bg: var(--bg-dark);
+            --header-bg: var(--header-bg-dark);
+            --card-bg: var(--card-bg-dark);
+            --text: var(--text-dark);
+            --muted: var(--muted-dark);
+            --h2-color: var(--h2-color-dark);
+            --upload-box-bg: var(--upload-box-bg-dark);
+            --upload-box-hover: var(--upload-box-hover-dark);
+            --btn-bg: var(--btn-bg-dark);
+            --btn-hover: var(--btn-hover-dark);
+            --table-border: var(--table-border-dark);
+            --table-th-bg: var(--table-th-bg-dark);
+            --table-even-bg: var(--table-even-bg-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body { font-family: Arial, sans-serif; background: var(--bg); margin: 0; padding: 0; transition: background 0.3s ease; }
+        header { background: var(--header-bg); color: var(--header-text); padding: 15px; text-align: center; font-size: 22px; font-weight: bold; margin-top: 65px; }
+        .container { width: 90%; margin: auto; margin-top: 20px; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px var(--shadow); }
+        h2 { color: var(--h2-color); }
+        .upload-box { border: 2px dashed var(--upload-box-border); padding: 40px; text-align: center; border-radius: 8px; background: var(--upload-box-bg); }
+        .upload-box:hover { background: var(--upload-box-hover); }
+        input[type=file] { margin-top: 15px; }
+        .btn { background: var(--btn-bg); color: white; padding: 10px 20px; border: none; border-radius: 6px; margin-top: 15px; cursor: pointer; font-size: 16px; transition: background 0.3s ease; }
+        .btn:hover { background: var(--btn-hover); }
+        .note { margin-top: 15px; font-size: 14px; color: var(--muted); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; color: var(--text); }
+        th, td { padding: 12px; border: 1px solid var(--table-border); text-align: left; }
+        th { background: var(--table-th-bg); color: white; }
+        table tr:nth-child(even) { background: var(--table-even-bg); }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: white;
+            background: var(--btn-bg);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+        .back-btn:hover {
+            background: var(--btn-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <a href="teacher_dashboard.html" class="back-btn">← Back to Teacher Dashboard</a>
+
+<header>
+    Bulk Upload
+</header>
+<div class="container">
+
+    <div class="card">
+        <h2>Bulk Upload Student Data</h2>
+        <div class="upload-box">
+            <p>Drag & Drop CSV File Here</p>
+            <p>OR</p>
+            <input type="file" accept=".csv">
+            <br>
+            <button class="btn">Upload File</button>
+            <p class="note">Only CSV files allowed. Ensure columns: Name, Aadhaar Status, DBT Status, Remarks</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Sample CSV Format</h2>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Aadhaar Status</th>
+                <th>DBT Status</th>
+                <th>Remarks</th>
+            </tr>
+            <tr><td>Riya Sharma</td><td>Enabled</td><td>Eligible</td><td>—</td></tr>
+            <tr><td>Aman Verma</td><td>Pending</td><td>Not Eligible</td><td>Aadhaar mismatch</td></tr>
+            <tr><td>Kavita Patil</td><td>Enabled</td><td>Eligible</td><td>—</td></tr>
+                    <tr><td>Sneha Kulkarni</td><td>Enabled</td><td>Eligible</td><td>—</td></tr>
+            <tr><td>Rohan Singh</td><td>Pending</td><td>Not Eligible</td><td>Documents not submitted</td></tr>
+            <tr><td>Meera Joshi</td><td>Enabled</td><td>Eligible</td><td>—</td></tr>
+            <tr><td>Arjun Desai</td><td>Pending</td><td>Not Eligible</td><td>Aadhaar not linked</td></tr>
+            <tr><td>Priya Nair</td><td>Enabled</td><td>Eligible</td><td>—</td></tr>
+            <tr><td>Dev Malhotra</td><td>Enabled</td><td>Not Eligible</td><td>Bank account issue</td></tr>
+            <tr><td>Tanvi Chavan</td><td>Pending</td><td>Not Eligible</td><td>Incomplete KYC</td></tr>
+            <tr><td>Aditya Gupta</td><td>Enabled</td><td>Eligible</td><td>—</td></tr>
+            <tr><td>Neha Pawar</td><td>Enabled</td><td>Eligible</td><td>—</td></tr>
+            <tr><td>Karan Jadhav</td><td>Pending</td><td>Not Eligible</td><td>No Aadhaar submitted</td></tr>
+        </table>
+    </div>
+
+</div>
+
+<script>
+// Check for dark mode preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark');
+    }
+});
+</script>
+</body>
+</html>

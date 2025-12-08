@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Overview</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        body.dark-mode {
+            color: #e6f0fb;
+        }
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+            color: #ffffff;
+        }
+        body.dark-mode p, body.dark-mode small {
+            color: #d1d5db;
+        }
+        .dashboard-header {
+            background-color: #0b3b66;
+            color: white;
+            padding: 15px 0;
+            margin-bottom: 20px;
+        }
+        .section-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        body.dark-mode .section-container {
+            background-color: var(--card);
+            box-shadow: 0 4px 8px rgba(2, 6, 23, 0.5);
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: white;
+            background: #005bbb;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .back-btn:hover {
+            background: #004a99;
+        }
+    </style>
+</head>
+<body>
+    <a href="ministry_dashboard.html" class="back-btn">← Back to Dashboard</a>
+    <header class="dashboard-header text-center">
+        <div class="container">
+            <h1>National Overview</h1>
+            <p class="lead">A comprehensive view of national-level data and insights</p>
+        </div>
+    </header>
+    <div class="container">
+        <div class="row g-4 mb-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="section-container">
+                    <h3>Key Metrics</h3>
+                    <p>Display key national metrics here.</p>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-6">
+                <div class="section-container">
+                    <h3>Trends</h3>
+                    <canvas id="nationalTrendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const ctx = document.getElementById('nationalTrendsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May'],
+                datasets: [{
+                    label: 'Trend Data',
+                    data: [10, 20, 15, 25, 30],
+                    borderColor: '#0b3b66',
+                    backgroundColor: 'rgba(11, 59, 102, 0.1)',
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                    }
+                }
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+    <script>
+        initDarkMode();
+    </script>
+</body>
+</html>

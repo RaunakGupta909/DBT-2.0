@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBT Awareness Campaigns</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@300;400;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* App Theme Colors */
+        .bg-theme { background-color: #005bbb; }
+        .text-theme { color: #005bbb; }
+        .hover-text-theme:hover { color: #004a99; }
+        .border-theme { border-color: #005bbb; }
+        .ring-theme:focus { --tw-ring-color: #005bbb; }
+
+        .card-image { transition: transform 0.3s ease; }
+        .campaign-card:hover .card-image { transform: scale(1.05); }
+
+        /* News Site Styles */
+        .font-news { font-family: 'Merriweather', serif; }
+        .news-header { border-bottom: 4px solid #cc0000; }
+        .breaking-news { animation: ticker 20s linear infinite; }
+        
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- APP VIEW: Main Campaign List -->
+    <div id="appView" class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <h1 class="text-3xl font-bold text-gray-900 flex items-center gap-3">
+                    <span class="bg-theme text-white p-2 rounded-lg flex items-center justify-center">
+                        <i data-lucide="landmark" class="w-6 h-6"></i>
+                    </span>
+                    DBT Awareness Campaigns
+                </h1>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            
+            <!-- Filters Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+                <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+                    <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <i data-lucide="search" class="w-5 h-5 text-gray-500"></i>
+                        Find Awareness Camps
+                    </h2>
+                    <div class="flex gap-3">
+                        <button onclick="generateData()" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md text-gray-600 transition-colors">
+                            Refresh Data
+                        </button>
+                        <button onclick="resetFilters()" class="text-sm text-theme hover-text-theme font-medium hover:underline">
+                            Reset Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- State Filter -->
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">State</label>
+                        <div class="relative">
+                            <select id="stateSelect" onchange="handleStateChange()" class="w-full appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 ring-theme focus:border-transparent block p-3 pr-8 outline-none transition-all shadow-sm">
+                                <option value="">All States</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- District Filter -->
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">District</label>
+                        <div class="relative">
+                            <select id="districtSelect" onchange="handleDistrictChange()" class="w-full appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 ring-theme focus:border-transparent block p-3 pr-8 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm" disabled>
+                                <option value="">All Districts</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Month Filter -->
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Month</label>
+                        <div class="relative">
+                            <select id="monthSelect" onchange="handleMonthChange()" class="w-full appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 ring-theme focus:border-transparent block p-3 pr-8 outline-none transition-all shadow-sm">
+                                <option value="">All Months</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Count -->
+            <div class="mb-6 flex items-center justify-between border-b border-gray-200 pb-2">
+                <p class="text-gray-600 text-sm">
+                    Showing <span id="count" class="font-bold text-theme text-lg">0</span> active campaigns
+                </p>
+            </div>
+
+            <!-- Campaigns List -->
+            <div id="campaignsContainer" class="space-y-6">
+                <!-- Cards injected by JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-16 bg-white rounded-lg border border-dashed border-gray-300 mt-4">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-50 mb-4">
+                    <i data-lucide="search-x" class="w-8 h-8 text-blue-400"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900">No campaigns found</h3>
+                <p class="text-gray-500 mt-1 max-w-sm mx-auto">We couldn't find any campaigns matching your criteria. Try selecting a different district or month.</p>
+                <button onclick="resetFilters()" class="mt-6 px-6 py-2 bg-theme text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm">
+                    Clear all filters
+                </button>
+            </div>
+
+        </main>
+
+        <footer class="bg-white border-t border-gray-200 mt-auto py-8">
+            <div class="max-w-6xl mx-auto px-4 text-center text-gray-500 text-sm">
+                &copy; 2023 DBT Mission. All rights reserved.
+            </div>
+        </footer>
+    </div>
+
+    <!-- NEWS VIEW: Simulated External Site -->
+    <div id="newsView" class="hidden bg-white min-h-screen text-black">
+        <!-- News Header -->
+        <div class="bg-red-700 text-white text-xs py-1 px-4 overflow-hidden whitespace-nowrap relative">
+            <div class="inline-block breaking-news">
+                BREAKING: RECORD NUMBER OF DBT CAMPAIGNS LAUNCHED ACROSS INDIA — GOVERNMENT PUSHES FOR 100% SATURATION — AADHAAR SEEDING DEADLINE EXTENDED — 
+            </div>
+        </div>
+        
+        <header class="bg-white news-header border-b-2 border-gray-200 sticky top-0 z-50">
+            <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <button onclick="closeNewsView()" class="flex items-center gap-1 text-sm font-bold text-gray-600 hover:text-red-700 border-r pr-4 border-gray-300">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> BACK
+                    </button>
+                    <h1 class="font-news font-black text-2xl md:text-3xl tracking-tighter text-red-700">INDIA NEWS <span class="text-black font-light">DAILY</span></h1>
+                </div>
+                <div class="hidden sm:flex text-xs font-bold gap-4 text-gray-500">
+                    <span>POLITICS</span>
+                    <span>ECONOMY</span>
+                    <span class="text-red-600">DBT SPECIAL</span>
+                    <span>TECH</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- News Content -->
+        <article class="max-w-3xl mx-auto px-4 py-8">
+            <div class="mb-4">
+                <span id="newsCategory" class="bg-red-100 text-red-700 px-2 py-1 text-xs font-bold uppercase tracking-wider">National Welfare</span>
+                <span class="text-gray-400 text-xs ml-2">5 mins read</span>
+            </div>
+
+            <h1 id="newsHeadline" class="font-news text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-6 text-gray-900">
+                Headline Goes Here
+            </h1>
+
+            <div class="flex items-center justify-between mb-8 border-y border-gray-100 py-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Reporter" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-gray-900 uppercase">By <span id="newsAuthor">Rajesh Kumar</span></p>
+                        <p class="text-xs text-gray-500">Senior Correspondent, DBT Desk</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p id="newsDate" class="text-xs font-bold text-gray-600">October 24, 2023</p>
+                    <p id="newsLocation" class="text-xs text-gray-400">New Delhi</p>
+                </div>
+            </div>
+
+            <figure class="mb-8">
+                <img id="newsImage" src="" alt="Campaign Image" class="w-full h-64 md:h-96 object-cover rounded-sm shadow-sm">
+                <figcaption class="text-xs text-gray-500 mt-2 italic border-l-2 border-red-500 pl-2">
+                    Officials conducting the awareness drive at the designated center.
+                </figcaption>
+            </figure>
+
+            <div class="font-news text-lg leading-relaxed text-gray-800 space-y-6">
+                <p class="first-letter:text-5xl first-letter:font-bold first-letter:text-red-700 first-letter:float-left first-letter:mr-3 first-letter:mt-[-10px]">
+                    <span class="font-bold text-black" id="newsCity">CITY NAME</span> — In a significant move to ensure the benefits of government schemes reach the last mile, a massive <strong id="newsSchemeName">campaign</strong> was organized today.
+                </p>
+                
+                <p>
+                    The drive, titled <span id="newsTitleBody" class="font-bold">Title</span>, witnessed a large turnout of beneficiaries. Organized by the district administration of <span id="newsDistrictBody">District</span> in <span id="newsStateBody">State</span>, the primary objective was to facilitate direct interaction between officials and citizens.
+                </p>
+
+                <div class="bg-gray-50 p-6 border-l-4 border-theme my-8">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase mb-2">Key Highlights</h3>
+                    <ul class="list-disc pl-5 space-y-2 text-base">
+                        <li><strong>Venue:</strong> Community Hall, <span id="newsDistrictHighlight">District</span></li>
+                        <li><strong>Target Audience:</strong> Farmers, Students, and Senior Citizens.</li>
+                        <li><strong>Focus:</strong> Aadhaar Seeding and Error Correction in Bank Accounts.</li>
+                    </ul>
+                </div>
+
+                <p>
+                    "We have set up special help desks to resolve pending KYC issues on the spot," said the District Magistrate during the inauguration. "Direct Benefit Transfer (DBT) is the backbone of transparent governance, and we want to ensure zero leakage."
+                </p>
+
+                <p>
+                    Beneficiaries like <span class="italic">Suresh</span>, a local farmer, expressed relief. "I was struggling to get my PM-KISAN installment due to a spelling mismatch. The officials here fixed it in 10 minutes," he told <em>India News Daily</em>.
+                </p>
+
+                <p id="newsDescriptionBody">
+                    (Campaign specific details inserted here...)
+                </p>
+
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <h4 class="font-bold text-gray-900 mb-4">Share this article</h4>
+                    <div class="flex gap-2">
+                        <button class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700"><i class="fab fa-facebook-f text-xs"></i> F</button>
+                        <button class="w-8 h-8 rounded-full bg-sky-400 text-white flex items-center justify-center hover:bg-sky-500"><i class="fab fa-twitter text-xs"></i> T</button>
+                        <button class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center hover:bg-green-600"><i class="fab fa-whatsapp text-xs"></i> W</button>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <section class="bg-gray-100 py-12 mt-12">
+            <div class="max-w-5xl mx-auto px-4">
+                <h3 class="font-bold text-xl mb-6">More from DBT Special</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-4 shadow-sm">
+                        <div class="h-32 bg-gray-300 mb-3"></div>
+                        <h4 class="font-bold text-sm mb-1">How to link Aadhaar with PAN?</h4>
+                        <p class="text-xs text-gray-500">2 hours ago</p>
+                    </div>
+                    <div class="bg-white p-4 shadow-sm">
+                        <div class="h-32 bg-gray-300 mb-3"></div>
+                        <h4 class="font-bold text-sm mb-1">New Subsidy Rates Announced</h4>
+                        <p class="text-xs text-gray-500">5 hours ago</p>
+                    </div>
+                    <div class="bg-white p-4 shadow-sm">
+                        <div class="h-32 bg-gray-300 mb-3"></div>
+                        <h4 class="font-bold text-sm mb-1">Student Scholarship Deadlines</h4>
+                        <p class="text-xs text-gray-500">1 day ago</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Configuration ---
+        const STATES = ["Delhi", "Maharashtra", "Karnataka", "Uttar Pradesh", "Tamil Nadu", "Rajasthan"];
+        
+        const DISTRICTS = {
+            "Delhi": ["New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi"],
+            "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Nashik", "Thane", "Aurangabad"],
+            "Karnataka": ["Bengaluru", "Mysore", "Hubli", "Mangalore", "Belgaum"],
+            "Uttar Pradesh": ["Lucknow", "Varanasi", "Kanpur", "Noida", "Agra", "Meerut"],
+            "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Salem"],
+            "Rajasthan": ["Jaipur", "Udaipur", "Jodhpur", "Kota"]
+        };
+
+        const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        const IMAGES = [
+            "https://images.unsplash.com/photo-1625246333195-58197bd4773d?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1528642474493-2276c8c6d0d5?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1585241936939-be05368a5bc3?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1531983412531-1f49a365ffed?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1577563908411-5077b6dc7624?auto=format&fit=crop&q=80&w=400",
+            "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=400"
+        ];
+
+        const TEMPLATES = [
+            { t: "PM-KISAN e-KYC Drive", c: "Agriculture", desc: "Special camp to assist farmers in completing e-KYC for seamless installment transfer." },
+            { t: "Student Scholarship Seeding", c: "Education", desc: "Helping university students link bank accounts to NSP for timely scholarship disbursement." },
+            { t: "Pension Aadhaar Linkage", c: "Social Welfare", desc: "Door-to-door campaign for senior citizens to link Aadhaar for monthly pension DBT." },
+            { t: "LPG Subsidy Check", c: "Energy", desc: "Check your LPG subsidy status and reactivate dormant bank accounts." },
+            { t: "Maternity Benefit Camp", c: "Health", desc: "Registration drive for PMMVY scheme incentives for expecting mothers." },
+            { t: "Housing Grant Verification", c: "Housing", desc: "On-site verification for PMAY-U beneficiaries to release construction grants." },
+            { t: "Ration Card Aadhaar Seeding", c: "Food Security", desc: "Ensure your ration card is seeded with Aadhaar to continue receiving food grains." },
+            { t: "Fertilizer Subsidy Awareness", c: "Agriculture", desc: "Educating farmers on POS machine usage and direct fertilizer subsidy benefits." },
+            { t: "MNREGA Wage Camp", c: "Employment", desc: "Resolving wage payment failures due to inactive Aadhaar bridges in bank accounts." },
+            { t: "Digital Financial Literacy", c: "Finance", desc: "Teaching rural citizens how to withdraw DBT money using AEPS micro-ATMs." }
+        ];
+
+        let CAMPAIGNS = [];
+
+        // --- Data Generation ---
+        function generateData() {
+            CAMPAIGNS = [];
+            let idCounter = 1;
+
+            STATES.forEach(state => {
+                if(DISTRICTS[state]) {
+                    DISTRICTS[state].forEach(district => {
+                        // Generate ~25 campaigns per district
+                        for(let i=0; i<25; i++) {
+                            const template = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
+                            const month = MONTHS[Math.floor(Math.random() * MONTHS.length)];
+                            const day = Math.floor(Math.random() * 28) + 1;
+                            
+                            CAMPAIGNS.push({
+                                id: idCounter++,
+                                title: `${template.t} - Phase ${Math.floor(Math.random()*5)+1}`,
+                                image: IMAGES[Math.floor(Math.random() * IMAGES.length)],
+                                state: state,
+                                district: district,
+                                month: month,
+                                date: `${month} ${day}, 2023`,
+                                fullDate: `${month} ${day}, 2023`,
+                                description: template.desc,
+                                fullDescription: template.desc + " This initiative is part of the central government's push to ensure 100% saturation of welfare schemes. Local administration has deployed 5 teams to cover all wards in the district. Beneficiaries are requested to bring their Aadhaar card and bank passbook.",
+                                category: template.c,
+                                categoryColor: getCategoryColor(template.c)
+                            });
+                        }
+                    });
+                }
+            });
+            console.log(`Generated ${CAMPAIGNS.length} campaigns.`);
+            init();
+        }
+
+        function getCategoryColor(category) {
+            const map = {
+                "Agriculture": "bg-green-100 text-green-800",
+                "Education": "bg-blue-100 text-blue-800",
+                "Social Welfare": "bg-orange-100 text-orange-800",
+                "Energy": "bg-red-100 text-red-800",
+                "Health": "bg-purple-100 text-purple-800",
+                "Housing": "bg-yellow-100 text-yellow-800",
+                "Food Security": "bg-teal-100 text-teal-800",
+                "Employment": "bg-gray-100 text-gray-800",
+                "Finance": "bg-indigo-100 text-indigo-800"
+            };
+            return map[category] || "bg-gray-100 text-gray-800";
+        }
+
+        // --- State Variables ---
+        let selectedState = "";
+        let selectedDistrict = "";
+        let selectedMonth = "";
+
+        // --- Elements ---
+        const stateSelect = document.getElementById('stateSelect');
+        const districtSelect = document.getElementById('districtSelect');
+        const monthSelect = document.getElementById('monthSelect');
+        const campaignsContainer = document.getElementById('campaignsContainer');
+        const countSpan = document.getElementById('count');
+        const emptyState = document.getElementById('emptyState');
+        const appView = document.getElementById('appView');
+        const newsView = document.getElementById('newsView');
+
+        // --- Initialization ---
+        function init() {
+            populateSelect(stateSelect, STATES);
+            populateSelect(monthSelect, MONTHS);
+            
+            // Initial render - restrict to first 50 to prevent lag before filtering
+            renderCampaigns(50);
+            
+            lucide.createIcons();
+        }
+
+        // --- Helpers ---
+        function populateSelect(element, items) {
+            const firstOption = element.options[0];
+            element.innerHTML = '';
+            element.appendChild(firstOption);
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                if(element.id === 'stateSelect' && item === selectedState) option.selected = true;
+                if(element.id === 'districtSelect' && item === selectedDistrict) option.selected = true;
+                if(element.id === 'monthSelect' && item === selectedMonth) option.selected = true;
+                element.appendChild(option);
+            });
+        }
+
+        function createCardHTML(campaign) {
+            return `
+            <div class="campaign-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300">
+                <div class="flex flex-col sm:flex-row">
+                    <!-- Image Side -->
+                    <div class="sm:w-48 h-48 sm:h-auto relative overflow-hidden flex-shrink-0 bg-gray-100">
+                        <img src="${campaign.image}" alt="${campaign.title}" loading="lazy" class="card-image w-full h-full object-cover">
+                        <span class="absolute top-2 left-2 px-2 py-1 text-xs font-semibold rounded-md ${campaign.categoryColor} sm:hidden">
+                            ${campaign.category}
+                        </span>
+                    </div>
+                    
+                    <!-- Content Side -->
+                    <div class="flex-1 p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-gray-900 line-clamp-1">${campaign.title}</h3>
+                                <span class="hidden sm:inline-block px-2 py-1 text-xs font-semibold rounded-md ${campaign.categoryColor}">
+                                    ${campaign.category}
+                                </span>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-500 mb-3">
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="map-pin" class="w-4 h-4 text-theme"></i>
+                                    ${campaign.district}, ${campaign.state}
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <i data-lucide="calendar" class="w-4 h-4 text-theme"></i>
+                                    ${campaign.date}
+                                </div>
+                            </div>
+                            
+                            <p class="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-4">
+                                ${campaign.description}
+                            </p>
+                        </div>
+                        
+                        <div class="flex items-center justify-end">
+                            <button onclick="openNewsView(${campaign.id})" class="inline-flex items-center gap-2 text-sm font-semibold text-theme hover-text-theme transition-colors group">
+                                View Details
+                                <i data-lucide="external-link" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // --- Logic: News View ---
+        function openNewsView(id) {
+            const campaign = CAMPAIGNS.find(c => c.id === id);
+            if(!campaign) return;
+
+            // Populate News Template
+            document.getElementById('newsHeadline').textContent = campaign.title;
+            document.getElementById('newsCity').textContent = campaign.district.toUpperCase();
+            document.getElementById('newsCategory').textContent = campaign.category;
+            document.getElementById('newsDate').textContent = campaign.fullDate;
+            document.getElementById('newsLocation').textContent = `${campaign.district}, ${campaign.state}`;
+            document.getElementById('newsImage').src = campaign.image.replace("w=300", "w=800"); // Higher res
+            document.getElementById('newsSchemeName').textContent = campaign.category + " Awareness";
+            document.getElementById('newsTitleBody').textContent = campaign.title;
+            document.getElementById('newsDistrictBody').textContent = campaign.district;
+            document.getElementById('newsStateBody').textContent = campaign.state;
+            document.getElementById('newsDistrictHighlight').textContent = campaign.district;
+            document.getElementById('newsDescriptionBody').textContent = campaign.fullDescription;
+
+            // Generate a fake author
+            const authors = ["Priya Sharma", "Rahul Verma", "Anjali Gupta", "Vikram Singh"];
+            document.getElementById('newsAuthor').textContent = authors[Math.floor(Math.random() * authors.length)];
+
+            // Switch Views
+            window.scrollTo(0,0);
+            appView.classList.add('hidden');
+            newsView.classList.remove('hidden');
+        }
+
+        function closeNewsView() {
+            newsView.classList.add('hidden');
+            appView.classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        // --- Logic: Filters ---
+        function handleStateChange() {
+            selectedState = stateSelect.value;
+            if (selectedState && DISTRICTS[selectedState]) {
+                districtSelect.disabled = false;
+                populateSelect(districtSelect, DISTRICTS[selectedState]);
+            } else {
+                districtSelect.disabled = true;
+                districtSelect.innerHTML = '<option value="">All Districts</option>';
+            }
+            selectedDistrict = "";
+            districtSelect.value = "";
+            renderCampaigns();
+        }
+
+        function handleDistrictChange() {
+            selectedDistrict = districtSelect.value;
+            renderCampaigns();
+        }
+
+        function handleMonthChange() {
+            selectedMonth = monthSelect.value;
+            renderCampaigns();
+        }
+
+        function resetFilters() {
+            selectedState = "";
+            selectedDistrict = "";
+            selectedMonth = "";
+            stateSelect.value = "";
+            monthSelect.value = "";
+            districtSelect.value = "";
+            districtSelect.disabled = true;
+            districtSelect.innerHTML = '<option value="">All Districts</option>';
+            renderCampaigns();
+        }
+
+        function renderCampaigns(limit = null) {
+            let filtered = CAMPAIGNS.filter(c => {
+                const stateMatch = selectedState ? c.state === selectedState : true;
+                const districtMatch = selectedDistrict ? c.district === selectedDistrict : true;
+                const monthMatch = selectedMonth ? c.month === selectedMonth : true;
+                return stateMatch && districtMatch && monthMatch;
+            });
+
+            countSpan.textContent = filtered.length;
+            campaignsContainer.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                // If there's a limit (initial load), slice array
+                // If filters are active, usually we show all matches
+                const displaySet = limit ? filtered.slice(0, limit) : filtered;
+
+                displaySet.forEach(campaign => {
+                    campaignsContainer.innerHTML += createCardHTML(campaign);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        // Start
+        window.addEventListener('DOMContentLoaded', generateData);
+
+    </script>
+</body>
+</html>

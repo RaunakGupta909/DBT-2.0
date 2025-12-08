@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Action Tools | Tech4Transparency</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: #faf6ff;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 14px;
+            margin: 0;
+            font-size: 14px;
+            color: white;
+            background: #0e0649;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #120752;
+        }
+
+        .action-tools {
+            width: 90%;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .action-tools h1 {
+            font-size: 40px;
+            color: #0e0b48;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 40px;
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .tool-card {
+            background: #f4ebff;
+            padding: 28px;
+            border-radius: 18px;
+            box-shadow: 0 0 10px rgba(73, 11, 196, 0.15);
+            transition: 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }z
+
+        .tool-card:hover {
+            transform: translateY(-6px);
+            border-color: #100654;
+            box-shadow: 0 0 20px rgba(129, 76, 255, 0.25);
+        }
+
+        .tool-card h3 {
+            font-size: 22px;
+            color: #230e6f;
+            margin-bottom: 10px;
+        }
+
+        .tool-card p {
+            color: #444;
+            font-size: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #777;
+        }
+
+        /* Dark mode class support (synced with toggle) */
+        body.dark-mode {
+            background: #071022;
+            color: #e6f2fb;
+        }
+
+        body.dark-mode .action-tools h1 {
+            color: #cdc8d4;
+        }
+
+        body.dark-mode .subtitle {
+            color: #9fb3c7;
+        }
+
+        body.dark-mode .tool-card {
+            background: #0f1724;
+            box-shadow: 0 0 10px rgba(129, 76, 255, 0.15);
+        }
+
+        body.dark-mode .tool-card:hover {
+            border-color: #b280ff;
+            box-shadow: 0 0 20px rgba(129, 76, 255, 0.25);
+        }
+
+        body.dark-mode .tool-card h3 {
+            color: #b280ff;
+        }
+
+        body.dark-mode .tool-card p {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode footer {
+            color: #9fb3c7;
+        }
+
+        /* Dark mode support using system preference */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #071022;
+                color: #e6f2fb;
+            }
+
+            .action-tools h1 {
+                color: #b280ff;
+            }
+
+            .subtitle {
+                color: #9fb3c7;
+            }
+
+            .tool-card {
+                background: #0f1724;
+                box-shadow: 0 0 10px rgba(129, 76, 255, 0.15);
+            }
+
+            .tool-card:hover {
+                border-color: #b280ff;
+                box-shadow: 0 0 20px rgba(129, 76, 255, 0.25);
+            }
+
+            .tool-card h3 {
+                color: #b280ff;
+            }
+
+            .tool-card p {
+                color: #cbd5e1;
+            }
+
+            footer {
+                color: #9fb3c7;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <a href="parent_dashboard.html" class="back-btn">← Back to Parent Dashboard</a>
+
+    <section class="action-tools">
+        <h1>Parent Action Tools</h1>
+        <p class="subtitle">Empowering parents to track and support their child’s journey.</p>
+
+        <div class="tool-grid">
+
+            <div class="tool-card">
+                <h3>Child Progress Tracker</h3>
+                <p>View subject-wise progress and weekly performance updates.</p>
+            </div>
+
+            <div class="tool-card">
+                <h3>📘 Homework & Assignments</h3>
+                <p>Track pending and completed homework with due dates.</p>
+            </div>
+
+            <div class="tool-card">
+                <h3> Attendance Monitor</h3>
+                <p>Check daily and monthly attendance with teacher remarks.</p>
+            </div>
+
+            <div class="tool-card">
+                <h3>💬 Communication Hub</h3>
+                <p>Send messages and connect with teachers & school staff.</p>
+            </div>
+
+            <div class="tool-card">
+                <h3>💳 Fee & Scholarship Support</h3>
+                <p>View fee status, receipts, and scholarship forms.</p>
+            </div>
+
+            <div class="tool-card">
+                <h3> Behaviour & Wellbeing</h3>
+                <p>See feedback, behaviour notes, and wellbeing reports.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        © 2025 Tech4Transparency | All Rights Reserved
+    </footer>
+
+    <script>
+        // Check for dark mode preference on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
+        // Listen for storage changes to sync dark mode across tabs
+        window.addEventListener('storage', function (e) {
+            if (e.key === 'darkMode') {
+                const isDarkMode = e.newValue === 'true';
+                document.body.classList.toggle('dark-mode', isDarkMode);
+            }
+        });
+    </script>
+</body>
+
+</html>
+

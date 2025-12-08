@@ -364,12 +364,6 @@
 </head>
 <body>
   <div class="multimedia-section">
-    <div class="dark-mode-toggle">
-      <label class="toggle-switch">
-        <input type="checkbox" id="darkModeToggle">
-        <span class="slider"></span>
-      </label>
-    </div>
     <a href="index.html" class="back-button">← Back to Home</a>
 
     <div class="multimedia-header">
@@ -430,13 +424,6 @@
 
         <div class="photo-card">
           <img src="images/1474369146_1_1.jpg" alt="Official Meeting" />
-          <div class="photo-info">
-            <h3>Administrative Coordination</h3>
-            <p>Government officials coordinating DBT implementation at state and district levels.</p>
-          </div>
-        </div>
-        <div class="photo-card">
-          <img src="1474369905_Lamp!!lighting.jpg" alt="Official Meeting" />
           <div class="photo-info">
             <h3>Administrative Coordination</h3>
             <p>Government officials coordinating DBT implementation at state and district levels.</p>
@@ -599,27 +586,11 @@
       });
     });
 
-    // Dark mode toggle for multimedia page
-    const toggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-
-    // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      body.classList.add(currentTheme);
-      if (currentTheme === 'dark') {
-        toggle.checked = true;
-      }
-    }
-
-    // Toggle dark mode
-    toggle.addEventListener('change', function() {
-      if (this.checked) {
-        body.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        body.classList.remove('dark');
-        localStorage.setItem('theme', '');
+    // Dark mode initialization - check localStorage and apply if enabled
+    document.addEventListener('DOMContentLoaded', function() {
+      const isDarkMode = localStorage.getItem('darkMode') === 'true';
+      if (isDarkMode) {
+        document.body.classList.add('dark');
       }
     });
   </script>

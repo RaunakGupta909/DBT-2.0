@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Raise Issue - Direct Benefit Transfer</title>
+    <style>
+        :root {
+            --bg: #f2f6f9;
+            --bg-dark: #1a1a1a;
+            --header-bg: #0a3c6b;
+            --header-bg-dark: #1e3a5f;
+            --container-bg: #fff;
+            --container-bg-dark: #2d3748;
+            --text: #333;
+            --text-dark: #ffffff;
+            --label-color: #333;
+            --label-color-dark: #e2e8f0;
+            --input-border: #ccc;
+            --input-border-dark: #4a5568;
+            --input-bg: #fff;
+            --input-bg-dark: #1a202c;
+            --btn-bg: #0a3c6b;
+            --btn-bg-dark: #2b6cb0;
+            --btn-hover: #08406b;
+            --btn-hover-dark: #3182ce;
+            --note-bg: #e8f4ff;
+            --note-bg-dark: #2c5282;
+            --note-border: #0a3c6b;
+            --note-border-dark: #3182ce;
+            --back-btn-bg: #005bbb;
+            --back-btn-bg-dark: #3182ce;
+            --back-btn-hover: #004a99;
+            --back-btn-hover-dark: #2c5282;
+        }
+
+        body.dark-mode {
+            --bg: var(--bg-dark);
+            --header-bg: var(--header-bg-dark);
+            --container-bg: var(--container-bg-dark);
+            --text: var(--text-dark);
+            --label-color: var(--label-color-dark);
+            --input-border: var(--input-border-dark);
+            --input-bg: var(--input-bg-dark);
+            --btn-bg: var(--btn-bg-dark);
+            --btn-hover: var(--btn-hover-dark);
+            --note-bg: var(--note-bg-dark);
+            --note-border: var(--note-border-dark);
+            --back-btn-bg: var(--back-btn-bg-dark);
+            --back-btn-hover: var(--back-btn-hover-dark);
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--bg);
+            transition: background-color 0.3s ease;
+        }
+        header {
+            background: var(--header-bg);
+            padding: 20px;
+            color: #fff;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 70px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--container-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background 0.3s ease;
+        }
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--header-bg);
+            font-weight: bold;
+        }
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--label-color);
+        }
+        input, select, textarea {
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            padding: 12px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            font-size: 15px;
+            background: var(--input-bg);
+            color: var(--text);
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        button {
+            background: var(--btn-bg);
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: var(--btn-hover);
+        }
+        .note {
+            background: var(--note-bg);
+            padding: 15px;
+            border-left: 4px solid var(--note-border);
+            border-radius: 6px;
+            margin-bottom: 25px;
+            color: var(--text);
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 14px;
+            margin: 0;
+            font-size: 14px;
+            color: white;
+            background: var(--back-btn-bg);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+        .back-btn:hover {
+            background: var(--back-btn-hover);
+        }
+    </style>
+</head>
+<body>
+    <a href="student_dashboard.html" class="back-btn">← Back to Student Dashboard</a>
+
+    <header>
+        Raise an Issue - Student DBT Support
+    </header>
+
+    <div class="container">
+        <div class="note">
+            <strong>Note:</strong> Please provide accurate information so that your issue can be resolved quickly.
+        </div>
+
+        <div class="section-title">Personal Details</div>
+
+        <label>Full Name</label>
+        <input type="text" placeholder="Enter your full name" required>
+
+        <label>Aadhaar Number</label>
+        <input type="text" placeholder="Enter 12-digit Aadhaar number" maxlength="12" required>
+
+        <label>Mobile Number</label>
+        <input type="text" placeholder="Enter your mobile number" maxlength="10" required>
+
+        <label>Email Address</label>
+        <input type="email" placeholder="Enter your email" required>
+
+        <label>College / School Name</label>
+        <input type="text" placeholder="Enter your college or school name" required>
+
+
+        <div class="section-title">Issue Details</div>
+
+        <label>Select Scheme</label>
+        <select required>
+            <option value="">-- Select Scheme --</option>
+            <option>Post Matric Scholarship</option>
+            <option>Pre Matric Scholarship</option>
+            <option>Merit-cum-Means Scholarship</option>
+            <option>Hostel Subsidy</option>
+            <option>Other Student Scheme</option>
+        </select>
+
+        <label>Type of Issue</label>
+        <select required>
+            <option value="">-- Select Issue Type --</option>
+            <option>Scholarship Not Received</option>
+            <option>Application Pending for Long Time</option>
+            <option>Document Verification Issue</option>
+            <option>Bank / Aadhaar Not Linking</option>
+            <option>Other Issue</option>
+        </select>
+
+        <label>Describe Your Issue</label>
+        <textarea placeholder="Write your issue in detail..." required></textarea>
+
+        <button type="submit">Submit Issue</button>
+    </div>
+
+<script>
+// Check for dark mode preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+});
+</script>
+</body>
+</html>
