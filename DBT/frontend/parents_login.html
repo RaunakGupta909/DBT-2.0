@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Login - DBT Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary: #005bbb;
+            --primary-dark: #004a99;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #333;
+            --border: #ddd;
+        }
+
+        body.dark-mode {
+            --primary: #4dabf7;
+            --primary-dark: #339af0;
+            --bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text: #f1f1f1;
+            --border: #444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .login-container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .login-header h2 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .login-header p {
+            margin-bottom: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode .login-header p {
+            color: #aaa;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg);
+            color: var(--text);
+            box-sizing: border-box;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 10px;
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(0, 91, 187, 0.1);
+        }
+
+        .toggle-link {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .toggle-link a {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 1rem;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        body.dark-mode .back-link {
+            color: #aaa;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .otp-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- LOGIN FORM -->
+        <div id="login-form">
+            <div class="login-header">
+                <h2>Parent Login</h2>
+                <p>Login with Aadhaar or Mobile Number</p>
+            </div>
+            <form onsubmit="handleLoginOTP(event)">
+                <div class="form-group">
+                    <label for="login-identifier">Aadhaar Number / Mobile Number</label>
+                    <input type="text" id="login-identifier" placeholder="Enter Aadhaar or Mobile No." required>
+                </div>
+                
+                <div id="login-otp-group" class="form-group hidden">
+                    <label for="login-otp">Enter OTP</label>
+                    <input type="text" id="login-otp" placeholder="Enter 6-digit OTP">
+                </div>
+
+                <button type="button" id="btn-send-otp-login" class="btn-secondary" onclick="sendOTP('login')">Send OTP</button>
+                <button type="submit" id="btn-login-submit" class="btn-primary hidden">Verify & Login</button>
+            </form>
+            <div class="toggle-link">
+                New User? <a onclick="toggleForms()">Register here</a>
+            </div>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="register-form" class="hidden">
+            <div class="login-header">
+                <h2>Parent Registration</h2>
+                <p>Register to track your child's benefits</p>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-identifier">Aadhaar Number / Mobile Number</label>
+                    <input type="text" id="reg-identifier" placeholder="Enter Aadhaar or Mobile No." required>
+                </div>
+
+                <div id="reg-otp-group" class="form-group hidden">
+                    <label for="reg-otp">Enter OTP</label>
+                    <input type="text" id="reg-otp" placeholder="Enter 6-digit OTP">
+                </div>
+
+                <button type="button" id="btn-send-otp-reg" class="btn-secondary" onclick="sendOTP('register')">Send OTP</button>
+                <button type="submit" id="btn-reg-submit" class="btn-primary hidden">Verify & Register</button>
+            </form>
+            <div class="toggle-link">
+                Already have an account? <a onclick="toggleForms()">Login here</a>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <script>
+        // Check Dark Mode
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        let currentOTP = null;
+
+        function toggleForms() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('register-form').classList.toggle('hidden');
+            resetForms();
+        }
+
+        function resetForms() {
+            // Hide OTP fields and buttons
+            document.getElementById('login-otp-group').classList.add('hidden');
+            document.getElementById('btn-login-submit').classList.add('hidden');
+            document.getElementById('btn-send-otp-login').classList.remove('hidden');
+            
+            document.getElementById('reg-otp-group').classList.add('hidden');
+            document.getElementById('btn-reg-submit').classList.add('hidden');
+            document.getElementById('btn-send-otp-reg').classList.remove('hidden');
+            
+            currentOTP = null;
+        }
+
+        function sendOTP(mode) {
+            const identifierId = mode === 'login' ? 'login-identifier' : 'reg-identifier';
+            const identifier = document.getElementById(identifierId).value;
+
+            if (!identifier || identifier.length < 10) {
+                alert('Please enter a valid Aadhaar or Mobile Number');
+                return;
+            }
+
+            // Simulate OTP generation
+            currentOTP = Math.floor(100000 + Math.random() * 900000);
+            alert(`OTP sent to ${identifier}\n\nYour OTP is: ${currentOTP}`);
+
+            // Show OTP field
+            if (mode === 'login') {
+                document.getElementById('login-otp-group').classList.remove('hidden');
+                document.getElementById('btn-login-submit').classList.remove('hidden');
+                document.getElementById('btn-send-otp-login').classList.add('hidden');
+            } else {
+                document.getElementById('reg-otp-group').classList.remove('hidden');
+                document.getElementById('btn-reg-submit').classList.remove('hidden');
+                document.getElementById('btn-send-otp-reg').classList.add('hidden');
+            }
+        }
+
+        function handleLoginOTP(e) {
+            e.preventDefault();
+            const enteredOTP = document.getElementById('login-otp').value;
+            const identifier = document.getElementById('login-identifier').value;
+
+            if (enteredOTP == currentOTP) {
+                // Check if user exists
+                const storedUser = JSON.parse(localStorage.getItem('dbt_parent_user_' + identifier));
+                
+                if (storedUser) {
+                    localStorage.setItem('dbt_current_parent', JSON.stringify(storedUser));
+                    alert('Login Successful! Welcome ' + storedUser.name);
+                    window.location.href = 'parent_dashboard.html';
+                } else {
+                    // Demo mode: Allow login even if not registered, create temp user
+                    const demoUser = { name: "Parent (" + identifier.slice(-4) + ")", id: identifier };
+                    localStorage.setItem('dbt_current_parent', JSON.stringify(demoUser));
+                    alert('Login Successful! (Demo Mode)');
+                    window.location.href = 'parent_dashboard.html';
+                }
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const enteredOTP = document.getElementById('reg-otp').value;
+            const name = document.getElementById('reg-name').value;
+            const identifier = document.getElementById('reg-identifier').value;
+
+            if (enteredOTP == currentOTP) {
+                const user = { name: name, id: identifier };
+                localStorage.setItem('dbt_parent_user_' + identifier, JSON.stringify(user));
+                
+                alert('Registration Successful! Please login.');
+                toggleForms();
+                // Pre-fill login
+                document.getElementById('login-identifier').value = identifier;
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

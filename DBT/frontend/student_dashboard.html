@@ -121,6 +121,28 @@
 
 </head>
 <body>
+    <script>
+        // Auth Check
+        const currentUser = JSON.parse(localStorage.getItem('dbt_current_user'));
+        if (!currentUser) {
+            window.location.href = 'student_login.html';
+        }
+        
+        function logout() {
+            localStorage.removeItem('dbt_current_user');
+            window.location.href = 'student_login.html';
+        }
+    </script>
+
+    <div id="user-profile" style="position: absolute; top: 20px; right: 20px; text-align: right; z-index: 1000;">
+        <h3 id="student-name" style="margin: 0; color: var(--text); font-size: 1.1rem;">Welcome, <span id="display-name">Student</span></h3>
+        <button onclick="logout()" style="background: none; border: none; color: var(--btn-bg); cursor: pointer; text-decoration: underline; font-size: 0.9rem; padding: 0;">Logout</button>
+    </div>
+    <script>
+        if(currentUser) {
+            document.getElementById('display-name').textContent = currentUser.name;
+        }
+    </script>
 
     <a href="index.html" class="back-btn">← Back to Home</a>
 

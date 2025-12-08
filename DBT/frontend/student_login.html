@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - DBT Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary: #005bbb;
+            --primary-dark: #004a99;
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #333;
+            --border: #ddd;
+        }
+
+        body.dark-mode {
+            --primary: #4dabf7;
+            --primary-dark: #339af0;
+            --bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text: #f1f1f1;
+            --border: #444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .login-container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .login-header h2 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .login-header p {
+            margin-bottom: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        body.dark-mode .login-header p {
+            color: #aaa;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background-color: var(--bg);
+            color: var(--text);
+            box-sizing: border-box; /* Fix padding issue */
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-login:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .toggle-link {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .toggle-link a {
+            color: var(--primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 1rem;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        body.dark-mode .back-link {
+            color: #aaa;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div id="login-form">
+            <div class="login-header">
+                <h2>Student Login</h2>
+                <p>Access your DBT Dashboard</p>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-id">Student ID / Username</label>
+                    <input type="text" id="login-id" placeholder="Enter your Student ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+            <div class="toggle-link">
+                Don't have an account? <a onclick="toggleForms()">Register here</a>
+            </div>
+        </div>
+
+        <div id="register-form" class="hidden">
+            <div class="login-header">
+                <h2>Student Registration</h2>
+                <p>Create your account</p>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-id">Student ID</label>
+                    <input type="text" id="reg-id" placeholder="Create a Student ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn-login">Register</button>
+            </form>
+            <div class="toggle-link">
+                Already have an account? <a onclick="toggleForms()">Login here</a>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <script>
+        // Check Dark Mode
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        function toggleForms() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('register-form').classList.toggle('hidden');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const studentId = document.getElementById('login-id').value;
+            // In a real app, validate against backend
+            // For demo, we just simulate login
+            
+            // Check if we have a registered user in local storage to match (optional, but good for demo)
+            const storedUser = JSON.parse(localStorage.getItem('dbt_student_user_' + studentId));
+            
+            if (storedUser) {
+                localStorage.setItem('dbt_current_user', JSON.stringify(storedUser));
+                alert('Login Successful! Welcome ' + storedUser.name);
+                window.location.href = 'student_dashboard.html';
+            } else {
+                // Allow login even if not registered for demo simplicity, using the ID as name if not found
+                const demoUser = { name: "Student " + studentId, id: studentId };
+                localStorage.setItem('dbt_current_user', JSON.stringify(demoUser));
+                alert('Login Successful! (Demo Mode)');
+                window.location.href = 'student_dashboard.html';
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const id = document.getElementById('reg-id').value;
+            
+            const user = { name: name, id: id };
+            localStorage.setItem('dbt_student_user_' + id, JSON.stringify(user));
+            
+            alert('Registration Successful! Please login.');
+            toggleForms();
+            // Pre-fill login
+            document.getElementById('login-id').value = id;
+        }
+    </script>
+</body>
+</html>
