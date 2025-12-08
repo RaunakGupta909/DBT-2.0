@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DBT Portal - Government Services</title>
+  <link rel="stylesheet" href="styles.css" />
+
+
+</head>
+<body>
+  <!-- Top utility strap -->
+  <div class="top-strap">
+    <div class="strap-controls">
+      <button id="dark-toggle" title="Toggle Dark Mode">🌙</button>
+      <div class="lang-switcher" id="lang-switcher">EN</div>
+    </div>
+  </div>
+
+  <header class="gov-navbar">
+    <div class="navbar-left">
+      <span class="gov-logo"><img src="images/images (1).png" height="50px" width="140px" alt="Government Logo"></span>
+      <span class="gov-logo"><img src="images/logo.jpeg" height="50px" width="175px" alt="DBT Logo"></span>
+    </div>
+    <div class="navbar-center">DIRECT BENEFIT TRANSFER</div>
+    <button id="find-bank-btn" class="navbar-btn">📍 Find Nearby Bank</button>
+  </header>
+
+  <!-- Main navigation strip (third strap) -->
+  <!-- Top strap -->
+<header class="strap" role="banner">
+<div class="strap-inner">
+
+
+<!-- Hamburger for mobile -->
+<button class="hamburger" aria-controls="primary-navigation" aria-expanded="false" aria-label="Toggle navigation">☰</button>
+
+
+<!-- Primary nav (evenly spaced across) -->
+<nav id="primary-navigation" role="navigation" aria-label="Primary">
+  <a href="#home">Home</a>
+<a href="about.html">About DBT</a>
+<a href="multimedia.html">Multimedia</a>
+<a href="key_benefits.html">Key Benefits</a>
+<a href="contact.html">Contact us</a>
+<a href="scam_report.html">Scamming report</a>
+</nav>
+
+
+<!-- optional right-side compact area (keeps spacing pleasant on wide screens) -->
+<div class="right-cta">
+<!-- placeholder - could be login / language selector -->
+</div>
+
+
+</div>
+</header>
+
+
+<!-- Mobile menu (for small screens) -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+<a href="#home">Home</a>
+<a href="#about">About DBT</a>
+<a href="multimedia.html">Multimedia</a>
+<a href="benefits.html">Key Benefits</a>
+<a href="#contact">Contact us</a>
+<a href="scam_report.html">Scamming report</a>
+</div>
+
+  <!-- Hero Section Carousel -->
+  <div class="carousel">
+  <div class="carousel-track">
+    <a href="https://example.com/slide1" target="_blank"><img src="images/image copy 2.png" alt=""></a>
+    <a href="https://example.com/slide2" target="_blank"><img src="images/image copy 3.png" alt=""></a>
+    <a href="https://example.com/slide3" target="_blank"><img src="images/image copy 4.png" alt=""></a>
+  </div>
+
+  <button class="btn prev">❮</button>
+  <button class="btn next">❯</button>
+</div>
+
+  <!-- Three Cards Section -->
+  <section id="three-cards" class="three-cards">
+    <div class="container">
+      <div class="cards-grid">
+        <div class="info-card">
+          <div class="card-content">
+            <h3>What is DBT?</h3>
+            <p>Direct Benefit Transfer (DBT) is a government initiative to transfer subsidies and benefits directly to beneficiaries' bank accounts, reducing corruption and ensuring transparency.</p>
+          </div>
+          <iframe width="100%" height="200" src="https://www.youtube.com/embed/4ykO-GI6x7k?si=WqumiYtHljEI4qSP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="info-card">
+          <div class="card-content">
+            <h3>How to Register</h3>
+            <p>Register using your Aadhaar number and mobile OTP. Visit the portal and follow the simple steps to link your account and start receiving benefits.</p>
+          </div>
+          <iframe width="100%" height="200" src="https://www.youtube.com/embed/SAxbX9zFzvw?si=nsfvtyjPT3zs8zqt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <div class="info-card">
+          <div class="card-content">
+            <h3>Check Your Status</h3>
+            <p>Log in to your dashboard to check DBT status, view transaction history, and ensure your benefits are being transferred correctly.</p>
+          </div>
+          <iframe width="100%" height="200" src="https://www.youtube.com/embed/Eq4wfveWd90?si=R5yV8j7-amWb4wq8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- 
+  Tutorial Card Section
+  <section id="tutorial-card" class="tutorial-card">
+    <div class="container">
+      <div class="tutorial-content">
+        <h2>How to use this website</h2>
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="How to Use This Website Video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <audio controls>
+          <source src="path/to/audio.mp3" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    </div>
+  </section> -->
+  <div class="full-card">
+  <div class="card-header">
+    How to use this website
+  </div>
+
+  <div class="card-video">
+    <iframe 
+      src="https://www.youtube.com/embed/VIDEO_ID" 
+      frameborder="0"
+      allowfullscreen>
+    </iframe>
+  </div>
+
+  <div class="card-audio">
+    <audio controls>
+      <source src="audio-file.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+</div>
+
+
+  <!-- Select Role cards (replaces previous big-actions) -->
+  <section id="select-role" class="select-role">
+    <div class="container">
+      <h2 class="section-title">Select Your Role</h2>
+      <p class="section-sub">Access information and resources tailored to your role in the DBT ecosystem.</p>
+
+      <div class="role-grid">
+        <article class="role-card student">
+          <div class="role-badge">🎓</div>
+          <h3>Student</h3>
+          <p>Check your status, play quizzes, and earn badges.</p>
+          <a class="proceed-btn" href="student_dashboard.html">Proceed →</a>
+        </article>
+
+        <article class="role-card parent">
+          <div class="role-badge">👨‍👩‍👧</div>
+          <h3>Parent / Guardian</h3>
+          <p>Manage your children's DBT status and learn more.</p>
+          <a class="proceed-btn" href="parent_dashboard.html">Proceed →</a>
+        </article>
+
+        <article class="role-card teacher">
+          <div class="role-badge">👩‍🏫</div>
+          <h3>Teacher / School Staff</h3>
+          <p>Track student status and access awareness toolkits.</p>
+          <a class="proceed-btn" href="teacher_dashboard.html">Proceed →</a>
+        </article>
+
+        <article class="role-card volunteer">
+          <div class="role-badge">🤝</div>
+          <h3>Volunteer / Citizen</h3>
+          <p>Help your community and spread awareness.</p>
+          <a class="proceed-btn" href="citizen_dashboard.html">Proceed →</a>
+        </article>
+
+        <article class="role-card beo">
+          <div class="role-badge">📋</div>
+          <h3>BEO (Block Education Officer)</h3>
+          <p>Monitor and support block-level DBT activities.</p>
+          <a class="proceed-btn" href="beo_dashboard.html">Proceed →</a>
+        </article>
+
+        <article class="role-card deo">
+          <div class="role-badge">📊</div>
+          <h3>DEO (District Education Officer)</h3>
+          <p>District reporting, analytics and oversight.</p>
+          <a class="proceed-btn" href="deo_dashboard.html">Proceed →</a>
+        </article>
+
+        <article class="role-card state">
+          <div class="role-badge">🏢</div>
+          <h3>State DBT Cell / Admin</h3>
+          <p>Manage state-level DBT operations and users.</p>
+          <a class="proceed-btn" href="state_dbt_officer_dashboard.html">Proceed →</a>
+        </article>
+
+        <article class="role-card ministry">
+          <div class="role-badge">🏛️</div>
+          <h3>Ministry of Social Justice & Empowerment (MoSJE)</h3>
+          <p>Policy, national oversight and coordination.</p>
+          <a class="proceed-btn" href="ministry_dashboard.html">Proceed →</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Enhanced Statistics Dashboard -->
+  <section class="stats-dashboard">
+    <div class="container">
+      <h2 class="section-title">DBT Impact Statistics</h2>
+      <div class="year-selector-card">
+        <span class="year-label">Financial Year:</span>
+        <select id="year-select" class="year-select">
+          <option value="fy25-26" selected>2025-26</option>
+          <option value="fy24-25">2024-25</option>
+          <option value="fy23-24">2023-24</option>
+        </select>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card primary">
+          <div class="stat-icon">🎓</div>
+          <div class="stat-content">
+            <h3 id="total-students">2,547,892</h3>
+            <p>Total Students Enrolled</p>
+            <span id="change-total-students" class="stat-change positive">+12.5% this year</span>
+          </div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <h3 id="dbt-enabled">1,892,456</h3>
+            <p>DBT Enabled Students</p>
+            <span id="change-dbt-enabled" class="stat-change positive">74.2% coverage</span>
+          </div>
+        </div>
+        <div class="stat-card info">
+          <div class="stat-icon">🤝</div>
+          <div class="stat-content">
+            <h3 id="total-volunteers">45,678</h3>
+            <p>Active Volunteers</p>
+            <span id="change-total-volunteers" class="stat-change positive">+8.3% growth</span>
+          </div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-icon">💰</div>
+          <div class="stat-content">
+            <h3 id="annual-amount">₹1,247.5Cr</h3>
+            <p>Annual DBT Amount</p>
+            <span id="change-annual-amount" class="stat-change positive">+15.2% increase</span>
+          </div>
+        </div>
+
+
+        <div class="stat-card info">
+          <div class="stat-icon">🏫</div>
+          <div class="stat-content">
+            <h3 id="schools-connected">1,456,789</h3>
+            <p>Schools Connected</p>
+            <span id="change-schools-connected" class="stat-change positive">+23.1% this year</span>
+          </div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-content">
+            <h3 id="transactions-processed">89.2M</h3>
+            <p>Transactions Processed</p>
+            <span class="stat-change positive">+31.7% growth</span>
+          </div>
+        </div>
+        <div class="stat-card primary">
+          <div class="stat-icon">👥</div>
+          <div class="stat-content">
+            <h3 id="beneficiaries-served">45.6M</h3>
+            <p>Total Beneficiaries</p>
+            <span id="change-beneficiaries-served" class="stat-change positive">+18.9% increase</span>
+          </div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-icon">🛡️</div>
+          <div class="stat-content">
+            <h3 id="fraud-prevented">₹2,847Cr</h3>
+            <p>Fraud Prevented</p>
+            <span id="change-fraud-prevented" class="stat-change positive">₹847Cr saved</span>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- Testimonials (single-comment carousel) & FAQ -->
+  <section class="testimonials">
+    <h2>What citizens say</h2>
+    <div class="testimonial-wrapper card" id="testimonial-wrapper">
+      <!-- viewport hides scrollbars; track will slide left -->
+      <div class="testimonial-viewport">
+        <div class="testimonial-track" id="testimonial-track" aria-live="polite">
+          <!-- items injected by JS; include a fallback single item -->
+          <div class="testimonial" role="region">
+            <p>"This portal made it easy to check our DBT status. Very helpful!"</p>
+            <div class="author">— S. Kumar, Pune</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- auto-scrolling testimonials; controls removed -->
+  </section>
+
+   <section id="faq" class="faq-section">
+  <h2 class="faq-title">Frequently Asked Questions</h2>
+
+  <div class="faq-container">
+
+    <div class="faq-item">
+      <button class="faq-question">
+        What documents are required for DBT?
+        <span class="icon">+</span>
+      </button>
+      <div class="faq-answer">
+        Aadhaar card, bank account number, mobile number and basic identity documents.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        How do I register on the portal?
+        <span class="icon">+</span>
+      </button>
+      <div class="faq-answer">
+        You can register using your mobile number and Aadhaar details. Follow OTP steps.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        How can I check DBT status for my child?
+        <span class="icon">+</span>
+      </button>
+      <div class="faq-answer">
+        Login as Parent/Student → Enter child Aadhaar → View DBT status.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        Which schemes are included in DBT?
+        <span class="icon">+</span>
+      </button>
+      <div class="faq-answer">
+        Scholarship, pension, LPG subsidy, maternity benefits, PM-KISAN, health benefits etc.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        I forgot my password — how do I reset it?
+        <span class="icon">+</span>
+      </button>
+      <div class="faq-answer">
+        Use 'Forgot Password'. OTP will be sent through SMS.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question">
+        What should I do if I receive a fake DBT message?
+        <span class="icon">+</span>
+      </button>
+      <div class="faq-answer">
+        Do not reply. Report the scam on DBT portal or call cyber helpline (1930).
+      </div>
+    </div>
+
+  </div>
+</section>
+
+  <!-- Comment Section -->
+  <section id="comments" class="comments-section">
+    <div class="container">
+      <h2 class="section-title">Share Your Feedback</h2>
+      <p class="section-sub">We value your opinions and suggestions to improve our services.</p>
+      <div class="comment-card card">
+        <form id="commentForm" class="comment-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="commentName">Name</label>
+              <input type="text" id="commentName" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="commentEmail">Email</label>
+              <input type="email" id="commentEmail" name="email" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="commentMessage">Message</label>
+            <textarea id="commentMessage" name="message" rows="5" required></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Submit Feedback</button>
+        </form>
+        <div id="commentSuccess" class="success-message" style="display: none;">
+          <p>Thank you for your feedback! We appreciate your input.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Government Websites Logos Strap -->
+  <section class="gov-logos-strap">
+    <div class="logos-container">
+      <a href="https://www.nic.gov.in" target="_blank" title="National Informatics Centre"><img src="images/image 1.jpg" alt="NIC" onerror="this.style.display='none'">NIC</a>
+      <a href="https://finmin.gov.in" target="_blank" title="Ministry of Finance"><img src="images/image 2.png" alt="MoF" onerror="this.style.display='none'">MoF</a>
+      <a href="https://www.pmindia.gov.in" target="_blank" title="Prime Minister's Office"><img src="images/image 3.png" alt="PMO" onerror="this.style.display='none'">PMO</a>
+      <a href="https://www.india.gov.in" target="_blank" title="Government of India"><img src="images/image 4.png" alt="GoI" onerror="this.style.display='none'">GoI</a>
+      <a href="https://www.digitalindia.gov.in" target="_blank" title="Digital India"><img src="images/image 5.png" alt="Digital India" onerror="this.style.display='none'">Digital India</a>
+      <a href="https://www.npci.org.in/" target="_blank" title="National Payments Corporation of India"><img src="images/image 6.jpg" alt="National Payments Corporation of India" onerror="this.style.display='none'">NPCI</a>
+      <a href="https://www.pfms.nic.in" target="_blank" title="Public Financial Management System"><img src="images/image 7.jpg" alt="Public Financial Management System" onerror="this.style.display='none'">PFMS</a>
+      <a href="https://www.mygov.in/" target="_blank" title="mygov"><img src="images/Mygov.svg" alt="Mygov" onerror="this.style.display='none'">Mygov</a>
+      <a href="https://serviceonline.gov.in/" target="_blank" title="serviceonline"><img src="images/service +.jpg" alt="serviceonline" onerror="this.style.display='none'">serviceonline</a>
+      <a href="https://scholarships.gov.in/" target="_blank" title="National scholarship portal "><img src="images/NSP.jpg" alt="National scholarship portal" onerror="this.style.display='none'">NSP</a>
+      <a href="https://www.pmuy.gov.in/" target="_blank" title="My LPG"><img src="images/pahal.png" alt="My LPG" onerror="this.style.display='none'">My LPG</a>
+      <a href="https://web.umang.gov.in/" target="_blank" title="umang"><img src="images/umang_logo.png" alt="umang" onerror="this.style.display='none'">umang</a>
+      <a href="https://uidai.gov.in/" target="_blank" title="uidai"><img src="images/Aadhaar_Logo.svg.png" alt="uidai" onerror="this.style.display='none'">uidai</a>
+      <a href="https://www.pmjdy.gov.in/" target="_blank" title="Pradhan Mantri Jan-Dhan Yojana"><img src="image/PMJAY" alt="Pradhan Mantri Jan-Dhan Yojana" onerror="this.style.display='none'">pmjdy</a>
+           <!-- DUPLICATE LINKS -->
+      <a href="https://www.nic.gov.in" target="_blank" title="National Informatics Centre"><img src="images/image 1.jpg" alt="NIC" onerror="this.style.display='none'">NIC</a>
+      <a href="https://finmin.gov.in" target="_blank" title="Ministry of Finance"><img src="images/image 2.png" alt="MoF" onerror="this.style.display='none'">MoF</a>
+      <a href="https://www.pmindia.gov.in" target="_blank" title="Prime Minister's Office"><img src="images/image 3.png" alt="PMO" onerror="this.style.display='none'">PMO</a>
+      <a href="https://www.india.gov.in" target="_blank" title="Government of India"><img src="images/image 4.png" alt="GoI" onerror="this.style.display='none'">GoI</a>
+      <a href="https://www.digitalindia.gov.in" target="_blank" title="Digital India"><img src="images/image 5.png" alt="Digital India" onerror="this.style.display='none'">Digital India</a>
+      <a href="https://www.npci.org.in/" target="_blank" title="National Payments Corporation of India"><img src="images/image 6.jpg" alt="National Payments Corporation of India" onerror="this.style.display='none'">NPCI</a>
+      <a href="https://www.pfms.nic.in" target="_blank" title="Public Financial Management System"><img src="images/image 7.jpg" alt="Public Financial Management System" onerror="this.style.display='none'">PFMS</a>
+      <a href="https://www.mygov.in/" target="_blank" title="mygov"><img src="images/Mygov.svg" alt="Mygov" onerror="this.style.display='none'">Mygov</a>
+      <a href="https://serviceonline.gov.in/" target="_blank" title="serviceonline"><img src="images/service +.jpg" alt="serviceonline" onerror="this.style.display='none'">serviceonline</a>
+      <a href="https://scholarships.gov.in/" target="_blank" title="National scholarship portal "><img src="images/NSP.jpg" alt="National scholarship portal" onerror="this.style.display='none'">NSP</a>
+      <a href="https://www.pmuy.gov.in/" target="_blank" title="My LPG"><img src="images/pahal.png" alt="My LPG" onerror="this.style.display='none'">My LPG</a>
+      <a href="https://web.umang.gov.in/" target="_blank" title="umang"><img src="images/umang_logo.png" alt="umang" onerror="this.style.display='none'">umang</a>
+      <a href="https://uidai.gov.in/" target="_blank" title="uidai"><img src="images/Aadhaar_Logo.svg.png" alt="uidai" onerror="this.style.display='none'">uidai</a>
+      <a href="https://www.pmjdy.gov.in/" target="_blank" title="Pradhan Mantri Jan-Dhan Yojana"><img src="image/PMJAY" alt="Pradhan Mantri Jan-Dhan Yojana" onerror="this.style.display='none'">pmjdy</a>
+    </div>
+  </section>
+
+  <footer class="gov-footer">
+    <p>DBT Portal — Government Services Demo</p>
+
+    <!-- Footer Policy Strip -->
+    <div class="footer-policy-strip">
+      <div class="footer-links">
+        <a href="#rti">RTI</a>
+        <span class="separator">|</span>
+        <a href="#faq">FAQ</a>
+        <span class="separator">|</span>
+        <a href="#feedback">Feedback</a>
+        <span class="separator">|</span>
+        <a href="#terms">Terms & Conditions</a>
+        <span class="separator">|</span>
+        <a href="#website-policy">Website Policy</a>
+        <span class="separator">|</span>
+        <a href="#copyright">Copyright Policy</a>
+        <span class="separator">|</span>
+        <a href="#hyperlinking">Hyperlinking Policy</a>
+        <span class="separator">|</span>
+        <a href="#sitemap">SiteMap</a>
+        <span class="separator">|</span>
+        <a href="#privacy">Privacy Policy</a>
+      </div>
+      <div class="footer-info">
+        <p>© Website Content Managed by Direct Benefit Transfer Mission, Government of India.</p>
+        <p>Designed, Developed and Hosted by National Informatics Centre.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AI Chatbot Support Icon -->
+  <a id="chatbot-icon" class="chatbot-float" href="#">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Chatbot" />
+  </a>
+
+  <!-- whatsapp support system -->
+   <a href="https://wa.me/916386038421" class="whatsapp-float" target="_blank">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+</a>
+
+  <!-- Chatbot Modal -->
+  <div id="chatbot-modal" class="chatbot-modal">
+    <div class="chatbot-modal-content">
+      <div class="chatbot-header">
+        <h3>AI Chatbot</h3>
+        <button id="chatbot-close" class="chatbot-close">&times;</button>
+      </div>
+      <div id="chatbot-body" class="chatbot-body">
+        <p><strong>AI:</strong> Hello! How can I help you with DBT today?</p>
+      </div>
+      <div class="chatbot-input-container">
+        <input type="text" id="chatbot-input" placeholder="Type your question..." />
+        <button id="chatbot-send">Send</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // Comment form submission handler
+    document.getElementById('commentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Simulate form submission (in a real app, this would send data to server)
+      document.getElementById('commentSuccess').style.display = 'block';
+      this.reset();
+      setTimeout(() => {
+        document.getElementById('commentSuccess').style.display = 'none';
+      }, 5000);
+    });
+
+    const faqs = document.querySelectorAll(".faq-item");
+
+  faqs.forEach(faq => {
+    faq.querySelector(".faq-question").addEventListener("click", () => {
+      faq.classList.toggle("active");
+    });
+  });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Zone - DBT Educational Resources</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--text);
+            font-size: 2.5em;
+            margin-top: 80px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 1.2em;
+        }
+
+        /* Dark mode for learning zone */
+        body.dark-mode .learning-section {
+            background: #1e293b;
+        }
+
+        body.dark-mode .section-title {
+            color: #e6f0fb;
+        }
+
+        body.dark-mode .resource-card {
+            background: #334155;
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .resource-card:hover {
+            border-color: #3b82f6;
+        }
+
+        body.dark-mode .resource-title {
+            color: #e6f0fb;
+        }
+
+        body.dark-mode .resource-desc {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .video-section,
+        body.dark-mode .infographic-section,
+        body.dark-mode .voice-guide-section {
+            background: #1e293b;
+        }
+
+        body.dark-mode .video-card,
+        body.dark-mode .infographic-card,
+        body.dark-mode .voice-card {
+            background: #334155;
+        }
+
+        body.dark-mode .video-title,
+        body.dark-mode .infographic-title,
+        body.dark-mode .voice-title {
+            color: #e6f0fb;
+        }
+
+        body.dark-mode .video-duration,
+        body.dark-mode .infographic-desc,
+        body.dark-mode .voice-desc {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .play-btn {
+            background: linear-gradient(90deg, #3b82f6, #1e63e8);
+        }
+
+        body.dark-mode .play-btn:hover {
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 14px;
+            margin: 0;
+            font-size: 14px;
+            color: white;
+            background: #005bbb;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s;
+            z-index: 1000;
+        }
+
+        .back-btn:hover {
+            background: #004a99;
+        }
+
+        .learning-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #0b3b66;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .resource-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .resource-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .resource-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .resource-desc {
+            color: #718096;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .video-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .video-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .video-duration {
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .infographic-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .infographic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .infographic-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .infographic-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .infographic-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .infographic-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .infographic-desc {
+            color: #718096;
+            font-size: 0.9em;
+        }
+
+        .voice-guide-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .voice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .voice-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .voice-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .voice-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .voice-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .voice-desc {
+            color: #718096;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .play-btn {
+            padding: 8px 16px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .resources-grid, .video-grid, .infographic-grid, .voice-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="student_dashboard.html" class="back-btn">← Back to Student Dashboard</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>📚 Learning Zone</h1>
+            <p>Explore educational resources about Direct Benefit Transfer (DBT)</p>
+        </div>
+
+        <div class="learning-section">
+            <h2 class="section-title">Quick Learning Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <div class="resource-icon">💡</div>
+                    <div class="resource-title">What is DBT?</div>
+                    <div class="resource-desc">Learn about Direct Benefit Transfer and how it works to ensure benefits reach you directly.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🔐</div>
+                    <div class="resource-title">Aadhaar Linking</div>
+                    <div class="resource-desc">Understand the importance of linking your Aadhaar card for DBT benefits.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🏦</div>
+                    <div class="resource-title">Bank Account Details</div>
+                    <div class="resource-desc">Know how to provide correct bank details for seamless DBT transactions.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📱</div>
+                    <div class="resource-title">Digital Payments</div>
+                    <div class="resource-desc">Explore how DBT enables fast and secure digital money transfers.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">🛡️</div>
+                    <div class="resource-title">Scam Awareness</div>
+                    <div class="resource-desc">Learn to identify and avoid DBT-related scams and fraudulent activities.</div>
+                </div>
+                <div class="resource-card">
+                    <div class="resource-icon">📊</div>
+                    <div class="resource-title">Scheme Benefits</div>
+                    <div class="resource-desc">Discover various government schemes that use DBT for student benefits.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-section">
+            <h2 class="section-title">Video Tutorials</h2>
+            <div class="video-grid">
+                <div class="video-card">
+                    <iframe class="video-iframe" src="https://www.youtube.com/embed/Pmugccrh_yo?si=nRaFjw-CP8iEiPFX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <div class="video-info">
+                        <div class="video-title">DBT Registration Process</div>
+                        <div class="video-duration">8:33 mins</div>
+                    </div>
+                </div>
+                <div class="video-card">
+                   <iframe class="video-iframe" src="https://www.youtube.com/embed/SvnpbFEFEpw?si=bMSfyWR2F4xPkevP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <div class="video-info">
+                        <div class="video-title">Checking DBT Status</div>
+                        <div class="video-duration">9:31 mins</div>
+                    </div>
+                </div>
+                <div class="video-card">
+                   <iframe class="video-iframe" src="https://www.youtube.com/embed/229EJde0soY?si=lGSy3l59DqJm5uvM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <div class="video-info">
+                        <div class="video-title">Understanding Bank Statements</div>
+                        <div class="video-duration">1:26:25 hr</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="infographic-section">
+            <h2 class="section-title">Infographics</h2>
+            <div class="infographic-grid">
+                <div class="infographic-card">
+                    <div class="infographic-icon">📈</div>
+                    <div class="infographic-title">DBT Flow Chart</div>
+                    <div class="infographic-desc">Visual guide of how DBT works</div>
+                </div>
+                <div class="infographic-card">
+                    <div class="infographic-icon">💰</div>
+                    <div class="infographic-title">Benefits Timeline</div>
+                    <div class="infographic-desc">When and how you receive payments</div>
+                </div>
+                <div class="infographic-card">
+                    <div class="infographic-icon">🔄</div>
+                    <div class="infographic-title">Scheme Categories</div>
+                    <div class="infographic-desc">Different types of DBT schemes</div>
+                </div>
+                <div class="infographic-card">
+                    <div class="infographic-icon">📱</div>
+                    <div class="infographic-title">Mobile Banking</div>
+                    <div class="infographic-desc">Using mobile apps for DBT</div>
+                </div>
+                <div class="infographic-card">
+                    <div class="infographic-icon">🛡️</div>
+                    <div class="infographic-title">Security Tips</div>
+                    <div class="infographic-desc">Keep your information safe</div>
+                </div>
+                <div class="infographic-card">
+                    <div class="infographic-icon">📞</div>
+                    <div class="infographic-title">Help & Support</div>
+                    <div class="infographic-desc">Who to contact for assistance</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="voice-guide-section">
+            <h2 class="section-title">Voice Guides</h2>
+            <div class="voice-grid">
+                <div class="voice-card">
+                    <div class="voice-icon">🎧</div>
+                    <div class="voice-title">Introduction to DBT</div>
+                    <div class="voice-desc">A beginner's guide to Direct Benefit Transfer</div>
+                    <button class="play-btn">▶️ Play</button>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-icon">🎧</div>
+                    <div class="voice-title">Registration Steps</div>
+                    <div class="voice-desc">Step-by-step audio guide for DBT registration</div>
+                    <button class="play-btn">▶️ Play</button>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-icon">🎧</div>
+                    <div class="voice-title">Common FAQs</div>
+                    <div class="voice-desc">Answers to frequently asked questions</div>
+                    <button class="play-btn">▶️ Play</button>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-icon">🎧</div>
+                    <div class="voice-title">Troubleshooting</div>
+                    <div class="voice-desc">Solutions for common DBT issues</div>
+                    <button class="play-btn">▶️ Play</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive functionality for voice guides
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const title = this.parentElement.querySelector('.voice-title').textContent;
+                let audioFile = '';
+                switch(title) {
+                    case 'Introduction to DBT':
+                        audioFile = 'audio/intro.mp3';
+                        break;
+                    case 'Registration Steps':
+                        audioFile = 'audio/registration.mp3';
+                        break;
+                    case 'Common FAQs':
+                        audioFile = 'audio/faq.mp3';
+                        break;
+                    case 'Troubleshooting':
+                        audioFile = 'audio/troubleshooting.mp3';
+                        break;
+                    default:
+                        alert('Audio file not found for this tutorial.');
+                        return;
+                }
+                const audio = new Audio(audioFile);
+                audio.play().catch(e => {
+                    alert('Error playing audio: ' + e.message + '\n\nPlease ensure the audio file exists at: ' + audioFile);
+                });
+            });
+        });
+
+        // Add click handlers for resource cards
+        document.querySelectorAll('.resource-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.querySelector('.resource-title').textContent;
+                alert(`Opening: ${title}\n\n(This is a placeholder. In a real implementation, this would navigate to detailed content.)`);
+            });
+        });
+
+        // Add click handlers for video cards
+        document.querySelectorAll('.video-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.querySelector('.video-title').textContent;
+                alert(`Playing: ${title}\n\n(This is a placeholder. In a real implementation, this would play the actual video.)`);
+            });
+        });
+
+        // Add click handlers for infographic cards
+        document.querySelectorAll('.infographic-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.querySelector('.infographic-title').textContent;
+                alert(`Viewing: ${title}\n\n(This is a placeholder. In a real implementation, this would display the infographic.)`);
+            });
+        });
+
+        // Check for dark mode preference on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>
