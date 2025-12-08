@@ -558,39 +558,46 @@ document.addEventListener('DOMContentLoaded', ()=>{
     chatbotBody.scrollTop = chatbotBody.scrollHeight;
 
     try {
-      // Google Custom Search API
+      // Google Gemini API Integration
       const apiKey = 'AIzaSyBeKZn0eOHn4-qar3fc_L8K9daPLxczFGM';
-      const cx = 'b4da9edec49f045b8';
-      const url = `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${cx}&q=${encodeURIComponent(question)}&num=5`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: question }]
+          }]
+        })
+      });
+
       const data = await response.json();
 
       // Remove loading
       chatbotBody.removeChild(loadingMsg);
 
-      if (data.items && data.items.length > 0) {
-        // Add AI response header
-        const aiHeader = document.createElement('p');
-        aiHeader.innerHTML = `<strong>Search Results:</strong>`;
-        chatbotBody.appendChild(aiHeader);
-
-        // Display top 5 results
-        data.items.slice(0, 5).forEach(item => {
-          const resultMsg = document.createElement('div');
-          resultMsg.style.marginBottom = '10px';
-          resultMsg.innerHTML = `
-            <strong><a href="${item.link}" target="_blank">${item.title}</a></strong><br>
-            ${item.snippet}<br>
-            <small>${item.displayLink}</small>
-          `;
-          chatbotBody.appendChild(resultMsg);
-        });
+      if (data.candidates && data.candidates.length > 0) {
+        const aiText = data.candidates[0].content.parts[0].text;
+        
+        // Add AI response
+        const aiMsg = document.createElement('div');
+        aiMsg.style.marginBottom = '10px';
+        // Simple formatting for bold and newlines
+        const formattedText = aiText
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+          
+        aiMsg.innerHTML = `<strong>AI:</strong> ${formattedText}`;
+        chatbotBody.appendChild(aiMsg);
       } else {
-        // No results
+        // No results or error in response
         const noResultsMsg = document.createElement('p');
-        noResultsMsg.innerHTML = `<strong>No results found.</strong>`;
+        noResultsMsg.innerHTML = `<strong>AI:</strong> I'm sorry, I couldn't generate a response at the moment.`;
         chatbotBody.appendChild(noResultsMsg);
+        console.error('Gemini API Error:', data);
       }
 
       // Scroll to bottom
