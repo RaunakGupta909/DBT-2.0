@@ -3,124 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DBT Card</title>
-
+<title>Student Dashboard - DBT Portal</title>
+<link rel="stylesheet" href="styles.css">
 <style>
-    :root {
-        --bg: #f5f7fa;
-        --text: #111;
-        --muted: #444;
-        --card-bg: #ffffff;
-        --card-border: #eaeaea;
-        --btn-bg: #005bbb;
-        --btn-hover: #004a99;
-        --shadow: rgba(0,0,0,0.12);
-        --shadow-hover: rgba(0,0,0,0.18);
-    }
-
-    body.dark-mode {
-        --bg: #1a1a1a;
-        --text: #ffffff;
-        --muted: #cccccc;
-        --card-bg: #2d2d2d;
-        --card-border: #444444;
-        --btn-bg: #007bff;
-        --btn-hover: #0056b3;
-        --shadow: rgba(255,255,255,0.1);
-        --shadow-hover: rgba(255,255,255,0.2);
-    }
-
+    /* Dashboard specific overrides */
     body {
-        font-family: Arial, sans-serif;
+        padding: 0;
         background: var(--bg);
+    }
+    
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .dashboard-header {
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--gov-orange);
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dashboard-header h2 {
+        color: var(--gov-blue);
         margin: 0;
-        padding: 40px;
-        transition: background 0.3s ease;
     }
 
     .role-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 25px;
         justify-content: center;
-        margin-top: 60px;
     }
 
     /* #### CARD #### */
     .role-card {
-        background: var(--card-bg);
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px var(--shadow);
+        background: var(--card);
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
         transition: all 0.3s ease;
         cursor: pointer;
-        border: 1px solid var(--card-border);
+        border: 1px solid var(--border-color);
         position: relative;
         overflow: hidden;
+        border-top: 4px solid transparent;
+        text-decoration: none;
+        display: block;
+        color: inherit;
     }
 
     .role-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 20px var(--shadow-hover);
-        border-top: 5px solid var(--btn-bg);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        border-top-color: var(--gov-orange);
     }
 
     /* ICON STYLE LIKE IMAGE */
     .role-badge {
-        font-size: 45px;
-        margin-bottom: 10px;
-        animation: floatIcon 2.5s infinite ease-in-out;
-    }
-
-    @keyframes floatIcon {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-5px); }
-        100% { transform: translateY(0px); }
+        font-size: 40px;
+        margin-bottom: 15px;
+        display: inline-block;
     }
 
     /* TITLE */
     .role-card h3 {
-        margin: 0;
-        font-size: 20px;
+        margin: 0 0 10px 0;
+        font-size: 1.2rem;
         font-weight: 700;
-        color: var(--text);
-        animation: fadeSlide 1.2s ease;
+        color: var(--gov-blue);
     }
 
     /* DESCRIPTION */
     .role-card p {
-        margin-top: 8px;
+        margin: 0 0 20px 0;
         color: var(--muted);
-        font-size: 14px;
-        line-height: 1.4;
-        animation: fadeSlide 1.4s ease;
+        font-size: 0.95rem;
+        line-height: 1.5;
     }
 
     /* BUTTON */
     .proceed-btn {
         display: inline-block;
-        margin-top: 15px;
-        padding: 10px 14px;
-        font-size: 14px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
         color: white;
-        background: var(--btn-bg);
-        border-radius: 8px;
+        background: var(--gov-blue);
+        border-radius: 4px;
         text-decoration: none;
         transition: 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
     }
 
     .proceed-btn:hover {
-        background: var(--btn-hover);
-    }
-
-    @keyframes fadeSlide {
-        from { opacity: 0; transform: translateY(6px); }
-        to   { opacity: 1; transform: translateY(0px); }
+        background: #002244;
     }
 </style>
 
 </head>
 <body>
+    <!-- Top utility strap -->
+    <div class="top-strap">
+        <div class="strap-left">
+        <span>Government of India</span>
+        <span>|</span>
+        <span>Ministry of Electronics & IT</span>
+        </div>
+        <div class="strap-controls">
+        <button id="dark-toggle" title="Toggle Dark Mode">🌙</button>
+        <div class="lang-switcher">English</div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="gov-navbar">
+        <div class="navbar-left">
+        <span class="gov-logo"><img src="images/images (1).png" alt="Emblem of India"></span>
+        <span class="gov-logo"><img src="images/logo.jpeg" alt="DBT Bharat Logo"></span>
+        </div>
+        <div class="navbar-center">
+        <h1>Direct Benefit Transfer</h1>
+        <p>Student Dashboard</p>
+        </div>
+        <div class="navbar-right">
+        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Aadhaar_Logo.svg/1200px-Aadhaar_Logo.svg.png" height="50" alt="Aadhaar Logo">
+        </div>
+    </header>
+
     <script>
         // Auth Check
         const currentUser = JSON.parse(localStorage.getItem('dbt_current_user'));
@@ -134,107 +148,83 @@
         }
     </script>
 
-    <div id="user-profile" style="position: absolute; top: 20px; right: 20px; text-align: right; z-index: 1000;">
-        <h3 id="student-name" style="margin: 0; color: var(--text); font-size: 1.1rem;">Welcome, <span id="display-name">Student</span></h3>
-        <button onclick="logout()" style="background: none; border: none; color: var(--btn-bg); cursor: pointer; text-decoration: underline; font-size: 0.9rem; padding: 0;">Logout</button>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div>
+                <h2>Student Services</h2>
+                <p style="color: var(--muted); margin-top: 5px;">Access your benefits and learning resources</p>
+            </div>
+            <div style="text-align: right;">
+                <h3 id="student-name" style="margin: 0; color: var(--text); font-size: 1.1rem;">Welcome, <span id="display-name">Student</span></h3>
+                <button onclick="logout()" style="background: none; border: none; color: var(--gov-danger); cursor: pointer; text-decoration: underline; font-size: 0.9rem; padding: 0; margin-top: 5px;">Logout</button>
+            </div>
+        </div>
+
+        <script>
+            if(currentUser) {
+                document.getElementById('display-name').textContent = currentUser.name;
+            }
+        </script>
+
+        <div class="role-grid">
+
+            <!-- DBT Card -->
+            <article class="role-card" onclick="location.href='dbt_status_card_student.html'">
+                <div class="role-badge">🎓</div>
+                <h3>DBT Status Card</h3>
+                <p>Displays DBT status with color indicators.</p>
+                <span class="proceed-btn">Proceed →</span>
+            </article>
+
+            <article class="role-card" onclick="location.href='gamified_zone.html'">
+                <div class="role-badge">🎮</div>
+                <h3>Gamified Zone</h3>
+                <p>Quizzes, leaderboard, and badges for engagement</p>
+                <span class="proceed-btn">Proceed →</span>
+            </article>
+
+            <article class="role-card" onclick="location.href='raise_issue.html'">
+                <div class="role-badge">📢</div>
+                <h3>Raise Issue</h3>
+                <p>Submit DBT mismatch complaints</p>
+                <span class="proceed-btn">Proceed →</span>
+            </article>
+
+            <article class="role-card" onclick="location.href='student_ambassador_resources.html'">
+                <div class="role-badge">🤝</div>
+                <h3>Student Ambassador</h3>
+                <p>Spreading Awareness about DBT linked account</p>
+                <span class="proceed-btn">Proceed →</span>
+            </article>
+
+            <article class="role-card" onclick="location.href='learning_zone.html'">
+                <div class="role-badge">📚</div>
+                <h3>Learning Zone</h3>
+                <p>Infographics, explainers, and voice guides</p>
+                <span class="proceed-btn">Proceed →</span>
+            </article>
+
+            <article class="role-card" onclick="location.href='parent_share.html'">
+                <div class="role-badge">📱</div>
+                <h3>Parent Share</h3>
+                <p>One-tap WhatsApp sharing of DBT status</p>
+                <span class="proceed-btn">Proceed →</span>
+            </article>
+
+        </div>
     </div>
+
+    <script src="script.js"></script>
     <script>
-        if(currentUser) {
-            document.getElementById('display-name').textContent = currentUser.name;
+    // Check for dark mode preference on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark');
+        } else {
+            document.body.classList.remove('dark');
         }
+    });
     </script>
-
-    <a href="index.html" class="back-btn">← Back to Home</a>
-
-<style>
-.back-btn {
-    position: absolute;
-    top: 20px;     /* upar se distance */
-    left: 20px;    /* left side se distance */
-    padding: 10px 14px;
-    margin: 0;
-    font-size: 14px;
-    color: white;
-    background: var(--btn-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.3s;
-    z-index: 1000;
-}
-
-.back-btn:hover {
-    background: var(--btn-hover);
-}
-
-body.dark-mode .back-btn {
-    color: var(--text);
-}
-</style>
-
-<div class="role-grid">
-
-  <!-- DBT Card -->
-  <article class="role-card student" onclick="location.href='student-login.html'">
-    <div class="role-badge">🎓</div>
-    <h3>DBT Status Card</h3>
-    <p>Displays DBT status with color indicators.</p>
-    <a class="proceed-btn" href="dbt_status_card_student.html">Proceed →</a>
-  </article>
-
-
-<article class="role-card student" onclick="location.href='gamified_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Gamified Zone</h3>
-    <p>Quizzes, leaderboard,and badges for engagement</p>
-    <a class="proceed-btn" href="gamified_zone.html">Proceed →</a>
-  </article>
-
-
-<article class="role-card student" onclick="location.href=''">
-    <div class="role-badge">🎓</div>
-    <h3>Raise Issue</h3>
-    <p>Submit DBT mismatch complaints</p>
-    <a class="proceed-btn" href="raise_issue.html">Proceed →</a>
-  </article>
-
-<article class="role-card student" onclick="location.href='student-login.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Student Ambassador</h3>
-    <p>Spreading Awareness about DBT linked account</p>
-    <a class="proceed-btn" href="student_ambassador_resources.html">Proceed →</a>
-</article>
-
-  
-
-  <article class="role-card student" onclick="location.href='learning_zone.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Learning Zone</h3>
-    <p>Infographics, explainers, and voice guides</p>
-    <a class="proceed-btn" href="learning_zone.html">Proceed →</a>
-  </article>
-
-<article class="role-card student" onclick="location.href='student-login.html'">
-    <div class="role-badge">🎓</div>
-    <h3>Parent Share</h3>
-    <p>One-tap WhatsApp sharing of DBT status</p>
-    <a class="proceed-btn" href="parent_share.html">Proceed →</a>
-  </article>
-
-
-
-</div>
-
-<script src="script.js"></script>
-<script>
-// Check for dark mode preference on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (isDarkMode) {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
-});
-</script>
 </body>
 </html>

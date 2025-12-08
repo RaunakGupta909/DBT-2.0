@@ -11,64 +11,60 @@
 <body>
   <!-- Top utility strap -->
   <div class="top-strap">
+    <div class="strap-left">
+      <span>Government of India</span>
+      <span>|</span>
+      <span>MoSJE</span>
+    </div>
     <div class="strap-controls">
+      <a href="#main-content">Skip to Main Content</a>
+      <a href="#" title="Screen Reader Access">Screen Reader Access</a>
       <button id="dark-toggle" title="Toggle Dark Mode">🌙</button>
-      <div class="lang-switcher" id="lang-switcher">EN</div>
+      <div class="lang-switcher" id="lang-switcher">English | हिन्दी</div>
     </div>
   </div>
 
+  <!-- Main Header -->
   <header class="gov-navbar">
     <div class="navbar-left">
-      <span class="gov-logo"><img src="images/images (1).png" height="50px" width="140px" alt="Government Logo"></span>
-      <span class="gov-logo"><img src="images/logo.jpeg" height="50px" width="175px" alt="DBT Logo"></span>
+      <span class="gov-logo"><img src="images/images (1).png" alt="Emblem of India"></span>
+      <span class="gov-logo"><img src="images/logo.jpeg" alt="DBT Bharat Logo"></span>
     </div>
-    <div class="navbar-center">DIRECT BENEFIT TRANSFER</div>
-    <button id="find-bank-btn" class="navbar-btn">📍 Find Nearby Bank</button>
+    <div class="navbar-center">
+      <h1>Direct Benefit Transfer</h1>
+      <p>Ensuring Transparency & Efficiency in Government Delivery</p>
+    </div>
+    <div class="navbar-right">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Aadhaar_Logo.svg/1200px-Aadhaar_Logo.svg.png" height="60" alt="Aadhaar Logo">
+      <img src="https://upload.wikimedia.org/wikipedia/en/thumb/6/65/Make_In_India.png/200px-Make_In_India.png" height="50" alt="Make In India Logo">
+    </div>
   </header>
 
-  <!-- Main navigation strip (third strap) -->
-  <!-- Top strap -->
-<header class="strap" role="banner">
-<div class="strap-inner">
+  <!-- Main Navigation Bar -->
+  <nav class="main-nav">
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-btn active">Home</a></li>
+      <li><a href="about.html" class="nav-btn">About DBT</a></li>
+      <li><a href="key_benefits.html" class="nav-btn">Schemes</a></li>
+      <li><a href="multimedia.html" class="nav-btn">Media</a></li>
+      <li><a href="contact.html" class="nav-btn">Contact Us</a></li>
+      <li><a href="scam_report.html" class="nav-btn">Grievance</a></li>
+      <li><a href="#" class="nav-btn" id="find-bank-btn">Find Bank</a></li>
+    </ul>
+  </nav>
 
-
-<!-- Hamburger for mobile -->
-<button class="hamburger" aria-controls="primary-navigation" aria-expanded="false" aria-label="Toggle navigation">☰</button>
-
-
-<!-- Primary nav (evenly spaced across) -->
-<nav id="primary-navigation" role="navigation" aria-label="Primary">
-  <a href="#home">Home</a>
-<a href="about.html">About DBT</a>
-<a href="multimedia.html">Multimedia</a>
-<a href="key_benefits.html">Key Benefits</a>
-<a href="contact.html">Contact us</a>
-<a href="scam_report.html">Scamming report</a>
-</nav>
-
-
-<!-- optional right-side compact area (keeps spacing pleasant on wide screens) -->
-<div class="right-cta">
-<!-- placeholder - could be login / language selector -->
-</div>
-
-
-</div>
-</header>
-
-
-<!-- Mobile menu (for small screens) -->
-<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-<a href="#home">Home</a>
-<a href="#about">About DBT</a>
-<a href="multimedia.html">Multimedia</a>
-<a href="benefits.html">Key Benefits</a>
-<a href="#contact">Contact us</a>
-<a href="scam_report.html">Scamming report</a>
-</div>
+  <!-- News Ticker -->
+  <div class="news-ticker">
+    <div class="ticker-title">Latest Updates</div>
+    <div class="ticker-content">
+      <marquee onmouseover="this.stop();" onmouseout="this.start();">
+        New DBT schemes for students launched! | Aadhaar linking deadline extended to 31st Dec. | Check your scholarship status now. | Report any fraudulent calls immediately to 1930.
+      </marquee>
+    </div>
+  </div>
 
   <!-- Hero Section Carousel -->
-  <div class="carousel">
+  <div class="carousel" id="main-content">
   <div class="carousel-track">
     <a href="https://example.com/slide1" target="_blank"><img src="images/image copy 2.png" alt=""></a>
     <a href="https://example.com/slide2" target="_blank"><img src="images/image copy 3.png" alt=""></a>
