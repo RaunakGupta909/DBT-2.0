@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DBT Card</title>
+<link rel="stylesheet" href="auth.css">
 
 <style>
     :root {
@@ -204,14 +205,18 @@ body.dark-mode .back-btn {
 </div>
 
 <script src="script.js"></script>
+<script src="auth.js"></script>
 <script>
-// Apply dark mode based on localStorage (connected to home page toggle)
-document.addEventListener('DOMContentLoaded', function() {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (isDarkMode) {
-        document.body.classList.add('dark-mode');
-    }
-});
+    requireAuth('student', 'student_login.html');
+    AuthUI.attachProfileMenu();
+
+    // Apply dark mode based on localStorage (connected to home page toggle)
+    document.addEventListener('DOMContentLoaded', function() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+        }
+    });
 </script>
 </body>
 </html>

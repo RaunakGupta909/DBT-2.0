@@ -30,6 +30,11 @@ app.use('/api/admin', require('./routes/admin'));
 // Scam reports route
 app.use('/api/scams', require('./routes/scams'));
 app.use('/api/teachers', require('./routes/teachers'));
+// Parents route
+app.use('/api/parents', require('./routes/parents'));
+app.use('/api/ptm', require('./routes/ptm'));
+// Meetings route (scheduling, joining, attendance)
+app.use('/api/meetings', require('./routes/meetings'));
 
 // Simple stats endpoint for frontend counters
 app.get('/api/stats', async (req,res)=>{

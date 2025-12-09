@@ -65,6 +65,17 @@
         border-top: 5px solid var(--btn-bg);
     }
 
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .badge.pending { background: #fff3cd; color: #8a6d3b; border: 1px solid #ffeeba; }
+    .badge.accepted { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .badge.rejected { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
     /* ICON STYLE LIKE IMAGE */
     .role-badge {
         font-size: 45px;
@@ -187,6 +198,45 @@ body.dark-mode .back-btn {
 
 </div>
 
+<!-- PTM creation (local demo) -->
+<section style="margin-top:36px; max-width:1100px; margin-left:auto; margin-right:auto;">
+    <div class="role-card" style="cursor:default">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>
+                <h2 style="margin:0">Parent–Teacher Meetings</h2>
+                <p style="color:var(--muted); margin:4px 0 0">Create PTMs; parents will see invites in their dashboard (local demo data).</p>
+            </div>
+            <span class="badge pending" id="ptm-count">0 pending</span>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:16px;">
+            <div>
+                <label style="display:block; font-weight:600">Title</label>
+                <input id="ptm-title" placeholder="e.g., Mid-term Review" style="width:100%; padding:10px; border:1px solid #e0e0e0; border-radius:8px;" />
+            </div>
+            <div>
+                <label style="display:block; font-weight:600">Date</label>
+                <input id="ptm-date" type="date" style="width:100%; padding:10px; border:1px solid #e0e0e0; border-radius:8px;" />
+            </div>
+            <div>
+                <label style="display:block; font-weight:600">Time</label>
+                <input id="ptm-time" type="time" style="width:100%; padding:10px; border:1px solid #e0e0e0; border-radius:8px;" />
+            </div>
+        </div>
+        <div style="margin-top:12px">
+            <label style="display:block; font-weight:600">Purpose</label>
+            <textarea id="ptm-purpose" rows="3" placeholder="Share agenda..." style="width:100%; padding:10px; border:1px solid #e0e0e0; border-radius:8px;"></textarea>
+        </div>
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button id="ptm-create" class="proceed-btn">Create Meeting</button>
+            <span id="ptm-msg" style="color:green"></span>
+        </div>
+
+        <h3 style="margin-top:18px; margin-bottom:8px;">Upcoming / Sent Invites</h3>
+        <div id="ptm-list" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px;"></div>
+    </div>
+</section>
+
 <script>
 // Check for dark mode preference on page load
 document.addEventListener('DOMContentLoaded', function() {
@@ -196,7 +246,93 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         document.body.classList.remove('dark-mode');
     }
+
+    const token = localStorage.getItem('dbt_teacher_token');
+    async function loadPTMs() {
+        if (!token) return;
+        const res = await fetch('/api/ptm', { headers: { Authorization: 'Bearer ' + token } });
+        const data = await res.json();
+        return data.ptms || [];
+    }
+
+    async function renderPTMs() {
+        const listEl = document.getElementById('ptm-list');
+        const badge = document.getElementById('ptm-count');
+        if (!token) {
+            listEl.innerHTML = '<div class="role-card" style="cursor:default">Login as teacher/admin to manage PTMs.</div>';
+            return;
+        }
+        const ptms = await loadPTMs();
+        if (!ptms.length) {
+            listEl.innerHTML = '<div class="role-card" style="cursor:default">No PTMs created.</div>';
+            badge.textContent = '0 pending';
+            badge.className = 'badge pending';
+            return;
+        }
+        const pending = ptms.reduce((acc,p)=> acc + (p.invites||[]).filter(i=>i.status==='pending').length, 0);
+        badge.textContent = pending ? `${pending} pending` : 'All reviewed';
+        badge.className = 'badge ' + (pending ? 'pending' : 'accepted');
+
+        listEl.innerHTML = '';
+        ptms.forEach(ptm=>{
+            const dt = ptm.scheduledAt ? new Date(ptm.scheduledAt).toLocaleString() : 'Time tbd';
+            const pendingStatus = (ptm.invites||[]).filter(i=>i.status==='pending').length;
+            const card = document.createElement('article');
+            card.className = 'role-card';
+            card.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                  <div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                      <h3 style="margin:0">${ptm.title||'PTM'}</h3>
+                      <span class="badge ${pendingStatus?'pending':'accepted'}">${pendingStatus? pendingStatus+' pending' : 'Notified'}</span>
+                    </div>
+                    <div style="color:var(--muted); font-size:13px; margin-top:4px">${dt}</div>
+                    <p style="margin-top:8px; color:var(--text);">${ptm.purpose||''}</p>
+                  </div>
+                  <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end">
+                    <button class="proceed-btn" data-action="delete" data-id="${ptm._id}" style="background:#c0392b; padding:8px 10px">Delete</button>
+                  </div>
+                </div>
+            `;
+            listEl.appendChild(card);
+        });
+
+        listEl.querySelectorAll('button[data-action="delete"]').forEach(btn=>{
+            btn.onclick = async (e)=>{
+                const id = e.target.getAttribute('data-id');
+                await fetch('/api/ptm/'+id, { method:'DELETE', headers:{ Authorization:'Bearer '+token } });
+                renderPTMs();
+            }
+        });
+    }
+
+    document.getElementById('ptm-create').addEventListener('click', async ()=>{
+        if (!token) { alert('Login as teacher/admin first'); return; }
+        const title = document.getElementById('ptm-title').value.trim() || 'PTM';
+        const date = document.getElementById('ptm-date').value;
+        const time = document.getElementById('ptm-time').value;
+        const purpose = document.getElementById('ptm-purpose').value.trim() || 'Discussion about student progress.';
+        if (!date || !time) { alert('Pick date and time'); return; }
+        const scheduledAt = new Date(`${date}T${time}`);
+        const res = await fetch('/api/ptm', {
+          method:'POST', headers:{ 'Content-Type':'application/json', Authorization:'Bearer '+token },
+          body: JSON.stringify({ title, scheduledAt, purpose })
+        });
+        const data = await res.json();
+        if (!data.ok) { alert(data.error || 'Create failed'); return; }
+        document.getElementById('ptm-msg').innerText = 'Created and sent to parents.';
+        document.getElementById('ptm-title').value='';
+        document.getElementById('ptm-purpose').value='';
+        renderPTMs();
+    });
+
+    renderPTMs();
 });
+</script>
+<script src="auth.js"></script>
+<script>
+    requireAuth('teacher', 'teacher_login.html');
+    AuthUI.attachProfileMenu();
 </script>
 </body>
 </html>

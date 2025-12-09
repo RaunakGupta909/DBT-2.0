@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Teacher Meetings</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding:20px; background:#f6f8fb }
+    .card{background:#fff;padding:16px;border-radius:8px;max-width:760px;margin:0 auto;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+    input,button{padding:8px;margin:6px 0}
+    .proceed-btn{background:#005bbb;color:#fff;padding:8px 12px;border-radius:6px;border:none}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px;border-bottom:1px solid #eee}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <a href="index.html">← Home</a>
+    <h2>Teacher / Admin — Meetings</h2>
+
+    <div id="login-area">
+      <h4>Login (admin demo)</h4>
+      <div>
+        <input id="username" placeholder="username (admin@example.com)" style="width:60%" />
+      </div>
+      <div>
+        <input id="password" placeholder="password (admin123)" style="width:60%" />
+      </div>
+      <div>
+        <button id="login-btn" class="proceed-btn">Login</button>
+        <span id="login-msg" style="margin-left:12px;color:green"></span>
+      </div>
+    </div>
+
+    <div id="controls" style="display:none">
+      <h4>Create Meeting</h4>
+      <div>
+        <input id="mt-title" placeholder="Title" style="width:60%" />
+      </div>
+      <div>
+        <label>Schedule at: <input id="mt-time" type="datetime-local" /></label>
+      </div>
+      <div>
+        <button id="create-btn" class="proceed-btn">Create</button>
+      </div>
+
+      <h4>Existing Meetings</h4>
+      <table id="meetings-table">
+        <thead><tr><th>Title</th><th>Scheduled</th><th>Actions</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+<script>
+  let token = null;
+  document.getElementById('login-btn').addEventListener('click', async ()=>{
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    try{
+      const res = await fetch('/api/auth/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+      const data = await res.json();
+      if (!data.token) { alert('Login failed'); return; }
+      token = data.token;
+      localStorage.setItem('dbt_teacher_token', token);
+      document.getElementById('login-msg').innerText = 'Logged in';
+      document.getElementById('login-area').style.display = 'none';
+      document.getElementById('controls').style.display = 'block';
+      loadMeetings();
+    }catch(e){ console.error(e); alert('Login error') }
+  });
+
+  async function loadMeetings(){
+    try{
+      const res = await fetch('/api/meetings');
+      const data = await res.json();
+      const tbody = document.querySelector('#meetings-table tbody');
+      tbody.innerHTML = '';
+      if (!data.meetings) return;
+      data.meetings.forEach(m=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${m.title||''}</td><td>${new Date(m.scheduledAt).toLocaleString()}</td><td></td>`;
+        const actions = tr.querySelector('td:last-child');
+        // end button
+        const endBtn = document.createElement('button'); endBtn.innerText='End'; endBtn.className='proceed-btn';
+        endBtn.addEventListener('click', ()=>endMeeting(m._id));
+        actions.appendChild(endBtn);
+        // pdf
+        const pdfBtn = document.createElement('a'); pdfBtn.innerText='PDF'; pdfBtn.href='#'; pdfBtn.style.marginLeft='8px';
+        pdfBtn.addEventListener('click', async (e)=>{ e.preventDefault(); window.open('/api/meetings/'+m._id+'/pdf', '_blank'); });
+        actions.appendChild(pdfBtn);
+        // meeting link
+        const link = document.createElement('a'); link.innerText='Open'; link.href = '/meeting.html?id='+m._id; link.style.marginLeft='8px';
+        actions.appendChild(link);
+
+        tbody.appendChild(tr);
+      });
+    }catch(e){ console.error(e) }
+  }
+
+  document.getElementById('create-btn').addEventListener('click', async ()=>{
+    const title = document.getElementById('mt-title').value;
+    const scheduledAt = document.getElementById('mt-time').value;
+    if (!scheduledAt) { alert('Pick date/time'); return; }
+    try{
+      const res = await fetch('/api/meetings', {method:'POST',headers:{'Content-Type':'application/json', 'Authorization':'Bearer '+(token||localStorage.getItem('dbt_teacher_token')||'')}, body:JSON.stringify({title,scheduledAt})});
+      const data = await res.json();
+      if (!data.ok) { alert('Create failed: '+(data.error||'unknown')); return; }
+      document.getElementById('mt-title').value=''; document.getElementById('mt-time').value='';
+      loadMeetings();
+    }catch(e){ console.error(e); alert('Create error') }
+  });
+
+  async function endMeeting(id){
+    if (!confirm('End meeting?')) return;
+    try{
+      const res = await fetch('/api/meetings/'+id+'/end', {method:'POST', headers:{'Authorization':'Bearer '+(token||localStorage.getItem('dbt_teacher_token')||'')} });
+      const data = await res.json();
+      if (!data.ok) { alert('End failed: '+(data.error||'unknown')); return; }
+      loadMeetings();
+    }catch(e){ console.error(e); alert('End error') }
+  }
+
+  // Auto-show controls if token present
+  const saved = localStorage.getItem('dbt_teacher_token');
+  if (saved) { token = saved; document.getElementById('login-area').style.display='none'; document.getElementById('controls').style.display='block'; loadMeetings(); }
+</script>
+</body>
+</html>

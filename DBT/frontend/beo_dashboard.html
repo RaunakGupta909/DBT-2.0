@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard – True Benefit</title>
+    <link rel="stylesheet" href="auth.css">
 
     <style>
         body {
@@ -233,6 +234,12 @@ window.addEventListener('storage', function(e) {
         </div>
 
     </div>
+
+    <script src="auth.js"></script>
+    <script>
+        requireAuth('beo', 'beo_login.html');
+        AuthUI.attachProfileMenu();
+    </script>
 
 </body>
 </html>

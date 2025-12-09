@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parent Dashboard</title>
+
+<style>
+    :root {
+        --bg: #f5f7fa;
+        --text: #111;
+        --muted: #444;
+        --card-bg: #ffffff;
+        --card-border: #eaeaea;
+        --btn-bg: #005bbb;
+        --btn-hover: #004a99;
+        --shadow: rgba(0,0,0,0.12);
+        --shadow-hover: rgba(0,0,0,0.18);
+    }
+
+    body.dark-mode {
+        --bg: #1a1a1a;
+        --text: #ffffff;
+        --muted: #cccccc;
+        --card-bg: #2d2d2d;
+        --card-border: #444444;
+        --btn-bg: #007bff;
+        --btn-hover: #0056b3;
+        --shadow: rgba(255,255,255,0.1);
+        --shadow-hover: rgba(255,255,255,0.2);
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: var(--bg);
+        margin: 0;
+        padding: 40px;
+        transition: background 0.3s ease;
+    }
+
+    .role-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        gap: 25px;
+        justify-content: center;
+        margin-top: 60px;
+    }
+
+    /* #### CARD #### */
+    .role-card {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px var(--shadow);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid var(--card-border);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .role-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 20px var(--shadow-hover);
+        border-top: 5px solid var(--btn-bg);
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .badge.pending { background: #fff3cd; color: #8a6d3b; border: 1px solid #ffeeba; }
+    .badge.accepted { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .badge.rejected { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+    /* ICON STYLE LIKE IMAGE */
+    .role-badge {
+        font-size: 45px;
+        margin-bottom: 10px;
+        animation: floatIcon 2.5s infinite ease-in-out;
+    }
+
+    @keyframes floatIcon {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* TITLE */
+    .role-card h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text);
+        animation: fadeSlide 1.2s ease;
+    }
+
+    /* DESCRIPTION */
+    .role-card p {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.4;
+        animation: fadeSlide 1.4s ease;
+    }
+
+    /* BUTTON */
+    .proceed-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: white;
+        background: var(--btn-bg);
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .proceed-btn:hover {
+        background: var(--btn-hover);
+    }
+
+    @keyframes fadeSlide {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0px); }
+    }
+
+    /* Top utility strap */
+    .top-strap {
+        background: #f0f4f8;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 8px 20px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    body.dark-mode .top-strap {
+        background: #041421;
+        border-bottom-color: rgba(255,255,255,0.04);
+    }
+
+    .strap-controls {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .strap-controls button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+    }
+
+    .strap-controls button:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+    }
+
+    .lang-switcher {
+        background: var(--card-bg);
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+    }
+
+    body.dark-mode .lang-switcher {
+        background: rgba(255,255,255,0.03);
+        border-color: rgba(255,255,255,0.06);
+        color: var(--text);
+    }
+</style>
+
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back to Home</a>
+
+<style>
+.back-btn {
+    position: absolute;
+    top: 20px;     /* upar se distance */
+    left: 20px;    /* left side se distance */
+    padding: 10px 14px;
+    margin: 0;
+    font-size: 14px;
+    color: white;
+    background: var(--btn-bg);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.3s;
+    z-index: 1000;
+}
+
+.back-btn:hover {
+    background: var(--btn-hover);
+}
+
+body.dark-mode .back-btn {
+    color: var(--text);
+}
+</style>
+
+<div class="role-grid">
+
+  <!-- Family Overview Card -->
+  <article class="role-card parent" onclick="location.href='family_overview.html'">
+    <div class="role-badge">👨‍👩‍👧‍👦</div>
+    <h3>Family Overview</h3>
+    <p>Get an overview of your family's DBT status and progress.</p>
+    <a class="proceed-btn" href="family_overview.html">Proceed →</a>
+  </article>
+
+  <!-- Parent Action Tools Card -->
+  <article class="role-card parent" onclick="location.href='parents_action.html'">
+    <div class="role-badge">🛠</div>
+    <h3>Parent Action Tools</h3>
+    <p>Tools and actions to support your child's DBT journey.</p>
+    <a class="proceed-btn" href="parents_action.html">Proceed →</a>
+  </article>
+
+  <!-- Awareness Card -->
+  <article class="role-card parent" onclick="location.href='awareness.html'">
+    <div class="role-badge">📚</div>
+    <h3>Awareness</h3>
+    <p>Access resources and materials for DBT awareness.</p>
+    <a class="proceed-btn" href="awareness.html">Proceed →</a>
+  </article>
+
+  
+
+  <!-- Community Impact Card -->
+  <article class="role-card parent" onclick="location.href='community_impact.html'">
+    <div class="role-badge">🌍</div>
+    <h3>Community Impact</h3>
+    <p>See the broader impact of DBT in your community.</p>
+    <a class="proceed-btn" href="community_impact.html">Proceed →</a>
+  </article>
+
+
+ 
+
+</div>
+
+<!-- Meetings section -->
+
+
+<!-- PTM Notifications -->
+<section style="margin-top:32px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <h2 style="margin:0">Parent–Teacher Meetings</h2>
+        <span class="badge pending" id="ptm-badge">Loading…</span>
+    </div>
+    <p style="color:var(--muted);margin-top:4px">Invites sent by teachers. Accept/Reject/Join updates your status.</p>
+    <div id="ptm-container" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px"></div>
+</section>
+
+<script>
+// Check for dark mode preference on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+    }
+    // load meetings
+    fetch('/api/meetings').then(r=>r.json()).then(data=>{
+        const container = document.getElementById('meetings-list');
+        if (!data || !data.meetings || data.meetings.length===0) {
+            container.innerText = 'No meetings scheduled.';
+            return;
+        }
+        container.innerHTML = '';
+        data.meetings.forEach(m=>{
+            const el = document.createElement('div');
+            el.className = 'role-card';
+            el.style.marginBottom = '12px';
+            el.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <strong>${m.title || 'Meeting'}</strong>
+                    <div style="color:var(--muted);font-size:13px">${new Date(m.scheduledAt).toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <a class="proceed-btn" href="meeting.html?id=${m._id}">Join →</a>
+                  </div>
+                </div>
+            `;
+            container.appendChild(el);
+        });
+    }).catch(err=>{ console.error(err); document.getElementById('meetings-list').innerText = 'Failed to load meetings'; });
+
+        const token = localStorage.getItem('dbt_parent_token');
+        async function loadPTMs() {
+                if (!token) return [];
+                const res = await fetch('/api/ptm', { headers: { Authorization: 'Bearer ' + token } });
+                const data = await res.json();
+                return data.ptms || [];
+        }
+
+        async function renderPTMs() {
+                const container = document.getElementById('ptm-container');
+                const badge = document.getElementById('ptm-badge');
+                if (!token) {
+                        container.innerHTML = '<div class="role-card">Login to see PTM invites.</div>';
+                        badge.textContent = 'Login';
+                        return;
+                }
+                const ptms = await loadPTMs();
+                if (!ptms.length) {
+                        container.innerHTML = '<div class="role-card">No PTM invites yet.</div>';
+                        badge.textContent = '0';
+                        badge.className = 'badge pending';
+                        return;
+                }
+                // compute pending for this parent
+                let pendingCount = 0;
+                ptms.forEach(p=>{
+                    const inv = (p.invites||[]).find(i=>i.aadhaar===getAadhaar());
+                    if (inv && inv.status==='pending') pendingCount++;
+                });
+                badge.textContent = pendingCount ? `${pendingCount} pending` : 'All reviewed';
+                badge.className = 'badge ' + (pendingCount ? 'pending' : 'accepted');
+
+                container.innerHTML = '';
+                ptms.forEach(ptm=>{
+                        const inv = (ptm.invites||[]).find(i=>i.aadhaar===getAadhaar()) || { status:'pending' };
+                        const status = inv.status || 'pending';
+                        const card = document.createElement('article');
+                        card.className = 'role-card';
+                        const dt = ptm.scheduledAt ? new Date(ptm.scheduledAt).toLocaleString() : 'Time tbd';
+                        card.innerHTML = `
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+                                <div>
+                                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                                        <h3 style="margin:0">${ptm.title || 'PTM'}</h3>
+                                        <span class="badge ${status}">${status}</span>
+                                    </div>
+                                    <div style="color:var(--muted); font-size:13px; margin-top:4px">${dt}</div>
+                                    <p style="margin-top:8px; color:var(--text);">${ptm.purpose || ''}</p>
+                                </div>
+                                <div style="display:flex; flex-direction:column; gap:6px; align-items:flex-end">
+                                    <button class="proceed-btn" data-action="accept" data-id="${ptm._id}" style="padding:8px 10px">Accept</button>
+                                    <button class="proceed-btn" data-action="reject" data-id="${ptm._id}" style="padding:8px 10px; background:#c0392b">Reject</button>
+                                    <button class="proceed-btn" data-action="join" data-id="${ptm._id}" style="padding:8px 10px; background:#16a085">Join</button>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                });
+
+                container.querySelectorAll('button[data-action]').forEach(btn=>{
+                        btn.onclick = async (e)=>{
+                                const action = e.target.getAttribute('data-action');
+                                const id = e.target.getAttribute('data-id');
+                                const endpoint = action==='join' ? '/api/ptm/'+id+'/join' : '/api/ptm/'+id+'/respond';
+                                const body = action==='join' ? {} : { status: action==='accept' ? 'accepted' : 'rejected' };
+                                const res = await fetch(endpoint, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type':'application/json', Authorization:'Bearer '+token },
+                                    body: action==='join' ? null : JSON.stringify(body)
+                                });
+                                const data = await res.json();
+                                if (!data.ok) { alert(data.error || 'Action failed'); return; }
+                                renderPTMs();
+                        };
+                });
+        }
+
+        function getAadhaar(){
+            try {
+                const token = localStorage.getItem('dbt_parent_token');
+                if (!token) return '';
+                // token is opaque here; rely on server-side invites matching; fallback to stored current parent
+                const cp = localStorage.getItem('dbt_current_parent');
+                if (cp) {
+                    const obj = JSON.parse(cp); return obj.aadhaar || '';
+                }
+            } catch(e) {}
+            return '';
+        }
+
+        renderPTMs();
+});
+</script>
+</body>
+</html>

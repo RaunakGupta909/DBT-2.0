@@ -178,5 +178,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script src="auth.js"></script>
+<script>
+    requireAuth('citizen', 'citizen_login.html');
+    AuthUI.attachProfileMenu();
+</script>
 </body>
 </html>
