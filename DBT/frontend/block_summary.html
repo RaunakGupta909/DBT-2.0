@@ -3,201 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block Summary | True Benefit</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Block Summary Dashboard</title>
     <style>
-        body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+        * {
             margin: 0;
             padding: 0;
-            transition: background 0.3s ease;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
         }
-
-        /* Top utility strap */
-        .top-strap {
-            background: #f0f4f8;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 8px 20px;
-            display: flex;
-            justify-content: flex-end;
+        
+        body {
+            background-color: #f8fafc;
+            color: #333;
+            line-height: 1.6;
         }
-
-        .strap-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .strap-controls button {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .strap-controls button:focus {
-            outline: 2px solid var(--accent, #1e6fb8);
-            outline-offset: 2px;
-        }
-        header {
-            background: var(--accent);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
+        
         .container {
-            width: 90%;
-            margin: auto;
-            margin-top: 20px;
-        }
-        .card {
-            background: var(--card);
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
-        h2 {
-            color: var(--text);
+        
+        header {
+            background-color: #1e40af;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+            text-align: center;
         }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .blocks-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .blocks-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .block-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border-top: 5px solid #1e40af;
+        }
+        
+        .block-header {
+            background-color: #3b82f6;
+            color: white;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .block-title {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .block-title i {
+            font-size: 22px;
+        }
+        
+        .count-badge {
+            background-color: #1e40af;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .table-container {
+            padding: 0;
+            overflow-x: auto;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
         }
-        table th, table td {
-            border: 1px solid #e2e8f0;
-            padding: 10px;
+        
+        thead {
+            background-color: #eff6ff;
         }
-        table th {
-            background: var(--accent);
-            color: white;
+        
+        th {
+            padding: 16px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #1e40af;
+            border-bottom: 2px solid #dbeafe;
+            font-size: 15px;
         }
-        table tr:nth-child(even) {
-            background: #f8fafc;
+        
+        td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14.5px;
         }
-        /* Dark mode adjustments */
-        body.dark-mode table th, body.dark-mode table td {
-            border-color: #334155;
+        
+        tbody tr:hover {
+            background-color: #f8fafc;
         }
-        body.dark-mode table tr:nth-child(even) {
-            background: #1e293b;
+        
+        .percentage-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
         }
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #ffffff;
+        
+        .percentage-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #10b981;
         }
-        body.dark-mode header {
-            background-color: #2d2d2d;
-            color: #ffffff;
+        
+        .percentage-text {
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 14px;
         }
-        body.dark-mode .card {
-            background-color: #2d2d2d;
-            color: #ffffff;
-            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
         }
-        body.dark-mode table th {
-            background-color: #334155;
-            color: #ffffff;
+        
+        .status-good {
+            background-color: #d1fae5;
+            color: #065f46;
         }
-        body.dark-mode table tr:nth-child(even) {
-            background-color: #1e293b;
+        
+        .status-medium {
+            background-color: #fef3c7;
+            color: #92400e;
         }
-        body.dark-mode .top-strap {
-            background: #071426;
-            border-bottom-color: #071426;
+        
+        .status-low {
+            background-color: #fee2e2;
+            color: #991b1b;
         }
-        body.dark-mode .strap-controls button {
-            color: #e6f0fb;
+        
+        .stats-summary {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            border-top: 5px solid #1e40af;
+        }
+        
+        .stats-title {
+            font-size: 20px;
+            color: #1e40af;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background-color: #eff6ff;
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #4b5563;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 14px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 30px;
+        }
+        
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #1e40af;
+        }
+        
+        .loading-indicator.active {
+            display: block;
+        }
+        
+        .loading-indicator i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .last-updated {
+            text-align: right;
+            font-size: 13px;
+            color: #6b7280;
+            padding: 10px 15px;
+            border-top: 1px solid #e5e7eb;
+            background-color: #f8fafc;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-style: italic;
         }
     </style>
-
-    <script>
-// Check for dark mode preference on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (isDarkMode) {
-        document.body.classList.add('dark-mode');
-    }
-});
-</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-
-    <a href="beo_dashboard.html" class="back-btn"> ← Back To BEO Dashboard</a>
-<header>
-    Block Summary
-</header>
-<div class="container">
-    <div class="card">
-        <h2>Block Overview</h2>
-        <p><strong>Total Schools:</strong> 25</p>
-        <p><strong>Schools with DBT Enabled:</strong> 22</p>
-        <p><strong>Total Students:</strong> 4500</p>
-        <p><strong>Students with DBT Verified:</strong> 3800</p>
+    <div class="container">
+        <header>
+            <h1>Block Summary Dashboard</h1>
+            <p class="subtitle">Comprehensive overview of Gram Panchayats and Schools in the block</p>
+        </header>
+        
+        <div class="stats-summary">
+            <h2 class="stats-title">Block Overview</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Total Gram Panchayats</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">36</div>
+                    <div class="stat-label">Total Schools</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">72%</div>
+                    <div class="stat-label">Average Awareness</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">42,580</div>
+                    <div class="stat-label">Total Population</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="blocks-container">
+            <!-- Panchayat Block -->
+            <div class="block-card">
+                <div class="block-header">
+                    <div class="block-title">
+                        <i class="fas fa-village"></i>
+                        <span>Gram Panchayats</span>
+                    </div>
+                    <div class="count-badge">12 Panchayats</div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Panchayat Name</th>
+                                <th>Population</th>
+                                <th>Aware</th>
+                                <th>Unaware</th>
+                                <th>Awareness %</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="panchayat-table">
+                            <!-- Panchayat data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="last-updated">
+                    <i class="fas fa-clock"></i> Updated just now
+                </div>
+            </div>
+            
+            <!-- School Block -->
+            <div class="block-card">
+                <div class="block-header">
+                    <div class="block-title">
+                        <i class="fas fa-school"></i>
+                        <span>Schools</span>
+                    </div>
+                    <div class="count-badge">36 Schools</div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>School Name</th>
+                                <th>Panchayat</th>
+                                <th>Students</th>
+                                <th>Teachers</th>
+                                <th>Awareness %</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="school-table">
+                            <!-- School data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="last-updated">
+                    <i class="fas fa-clock"></i> Updated just now
+                </div>
+            </div>
+        </div>
+        
+        <div class="loading-indicator" id="loading">
+            <i class="fas fa-sync-alt"></i> Loading data from server...
+        </div>
+        
+        <footer>
+            <p>Block Summary Dashboard &copy; 2023 | Data is refreshed automatically every 5 minutes</p>
+            <p style="margin-top: 5px; font-size: 13px;">
+                <i class="fas fa-info-circle"></i> All data is based on the latest survey conducted in October 2023
+            </p>
+        </footer>
     </div>
-    <div class="card">
-        <h2>DBT Awareness and Compliance</h2>
-        <p>This section provides block-level insights for DBT implementation:</p>
-        <ul>
-            <li>Monitor school-wise Aadhaar seeding and DBT enrollment rates.</li>
-            <li>Track compliance with government DBT directives.</li>
-            <li>Identify schools needing additional support for awareness campaigns.</li>
-            <li>Analyze block performance against state-level targets.</li>
-        </ul>
-    </div>
-    <div class="card">
-        <h2>School Summary</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>School Name</th>
-                    <th>Total Students</th>
-                    <th>DBT Verified</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Government High School A</td>
-                    <td>180</td>
-                    <td>165</td>
-                    <td>Active</td>
-                </tr>
-                <tr>
-                    <td>Government High School B</td>
-                    <td>220</td>
-                    <td>200</td>
-                    <td>Active</td>
-                </tr>
-                <tr>
-                    <td>Government High School C</td>
-                    <td>150</td>
-                    <td>120</td>
-                    <td>Pending</td>
-                </tr>
-                <tr>
-                    <td>Government High School D</td>
-                    <td>190</td>
-                    <td>180</td>
-                    <td>Active</td>
-                </tr>
-                <tr>
-                    <td>Government High School E</td>
-                    <td>160</td>
-                    <td>140</td>
-                    <td>Active</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
 
-
+    <script>
+        // Sample realistic data for Gram Panchayats
+        const panchayatData = [
+            { id: 1, name: "Rampur", population: 3450, aware: 2650, unaware: 800, awarenessPercent: 77 },
+            { id: 2, name: "Chandpur", population: 2870, aware: 2010, unaware: 860, awarenessPercent: 70 },
+            { id: 3, name: "Sonapur", population: 4120, aware: 3500, unaware: 620, awarenessPercent: 85 },
+            { id: 4, name: "Madhopur", population: 2310, aware: 1380, unaware: 930, awarenessPercent: 60 },
+            { id: 5, name: "Bilaspur", population: 3890, aware: 3110, unaware: 780, awarenessPercent: 80 },
+            { id: 6, name: "Nagla", population: 2750, aware: 1920, unaware: 830, awarenessPercent: 70 },
+            { id: 7, name: "Kishanpur", population: 3180, aware: 2220, unaware: 960, awarenessPercent: 70 },
+            { id: 8, name: "Gopalpur", population: 2560, aware: 2050, unaware: 510, awarenessPercent: 80 },
+            { id: 9, name: "Sultanpur", population: 3310, aware: 2150, unaware: 1160, awarenessPercent: 65 },
+            { id: 10, name: "Ramnagar", population: 2950, aware: 2360, unaware: 590, awarenessPercent: 80 },
+            { id: 11, name: "Shivpur", population: 3760, aware: 3380, unaware: 380, awarenessPercent: 90 },
+            { id: 12, name: "Laxmipur", population: 2430, aware: 1450, unaware: 980, awarenessPercent: 60 }
+        ];
+        
+        // Sample realistic data for Schools
+        const schoolData = [
+            { id: 1, name: "Rampur Primary School", panchayat: "Rampur", students: 245, teachers: 8, awarenessPercent: 75 },
+            { id: 2, name: "Rampur High School", panchayat: "Rampur", students: 420, teachers: 15, awarenessPercent: 70 },
+            { id: 3, name: "Chandpur Middle School", panchayat: "Chandpur", students: 310, teachers: 12, awarenessPercent: 70 },
+            { id: 4, name: "Sonapur High School", panchayat: "Sonapur", students: 480, teachers: 18, awarenessPercent: 80 },
+            { id: 5, name: "Madhopur Primary", panchayat: "Madhopur", students: 135, teachers: 5, awarenessPercent: 55 },
+            { id: 6, name: "Bilaspur High School", panchayat: "Bilaspur", students: 520, teachers: 19, awarenessPercent: 82 },
+            { id: 7, name: "Nagla Middle School", panchayat: "Nagla", students: 280, teachers: 11, awarenessPercent: 68 },
+            { id: 8, name: "Kishanpur Primary", panchayat: "Kishanpur", students: 190, teachers: 7, awarenessPercent: 72 },
+            { id: 9, name: "Gopalpur High School", panchayat: "Gopalpur", students: 410, teachers: 16, awarenessPercent: 78 },
+            { id: 10, name: "Sultanpur Primary", panchayat: "Sultanpur", students: 165, teachers: 6, awarenessPercent: 62 },
+            { id: 11, name: "Ramnagar Middle School", panchayat: "Ramnagar", students: 320, teachers: 13, awarenessPercent: 76 },
+            { id: 12, name: "Shivpur High School", panchayat: "Shivpur", students: 510, teachers: 20, awarenessPercent: 88 },
+            { id: 13, name: "Laxmipur Primary", panchayat: "Laxmipur", students: 145, teachers: 5, awarenessPercent: 58 },
+            { id: 14, name: "Chandpur Primary", panchayat: "Chandpur", students: 165, teachers: 6, awarenessPercent: 60 },
+            { id: 15, name: "Sonapur Girls School", panchayat: "Sonapur", students: 195, teachers: 9, awarenessPercent: 72 }
+        ];
+        
+        // DOM elements
+        const panchayatTable = document.getElementById('panchayat-table');
+        const schoolTable = document.getElementById('school-table');
+        const loadingIndicator = document.getElementById('loading');
+        
+        // Function to get status based on awareness percentage
+        function getStatus(percent) {
+            if (percent >= 80) return { text: "Excellent", class: "status-good" };
+            if (percent >= 70) return { text: "Good", class: "status-medium" };
+            if (percent >= 60) return { text: "Average", class: "status-medium" };
+            return { text: "Needs Focus", class: "status-low" };
+        }
+        
+        // Function to render panchayat table
+        function renderPanchayatTable() {
+            panchayatTable.innerHTML = '';
+            
+            panchayatData.forEach(panchayat => {
+                const status = getStatus(panchayat.awarenessPercent);
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td><strong>${panchayat.name}</strong></td>
+                    <td>${panchayat.population.toLocaleString()}</td>
+                    <td>${panchayat.aware.toLocaleString()}</td>
+                    <td>${panchayat.unaware.toLocaleString()}</td>
+                    <td>
+                        <div class="percentage-text">${panchayat.awarenessPercent}%</div>
+                        <div class="percentage-bar">
+                            <div class="percentage-fill" style="width: ${panchayat.awarenessPercent}%"></div>
+                        </div>
+                    </td>
+                    <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                `;
+                
+                panchayatTable.appendChild(row);
+            });
+        }
+        
+        // Function to render school table
+        function renderSchoolTable() {
+            schoolTable.innerHTML = '';
+            
+            schoolData.forEach(school => {
+                const status = getStatus(school.awarenessPercent);
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${school.name}</td>
+                    <td>${school.panchayat}</td>
+                    <td>${school.students}</td>
+                    <td>${school.teachers}</td>
+                    <td>
+                        <div class="percentage-text">${school.awarenessPercent}%</div>
+                        <div class="percentage-bar">
+                            <div class="percentage-fill" style="width: ${school.awarenessPercent}%"></div>
+                        </div>
+                    </td>
+                    <td><span class="status-badge ${status.class}">${status.text}</span></td>
+                `;
+                
+                schoolTable.appendChild(row);
+            });
+        }
+        
+        // Function to simulate data loading
+        function loadData() {
+            // Show loading indicator
+            loadingIndicator.classList.add('active');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Render tables
+                renderPanchayatTable();
+                renderSchoolTable();
+                
+                // Hide loading indicator
+                loadingIndicator.classList.remove('active');
+                
+                // Update last updated time
+                updateLastUpdatedTime();
+            }, 800);
+        }
+        
+        // Function to update last updated time
+        function updateLastUpdatedTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString();
+            
+            const lastUpdatedElements = document.querySelectorAll('.last-updated');
+            lastUpdatedElements.forEach(el => {
+                el.innerHTML = `<i class="fas fa-clock"></i> Updated ${timeString}, ${dateString}`;
+            });
+        }
+        
+        // Function to simulate periodic data refresh
+        function startAutoRefresh() {
+            // Refresh data every 30 seconds (for demo purposes)
+            setInterval(() => {
+                // Simulate small data changes
+                panchayatData.forEach(p => {
+                    // Randomly adjust awareness by ±1%
+                    const change = Math.random() > 0.5 ? 1 : -1;
+                    p.awarenessPercent = Math.max(50, Math.min(95, p.awarenessPercent + change));
+                    
+                    // Recalculate aware/unaware counts
+                    p.aware = Math.round(p.population * p.awarenessPercent / 100);
+                    p.unaware = p.population - p.aware;
+                });
+                
+                // Re-render tables
+                renderPanchayatTable();
+                renderSchoolTable();
+                updateLastUpdatedTime();
+                
+                // Show a brief loading indicator
+                loadingIndicator.classList.add('active');
+                setTimeout(() => {
+                    loadingIndicator.classList.remove('active');
+                }, 300);
+            }, 30000); // 30 seconds
+        }
+        
+        // Initialize the dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial data
+            loadData();
+            
+            // Start auto-refresh simulation
+            startAutoRefresh();
+            
+            // Add click effect to table rows
+            document.addEventListener('click', function(e) {
+                const row = e.target.closest('tr');
+                if (row && row.parentElement.tagName === 'TBODY') {
+                    // Remove previous selection
+                    document.querySelectorAll('tbody tr').forEach(r => {
+                        r.style.backgroundColor = '';
+                    });
+                    
+                    // Highlight selected row
+                    row.style.backgroundColor = '#eff6ff';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
