@@ -1,0 +1,120 @@
+// backend/app.js - cleaned and robust server with session + routes
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const app = express();
+const port = process.env.PORT || 4000;
+
+// Basic middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
+
+// MongoDB connection
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/dbt_portal_demo';
+
+async function createMongoConnection() {
+  try {
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log('✅ Connected to MongoDB');
+    return true;
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err.message || err);
+    console.log('Proceeding without MongoDB (demo mode). Some features relying on DB will be degraded.');
+    return false;
+  }
+}
+
+// Init DB and session store
+(async () => {
+  const mongoConnected = await createMongoConnection();
+
+  // Session configuration
+  let sessionStore;
+  if (mongoConnected) {
+    sessionStore = MongoStore.create({
+      mongoUrl: MONGO_URI,
+      collectionName: 'sessions',
+      ttl: 14 * 24 * 60 * 60 // 14 days
+    });
+  } else {
+    // fallback (not recommended for production)
+    sessionStore = new session.MemoryStore();
+  }
+
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'dbt_demo_secret_change_me',
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    cookie: {
+      maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days
+    }
+  }));
+
+  // Mount API routes (only mount routes that exist)
+  // If a route file is missing, we attempt to require and ignore errors gracefully
+  const safeUse = (routePath, mountPath) => {
+    try {
+      const r = require(routePath);
+      app.use(mountPath, r);
+      console.log(`Mounted ${mountPath} -> ${routePath}`);
+    } catch (err) {
+      console.warn(`Could not mount ${mountPath} (${routePath}): ${err.message}`);
+    }
+  };
+
+  safeUse('./routes/students', '/api/students');
+  safeUse('./routes/teachers', '/api/teachers');
+  safeUse('./routes/volunteers', '/api/volunteers');
+  safeUse('./routes/admin', '/api/admin');
+  safeUse('./routes/scams', '/api/scams');
+  safeUse('./routes/campaigns', '/api/campaigns');
+  safeUse('./routes/heatmapRoutes', '/api/heatmap');
+  safeUse('./routes/meeting', '/api/meeting'); // if exists
+  // add other routes as needed...
+
+  // Simple demo endpoints that do not depend on route modules
+  app.get('/api/health', (req, res) => {
+    res.json({
+      status: 'healthy',
+      server: 'DBT Portal Backend',
+      port,
+      timestamp: new Date().toISOString(),
+      mongoConnected: mongoose.connection.readyState === 1
+    });
+  });
+
+  app.get('/api/test-endpoints', (req, res) => {
+    res.json({
+      server: 'DBT Portal API',
+      baseUrl: `http://localhost:${port}`,
+      available: [
+        '/api/health',
+        '/api/test-endpoints',
+        '/api/students (if mounted)'
+      ]
+    });
+  });
+
+  // Serve index for all non-API requests (SPA fallback)
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'API endpoint not found', path: req.path });
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+  });
+
+  // Start server
+  app.listen(port, () => {
+    console.log(`🚀 Server running at http://localhost:${port}`);
+    console.log(`📁 Serving frontend from: ${path.join(__dirname, '..', 'frontend')}`);
+  });
+})();

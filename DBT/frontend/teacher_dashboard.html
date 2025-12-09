@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Teacher Dashboard</title>
-
 <style>
     :root {
         --bg: #f5f7fa;
@@ -16,6 +15,9 @@
         --btn-hover: #004a99;
         --shadow: rgba(0,0,0,0.12);
         --shadow-hover: rgba(0,0,0,0.18);
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
     }
 
     body.dark-mode {
@@ -38,12 +40,79 @@
         transition: background 0.3s ease;
     }
 
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--card-border);
+    }
+
+    .user-info {
+        background: var(--card-bg);
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-icon {
+        font-size: 2rem;
+        color: var(--btn-bg);
+    }
+
+    .user-details h2 {
+        margin: 0;
+        color: var(--text);
+    }
+
+    .user-details p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px var(--shadow);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--btn-bg);
+        margin: 10px 0;
+    }
+
+    .stat-label {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
     .role-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(280px, 1fr));
         gap: 25px;
         justify-content: center;
-        margin-top: 60px;
+        margin-top: 30px;
     }
 
     /* #### CARD #### */
@@ -57,6 +126,9 @@
         border: 1px solid var(--card-border);
         position: relative;
         overflow: hidden;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
     }
 
     .role-card:hover {
@@ -94,6 +166,7 @@
         font-size: 14px;
         line-height: 1.4;
         animation: fadeSlide 1.4s ease;
+        flex-grow: 1;
     }
 
     /* BUTTON */
@@ -107,96 +180,410 @@
         border-radius: 8px;
         text-decoration: none;
         transition: 0.3s;
+        text-align: center;
+        width: 100%;
+        border: none;
+        cursor: pointer;
     }
 
     .proceed-btn:hover {
         background: var(--btn-hover);
     }
 
+    .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: white;
+        background: var(--btn-bg);
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.3s;
+        z-index: 1000;
+    }
+
+    .back-btn:hover {
+        background: var(--btn-hover);
+    }
+
+    body.dark-mode .back-btn {
+        color: var(--text);
+    }
+
     @keyframes fadeSlide {
         from { opacity: 0; transform: translateY(6px); }
         to   { opacity: 1; transform: translateY(0px); }
     }
-</style>
 
+    /* Meeting-specific styles */
+    .meeting-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: var(--success);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .meeting-count {
+        background: var(--warning);
+    }
+
+    .upcoming-meetings {
+        margin-top: 40px;
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .meeting-list {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding: 15px 0;
+    }
+
+    .meeting-item {
+        min-width: 300px;
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid var(--card-border);
+    }
+
+    .meeting-time {
+        color: var(--btn-bg);
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .meeting-title {
+        color: var(--text);
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .meeting-participants {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .join-meeting-btn {
+        background: var(--success);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .join-meeting-btn:hover {
+        background: #0da271;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .role-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .quick-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .role-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .quick-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .dashboard-header {
+            flex-direction: column;
+            gap: 20px;
+        }
+    }
+</style>
 </head>
 <body class="dark-mode">
 
     <a href="index.html" class="back-btn">← Back to Home</a>
 
-<style>
-.back-btn {
-    position: absolute;
-    top: 20px;     /* upar se distance */
-    left: 20px;    /* left side se distance */
-    padding: 10px 14px;
-    margin: 0;
-    font-size: 14px;
-    color: white;
-    background: var(--btn-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.3s;
-    z-index: 1000;
-}
+    <div class="dashboard-header">
+        <div class="user-info">
+            <div class="user-icon">👨‍🏫</div>
+            <div class="user-details">
+                <h2 id="teacherName">Teacher Name</h2>
+                <p id="teacherId">Teacher ID: -</p>
+                <p id="teacherSubjects">Subjects: -</p>
+            </div>
+        </div>
+        
+        <div>
+            <button class="proceed-btn" onclick="scheduleMeeting()">📅 Schedule New Meeting</button>
+        </div>
+    </div>
 
-.back-btn:hover {
-    background: var(--btn-hover);
-}
+    <div class="quick-stats">
+        <div class="stat-card">
+            <div class="stat-label">Total Students</div>
+            <div class="stat-value" id="totalStudents">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Upcoming Meetings</div>
+            <div class="stat-value" id="upcomingMeetings">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">DBT Active</div>
+            <div class="stat-value" id="dbtActive">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Attendance %</div>
+            <div class="stat-value" id="attendance">0%</div>
+        </div>
+    </div>
 
-body.dark-mode .back-btn {
-    color: var(--text);
-}
-</style>
+    <!-- Upcoming Meetings Section -->
+    <div class="upcoming-meetings" id="upcomingMeetingsSection">
+        <h3 style="margin-top: 0; color: var(--text);">📅 Upcoming Meetings</h3>
+        <div class="meeting-list" id="meetingList">
+            <!-- Meetings will be loaded here -->
+        </div>
+    </div>
 
-<div class="role-grid">
+    <div class="role-grid">
+        <!-- Bulk Upload Card -->
+        <article class="role-card teacher" onclick="location.href='bulk_upload.html'">
+            <div class="role-badge">📤</div>
+            <h3>Bulk Upload</h3>
+            <p>Upload student data in bulk for efficient processing.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Bulk Upload Card -->
-  <article class="role-card teacher"onclick="location.href='bulk_upload.html'">
-    <div class="role-badge">📤</div>
-    <h3>Bulk Upload</h3>
-    <p>Upload student data in bulk for efficient processing.</p>
-    <a class="proceed-btn" href="bulk_upload.html">Proceed →</a>
-  </article>
+        <!-- Class Summary Card -->
+        <article class="role-card teacher" onclick="location.href='class_summary.html'">
+            <div class="role-badge">📊</div>
+            <h3>Class Summary</h3>
+            <p>View overall class performance and DBT status summary.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Class Summary Card -->
-  <article class="role-card teacher"onclick="location.href='class_summary.html'">
-    <div class="role-badge">📊</div>
-    <h3>Class Summary</h3>
-    <p>View overall class performance and DBT status summary.</p>
-    <a class="proceed-btn" href="class_summary.html">Proceed →</a>
-  </article>
+        <!-- Awareness Toolkit Card -->
+        <article class="role-card teacher" onclick="location.href='teacher_awareness_toolkit.html'">
+            <div class="role-badge">📚</div>
+            <h3>Awareness Toolkit</h3>
+            <p>Access resources and materials for DBT awareness.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Awareness Toolkit Card -->
-  <article class="role-card teacher"onclick="location.href='teacher_awareness_toolkit.html'">
-    <div class="role-badge">📚</div>
-    <h3>Awareness Toolkit</h3>
-    <p>Access resources and materials for DBT awareness.</p>
-    <a class="proceed-btn" href="teacher_awareness_toolkit.html">Proceed →</a>
-  </article>
+        <!-- Class Statistics Card -->
+        <article class="role-card teacher" onclick="location.href='class_statistics.html'">
+            <div class="role-badge">📈</div>
+            <h3>Class Statistics</h3>
+            <p>Detailed statistics on class DBT enrollment and benefits.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Class Statistics Card -->
-  <article class="role-card teacher"onclick="location.href='class_statistics.html'">
-    <div class="role-badge">📈</div>
-    <h3>Class Statistics</h3>
-    <p>Detailed statistics on class DBT enrollment and benefits.</p>
-    <a class="proceed-btn" href="class_statistics.html">Proceed →</a>
-  </article>
+        <!-- Parent Meetings Card -->
+        <article class="role-card teacher" onclick="location.href='parent_meetings.html'">
+            <div class="role-badge">🤝</div>
+            <h3>Parent Meetings</h3>
+            <p>Schedule and manage parent-teacher meetings.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  
+        <!-- Live Meetings Card -->
+        <article class="role-card teacher" onclick="location.href='teacher_live_meetings.html'">
+            <div class="role-badge">🎥</div>
+            <h3>Live Meetings</h3>
+            <p>Start or join live video meetings with parents.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-</div>
+    </div>
+
+    <!-- Schedule Meeting Modal -->
+    <div id="scheduleModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
+            <h3 style="margin-top: 0; color: var(--text);">📅 Schedule New Meeting</h3>
+            <form id="meetingForm">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: var(--text);">Meeting Title</label>
+                    <input type="text" id="meetingTitle" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--card-border); background: var(--bg); color: var(--text);">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: var(--text);">Date & Time</label>
+                    <input type="datetime-local" id="meetingTime" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--card-border); background: var(--bg); color: var(--text);">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: var(--text);">Duration (minutes)</label>
+                    <input type="number" id="meetingDuration" value="30" min="15" max="120" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--card-border); background: var(--bg); color: var(--text);">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; color: var(--text);">Agenda</label>
+                    <textarea id="meetingAgenda" rows="3" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--card-border); background: var(--bg); color: var(--text);"></textarea>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" onclick="closeScheduleModal()" style="padding: 10px 20px; background: var(--muted); color: white; border: none; border-radius: 5px; cursor: pointer; flex: 1;">Cancel</button>
+                    <button type="submit" style="padding: 10px 20px; background: var(--btn-bg); color: white; border: none; border-radius: 5px; cursor: pointer; flex: 1;">Schedule</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 <script>
-// Check for dark mode preference on page load
+// Load teacher data and meetings
 document.addEventListener('DOMContentLoaded', function() {
+    // Check for dark mode preference
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
         document.body.classList.add('dark-mode');
     } else {
         document.body.classList.remove('dark-mode');
     }
+
+    // Load teacher data from localStorage
+    const teacherName = localStorage.getItem('teacherName') || 'Teacher Name';
+    const teacherId = localStorage.getItem('teacherId') || 'TCH-001';
+    
+    document.getElementById('teacherName').textContent = teacherName;
+    document.getElementById('teacherId').textContent = `Teacher ID: ${teacherId}`;
+    
+    // Fetch teacher stats and meetings
+    fetchTeacherStats();
+    fetchUpcomingMeetings();
 });
+
+function fetchTeacherStats() {
+    // Simulate API call for stats
+    setTimeout(() => {
+        document.getElementById('totalStudents').textContent = '42';
+        document.getElementById('upcomingMeetings').textContent = '3';
+        document.getElementById('dbtActive').textContent = '38';
+        document.getElementById('attendance').textContent = '92%';
+    }, 500);
+}
+
+function fetchUpcomingMeetings() {
+    // Simulate API call for meetings
+    const meetings = [
+        {
+            id: 'MEET-001',
+            title: 'Parent-Teacher Meeting: Rahul Sharma',
+            time: '2024-01-15T14:00:00',
+            participants: ['Mrs. Sharma', 'Mr. Sharma'],
+            duration: 30
+        },
+        {
+            id: 'MEET-002',
+            title: 'DBT Progress Review',
+            time: '2024-01-16T11:00:00',
+            participants: ['Mrs. Gupta', 'Mr. Verma'],
+            duration: 45
+        },
+        {
+            id: 'MEET-003',
+            title: 'Class Performance Discussion',
+            time: '2024-01-17T15:30:00',
+            participants: ['Mrs. Patel', 'Mr. Singh'],
+            duration: 30
+        }
+    ];
+    
+    const meetingList = document.getElementById('meetingList');
+    meetingList.innerHTML = '';
+    
+    meetings.forEach(meeting => {
+        const meetingDate = new Date(meeting.time);
+        const formattedTime = meetingDate.toLocaleString('en-IN', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const meetingItem = document.createElement('div');
+        meetingItem.className = 'meeting-item';
+        meetingItem.innerHTML = `
+            <div class="meeting-time">${formattedTime}</div>
+            <div class="meeting-title">${meeting.title}</div>
+            <div class="meeting-participants">With: ${meeting.participants.join(', ')}</div>
+            <button class="join-meeting-btn" onclick="joinMeeting('${meeting.id}')">
+                Join Meeting (${meeting.duration} mins)
+            </button>
+        `;
+        meetingList.appendChild(meetingItem);
+    });
+}
+
+function scheduleMeeting() {
+    document.getElementById('scheduleModal').style.display = 'flex';
+    
+    // Set minimum datetime to current time
+    const now = new Date();
+    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16);
+    document.getElementById('meetingTime').min = localDateTime;
+}
+
+function closeScheduleModal() {
+    document.getElementById('scheduleModal').style.display = 'none';
+}
+
+document.getElementById('meetingForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const meetingData = {
+        title: document.getElementById('meetingTitle').value,
+        scheduledTime: document.getElementById('meetingTime').value,
+        duration: document.getElementById('meetingDuration').value,
+        agenda: document.getElementById('meetingAgenda').value,
+        teacherId: localStorage.getItem('teacherId')
+    };
+    
+    try {
+        // In real implementation, call API to schedule meeting
+        const response = await fetch('/api/meetings/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(meetingData)
+        });
+        
+        if (response.ok) {
+            alert('Meeting scheduled successfully!');
+            closeScheduleModal();
+            fetchUpcomingMeetings();
+        } else {
+            alert('Failed to schedule meeting');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to schedule meeting');
+    }
+});
+
+function joinMeeting(meetingId) {
+    // Redirect to live meeting page
+    window.location.href = `live_meeting.html?meetingId=${meetingId}`;
+}
+
+// Real-time updates for meetings
+setInterval(fetchUpcomingMeetings, 60000); // Update every minute
 </script>
 </body>
 </html>

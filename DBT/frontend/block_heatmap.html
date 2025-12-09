@@ -3,160 +3,1038 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block Heatmap | True Benefit</title>
+    <title>Block Heatmap | DBT Portal</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-light: #f8fafc;
+            --text-dark: #1e293b;
+            --border-color: #334155;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            transition: background 0.3s ease;
+            box-sizing: border-box;
         }
 
-        /* Top utility strap */
-        .top-strap {
-            background: #f0f4f8;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 8px 20px;
-            display: flex;
-            justify-content: flex-end;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
         }
 
-        .strap-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
+        body.dark-mode {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: var(--text-light);
         }
 
-        .strap-controls button {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .strap-controls button:focus {
-            outline: 2px solid var(--accent, #1e6fb8);
-            outline-offset: 2px;
-        }
-        header {
-            background: var(--accent);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-        }
         .container {
-            width: 90%;
-            margin: auto;
-            margin-top: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        .card {
-            background: var(--card);
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
-        h2 {
-            color: var(--text);
+
+        body.dark-mode .header {
+            background: rgba(30, 41, 59, 0.95);
         }
-        .heatmap-placeholder {
-            width: 100%;
-            height: 400px;
-            background: #e0e0e0;
-            border: 2px dashed #ccc;
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 28px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #666;
+            gap: 10px;
         }
-        /* Dark mode adjustments */
-        body.dark-mode .heatmap-placeholder {
-            background: #334155;
-            border-color: #475569;
+
+        .header h1 i {
+            font-size: 32px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Control Buttons */
+        .control-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: white;
+            color: var(--text-dark);
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .control-btn {
+            background: var(--card-bg);
+            color: var(--text-light);
+            border-color: var(--border-color);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .control-btn.success {
+            background: var(--success-color);
+            color: white;
+            border: none;
+        }
+
+        .control-btn.danger {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+        }
+
+        /* Dark Mode Toggle */
+        .dark-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .dark-toggle:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode .dark-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .card {
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 i {
+            font-size: 24px;
+        }
+
+        /* Filters */
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        body.dark-mode .filter-label {
             color: #94a3b8;
         }
-        body.dark-mode {
-            background-color: #1a1a1a;
-            color: #ffffff;
+
+        .filter-select, .filter-slider {
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
         }
-        body.dark-mode header {
-            background-color: #2d2d2d;
-            color: #ffffff;
+
+        body.dark-mode .filter-select, 
+        body.dark-mode .filter-slider {
+            background: var(--card-bg);
+            border-color: var(--border-color);
+            color: var(--text-light);
         }
-        body.dark-mode .card {
-            background-color: #2d2d2d;
-            color: #ffffff;
-            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.1);
+
+        .filter-select:focus, .filter-slider:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
-        body.dark-mode h2 {
-            color: #ffffff;
+
+        /* Heatmap Container */
+        #heatmap-container {
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
-        body.dark-mode .top-strap {
-            background: #071426;
-            border-bottom-color: #071426;
+
+        body.dark-mode #heatmap-container {
+            border-color: var(--card-bg);
         }
-        body.dark-mode .strap-controls button {
-            color: #e6f0fb;
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), #4f46e5);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card.success {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+        }
+
+        .stat-card.warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+        }
+
+        .stat-card.danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            background: rgba(241, 245, 249, 0.5);
+            border-radius: 8px;
+        }
+
+        body.dark-mode .legend-item {
+            background: rgba(51, 65, 85, 0.5);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .legend-label {
+            font-size: 14px;
+            flex: 1;
+        }
+
+        /* Schools List */
+        .schools-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .school-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .school-item {
+            background: var(--card-bg);
+        }
+
+        .school-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .school-item.high { border-left-color: var(--success-color); }
+        .school-item.medium { border-left-color: var(--warning-color); }
+        .school-item.low { border-left-color: var(--danger-color); }
+
+        .school-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .school-name {
+            color: var(--text-light);
+        }
+
+        .school-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        body.dark-mode .school-info {
+            color: #94a3b8;
+        }
+
+        .coverage-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .coverage-badge.high { background: var(--success-color); }
+        .coverage-badge.medium { background: var(--warning-color); }
+        .coverage-badge.low { background: var(--danger-color); }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background: var(--danger-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            #heatmap-container {
+                height: 400px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-
-    <script>
-// Check for dark mode preference on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (isDarkMode) {
-        document.body.classList.add('dark-mode');
-        updateDarkModeIcon(true);
-    } else {
-        updateDarkModeIcon(false);
-    }
-});
-
-// Update toggle button icon
-function updateDarkModeIcon(isDark) {
-    const toggle = document.getElementById('dark-toggle');
-    if (toggle) {
-        toggle.textContent = isDark ? '☀️' : '🌙';
-        toggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-    }
-}
-
-// Toggle dark mode
-function toggleDarkMode() {
-    const isDarkMode = document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', isDarkMode);
-    updateDarkModeIcon(isDarkMode);
-}
-</script>
 </head>
 <body>
-    <a href="beo_dashboard.html" class="back-btn"> ← Back To  BEO Dashboard</a>
-<header>
-    Block Heatmap
-</header>
-<div class="container">
-    <div class="card">
-        <h2>Block DBT Coverage Heatmap</h2>
-        <p>This heatmap visualizes DBT coverage and issues across schools in the block. Areas with higher coverage are shown in green, while areas needing attention are highlighted in red.</p>
-        <div class="heatmap-placeholder">
-            [Interactive Heatmap Placeholder - Integration with mapping API required]
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i>🔥</i>
+                Block Heatmap - DBT Coverage Visualization
+            </h1>
+            <div class="header-controls">
+                <a href="beo_dashboard.html" class="back-btn">
+                    <i>←</i> Back to Dashboard
+                </a>
+                <button class="control-btn" id="refresh-btn">
+                    <i>🔄</i> Refresh
+                </button>
+                <button class="control-btn success" id="export-btn">
+                    <i>📥</i> Export Data
+                </button>
+                <button class="dark-toggle" id="dark-toggle" title="Toggle Dark Mode">
+                    🌙
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Filters Card -->
+                <div class="card">
+                    <h2><i>⚙️</i> Filters & Controls</h2>
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Select Block</label>
+                            <select class="filter-select" id="block-select">
+                                <option value="">Loading blocks...</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Heatmap Metric</label>
+                            <select class="filter-select" id="metric-select">
+                                <option value="coverage">DBT Coverage</option>
+                                <option value="issues">Issues Reported</option>
+                                <option value="beneficiaries">Beneficiaries</option>
+                                <option value="transactions">Transactions</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Heat Radius</label>
+                            <input type="range" class="filter-slider" id="radius-slider" min="10" max="50" value="25">
+                            <span id="radius-value">25</span>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Date Range</label>
+                            <select class="filter-select" id="date-range">
+                                <option value="7days">Last 7 Days</option>
+                                <option value="30days" selected>Last 30 Days</option>
+                                <option value="90days">Last 90 Days</option>
+                                <option value="year">Last Year</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heatmap Card -->
+                <div class="card">
+                    <h2><i>🗺️</i> Interactive Heatmap</h2>
+                    <div id="heatmap-container"></div>
+                    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="control-btn" onclick="toggleSchoolMarkers()" id="toggle-markers-btn">
+                            <i>📍</i> Show School Markers
+                        </button>
+                        <button class="control-btn primary" onclick="fitToBounds()">
+                            <i>🔍</i> Fit to View
+                        </button>
+                        <button class="control-btn" onclick="downloadMap()">
+                            <i>📸</i> Save as Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Stats Card -->
+                <div class="card">
+                    <h2><i>📊</i> Block Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-schools">0</div>
+                            <div class="stat-label">Total Schools</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-value" id="avg-coverage">0%</div>
+                            <div class="stat-label">Avg Coverage</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-value" id="total-beneficiaries">0</div>
+                            <div class="stat-label">Beneficiaries</div>
+                        </div>
+                        <div class="stat-card danger">
+                            <div class="stat-value" id="total-issues">0</div>
+                            <div class="stat-label">Issues</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legend Card -->
+                <div class="card">
+                    <h2><i>🎨</i> Heatmap Legend</h2>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #10b981;"></div>
+                            <span class="legend-label">High Coverage (>90%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f59e0b;"></div>
+                            <span class="legend-label">Medium Coverage (70-90%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #ef4444;"></div>
+                            <span class="legend-label">Low Coverage (<70%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3b82f6;"></div>
+                            <span class="legend-label">School Location</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #8b5cf6;"></div>
+                            <span class="legend-label">Issue Reported</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schools List Card -->
+                <div class="card">
+                    <h2><i>🏫</i> Schools in Block</h2>
+                    <div class="schools-list" id="schools-list">
+                        <!-- Schools will be loaded here -->
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="card">
-        <h2>Heatmap Legend</h2>
-        <ul>
-            <li><strong>Green:</strong> High DBT coverage (>90%)</li>
-            <li><strong>Yellow:</strong> Moderate coverage (70-90%)</li>
-            <li><strong>Red:</strong> Low coverage (<70%)</li>
-        </ul>
-    </div>
-</div>
 
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading heatmap data...</div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Libraries -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <script>
+        // Global variables
+        let map;
+        let heatLayer;
+        let schoolMarkers = [];
+        let currentBlock = '';
+        let showMarkers = false;
+        let blocks = [];
+
+        // API Base URL
+        const API_BASE = 'http://localhost:4000/api';
+
+        // Dark Mode Management
+        function initDarkMode() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('dark-toggle').textContent = '☀️';
+            }
+        }
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            document.getElementById('dark-toggle').textContent = isDarkMode ? '☀️' : '🌙';
+            
+            // Reinitialize map with appropriate theme
+            if (map) {
+                initializeMap();
+                loadHeatmapData();
+            }
+        }
+
+        // Initialize Map
+        function initializeMap() {
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const container = document.getElementById('heatmap-container');
+            
+            // Clear existing map
+            if (map) {
+                map.remove();
+            }
+            
+            // Initialize new map
+            map = L.map(container).setView([20.5937, 78.9629], 5); // India center
+            
+            // Choose tile layer based on mode
+            if (isDarkMode) {
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '© OpenStreetMap, © CartoDB'
+                }).addTo(map);
+            } else {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+            }
+            
+            // Add controls
+            L.control.zoom({ position: 'topright' }).addTo(map);
+        }
+
+        // Show loading overlay
+        function showLoading() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            document.getElementById('loading-overlay').style.display = 'none';
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Load blocks from API
+        async function loadBlocks() {
+            try {
+                const response = await fetch(`${API_BASE}/heatmap/blocks`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    blocks = data.blocks;
+                    const select = document.getElementById('block-select');
+                    select.innerHTML = '<option value="">Select a block</option>';
+                    
+                    blocks.forEach(block => {
+                        const option = document.createElement('option');
+                        option.value = block.blockId;
+                        option.textContent = `${block.blockName} (${block.district})`;
+                        select.appendChild(option);
+                    });
+                    
+                    // Select first block by default
+                    if (blocks.length > 0) {
+                        select.value = blocks[0].blockId;
+                        currentBlock = blocks[0].blockId;
+                        loadHeatmapData();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading blocks:', error);
+                showToast('Failed to load blocks', 'error');
+            }
+        }
+
+        // Load heatmap data from API
+        async function loadHeatmapData() {
+            if (!currentBlock) return;
+            
+            showLoading();
+            
+            const metric = document.getElementById('metric-select').value;
+            const dateRange = document.getElementById('date-range').value;
+            const radius = document.getElementById('radius-slider').value;
+            
+            try {
+                const response = await fetch(
+                    `${API_BASE}/heatmap/block/${currentBlock}?metric=${metric}&dateRange=${dateRange}`
+                );
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateHeatmap(data);
+                    updateStats(data);
+                    updateSchoolsList(data);
+                } else {
+                    showToast('Failed to load heatmap data', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading heatmap:', error);
+                showToast('Failed to load heatmap data', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Update heatmap on the map
+        function updateHeatmap(data) {
+            // Clear existing heat layer
+            if (heatLayer) {
+                map.removeLayer(heatLayer);
+            }
+            
+            // Clear existing markers
+            schoolMarkers.forEach(marker => map.removeLayer(marker));
+            schoolMarkers = [];
+            
+            // Convert data to heat points format
+            const heatPoints = data.heatPoints.map(point => [
+                point.lat,
+                point.lng,
+                point.intensity
+            ]);
+            
+            // Create new heat layer
+            const radius = parseInt(document.getElementById('radius-slider').value);
+            heatLayer = L.heatLayer(heatPoints, {
+                radius: radius,
+                blur: 15,
+                maxZoom: 10,
+                gradient: {
+                    0.1: 'blue',
+                    0.3: 'cyan',
+                    0.5: 'lime',
+                    0.7: 'yellow',
+                    0.9: 'orange',
+                    1.0: 'red'
+                }
+            }).addTo(map);
+            
+            // Add school markers if enabled
+            if (showMarkers) {
+                data.heatPoints.forEach(point => {
+                    let markerColor = '#3b82f6';
+                    if (point.issues > 0) markerColor = '#8b5cf6';
+                    
+                    const marker = L.circleMarker([point.lat, point.lng], {
+                        radius: 6,
+                        fillColor: markerColor,
+                        color: '#fff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map);
+                    
+                    marker.bindPopup(`
+                        <div style="padding: 10px;">
+                            <strong>${point.schoolName}</strong><br>
+                            Coverage: ${point.coverage}%<br>
+                            Beneficiaries: ${point.beneficiaries}<br>
+                            Issues: ${point.issues}<br>
+                            <small>School ID: ${point.schoolId}</small>
+                        </div>
+                    `);
+                    
+                    schoolMarkers.push(marker);
+                });
+            }
+            
+            // Fit map to heat points
+            if (heatPoints.length > 0) {
+                const bounds = heatPoints.map(p => [p[0], p[1]]);
+                const boundsObj = L.latLngBounds(bounds);
+                map.fitBounds(boundsObj, { padding: [50, 50] });
+            }
+        }
+
+        // Update statistics
+        function updateStats(data) {
+            document.getElementById('total-schools').textContent = data.totalSchools;
+            document.getElementById('avg-coverage').textContent = data.stats.avgValue.toFixed(1) + '%';
+            document.getElementById('total-beneficiaries').textContent = 
+                data.totalSchools * 100; // Mock calculation
+            document.getElementById('total-issues').textContent = 
+                Math.floor(data.totalSchools * 0.3); // Mock calculation
+        }
+
+        // Update schools list
+        function updateSchoolsList(data) {
+            const container = document.getElementById('schools-list');
+            container.innerHTML = '';
+            
+            // Sort schools by coverage
+            const sortedSchools = [...data.heatPoints].sort((a, b) => b.coverage - a.coverage);
+            
+            sortedSchools.forEach(school => {
+                const coverage = school.coverage;
+                let coverageClass = 'low';
+                let badgeClass = 'low';
+                
+                if (coverage >= 90) {
+                    coverageClass = 'high';
+                    badgeClass = 'high';
+                } else if (coverage >= 70) {
+                    coverageClass = 'medium';
+                    badgeClass = 'medium';
+                }
+                
+                const schoolElement = document.createElement('div');
+                schoolElement.className = `school-item ${coverageClass}`;
+                schoolElement.innerHTML = `
+                    <div class="school-name">${school.schoolName}</div>
+                    <div class="school-info">
+                        <span>${coverage}% Coverage</span>
+                        <span class="coverage-badge ${badgeClass}">${coverage}%</span>
+                    </div>
+                `;
+                
+                schoolElement.addEventListener('click', () => {
+                    map.setView([school.lat, school.lng], 14);
+                    
+                    // Find and open marker popup
+                    const marker = schoolMarkers.find(m => 
+                        m.getLatLng().lat === school.lat && 
+                        m.getLatLng().lng === school.lng
+                    );
+                    
+                    if (marker) {
+                        marker.openPopup();
+                    }
+                });
+                
+                container.appendChild(schoolElement);
+            });
+        }
+
+        // Toggle school markers
+        function toggleSchoolMarkers() {
+            showMarkers = !showMarkers;
+            const btn = document.getElementById('toggle-markers-btn');
+            
+            if (showMarkers) {
+                btn.innerHTML = '<i>📍</i> Hide School Markers';
+                btn.classList.add('danger');
+            } else {
+                btn.innerHTML = '<i>📍</i> Show School Markers';
+                btn.classList.remove('danger');
+                
+                // Remove all markers
+                schoolMarkers.forEach(marker => map.removeLayer(marker));
+                schoolMarkers = [];
+            }
+            
+            loadHeatmapData();
+        }
+
+        // Fit map to bounds
+        function fitToBounds() {
+            if (heatLayer) {
+                const bounds = heatLayer.getBounds();
+                if (bounds.isValid()) {
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+            }
+        }
+
+        // Download map as image
+        async function downloadMap() {
+            const container = document.getElementById('heatmap-container');
+            
+            html2canvas(container).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `heatmap-${currentBlock}-${new Date().toISOString().split('T')[0]}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                showToast('Map downloaded successfully!');
+            });
+        }
+
+        // Export data
+        async function exportData() {
+            if (!currentBlock) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/heatmap/export/${currentBlock}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Convert to CSV string
+                    const csvContent = [
+                        Object.keys(data.data[0]).join(','),
+                        ...data.data.map(row => Object.values(row).join(','))
+                    ].join('\n');
+                    
+                    // Create download link
+                    const blob = new Blob([csvContent], { type: 'text/csv' });
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `schools-${currentBlock}-${new Date().toISOString().split('T')[0]}.csv`;
+                    link.click();
+                    
+                    showToast('Data exported successfully!');
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                showToast('Failed to export data', 'error');
+            }
+        }
+
+        // Initialize everything
+        async function init() {
+            // Initialize dark mode
+            initDarkMode();
+            
+            // Initialize map
+            initializeMap();
+            
+            // Load blocks
+            await loadBlocks();
+            
+            // Event listeners
+            document.getElementById('dark-toggle').addEventListener('click', toggleDarkMode);
+            document.getElementById('refresh-btn').addEventListener('click', loadHeatmapData);
+            document.getElementById('export-btn').addEventListener('click', exportData);
+            
+            document.getElementById('block-select').addEventListener('change', function(e) {
+                currentBlock = e.target.value;
+                loadHeatmapData();
+            });
+            
+            document.getElementById('metric-select').addEventListener('change', loadHeatmapData);
+            document.getElementById('date-range').addEventListener('change', loadHeatmapData);
+            
+            document.getElementById('radius-slider').addEventListener('input', function(e) {
+                document.getElementById('radius-value').textContent = e.target.value;
+                loadHeatmapData();
+            });
+            
+            // Hide loading after initialization
+            hideLoading();
+        }
+
+        // Start the application
+        init();
+    </script>
 </body>
 </html>

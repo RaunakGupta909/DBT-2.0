@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parent Dashboard</title>
-
 <style>
     :root {
         --bg: #f5f7fa;
@@ -16,6 +15,9 @@
         --btn-hover: #004a99;
         --shadow: rgba(0,0,0,0.12);
         --shadow-hover: rgba(0,0,0,0.18);
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
     }
 
     body.dark-mode {
@@ -38,15 +40,81 @@
         transition: background 0.3s ease;
     }
 
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--card-border);
+    }
+
+    .user-info {
+        background: var(--card-bg);
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px var(--shadow);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-icon {
+        font-size: 2rem;
+        color: var(--btn-bg);
+    }
+
+    .user-details h2 {
+        margin: 0;
+        color: var(--text);
+    }
+
+    .user-details p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: var(--card-bg);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px var(--shadow);
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: var(--btn-bg);
+        margin: 10px 0;
+    }
+
+    .stat-label {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
     .role-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(280px, 1fr));
         gap: 25px;
         justify-content: center;
-        margin-top: 60px;
+        margin-top: 30px;
     }
 
-    /* #### CARD #### */
     .role-card {
         background: var(--card-bg);
         padding: 20px;
@@ -57,6 +125,9 @@
         border: 1px solid var(--card-border);
         position: relative;
         overflow: hidden;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
     }
 
     .role-card:hover {
@@ -65,7 +136,6 @@
         border-top: 5px solid var(--btn-bg);
     }
 
-    /* ICON STYLE LIKE IMAGE */
     .role-badge {
         font-size: 45px;
         margin-bottom: 10px;
@@ -78,7 +148,6 @@
         100% { transform: translateY(0px); }
     }
 
-    /* TITLE */
     .role-card h3 {
         margin: 0;
         font-size: 20px;
@@ -87,16 +156,15 @@
         animation: fadeSlide 1.2s ease;
     }
 
-    /* DESCRIPTION */
     .role-card p {
         margin-top: 8px;
         color: var(--muted);
         font-size: 14px;
         line-height: 1.4;
         animation: fadeSlide 1.4s ease;
+        flex-grow: 1;
     }
 
-    /* BUTTON */
     .proceed-btn {
         display: inline-block;
         margin-top: 15px;
@@ -107,10 +175,36 @@
         border-radius: 8px;
         text-decoration: none;
         transition: 0.3s;
+        text-align: center;
+        width: 100%;
+        border: none;
+        cursor: pointer;
     }
 
     .proceed-btn:hover {
         background: var(--btn-hover);
+    }
+
+    .back-btn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 14px;
+        font-size: 14px;
+        color: white;
+        background: var(--btn-bg);
+        border-radius: 8px;
+        text-decoration: none;
+        transition: 0.3s;
+        z-index: 1000;
+    }
+
+    .back-btn:hover {
+        background: var(--btn-hover);
+    }
+
+    body.dark-mode .back-btn {
+        color: var(--text);
     }
 
     @keyframes fadeSlide {
@@ -118,138 +212,395 @@
         to   { opacity: 1; transform: translateY(0px); }
     }
 
-    /* Top utility strap */
-    .top-strap {
-        background: #f0f4f8;
-        border-bottom: 1px solid #e2e8f0;
-        padding: 8px 20px;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    body.dark-mode .top-strap {
-        background: #041421;
-        border-bottom-color: rgba(255,255,255,0.04);
-    }
-
-    .strap-controls {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .strap-controls button {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        font-size: 1.2rem;
-    }
-
-    .strap-controls button:focus {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
-    }
-
-    .lang-switcher {
+    /* Upcoming Meetings Section */
+    .upcoming-meetings {
+        margin-top: 40px;
         background: var(--card-bg);
-        padding: 6px 10px;
-        border-radius: 6px;
-        border: 1px solid #e2e8f0;
-        cursor: pointer;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 4px 12px var(--shadow);
     }
 
-    body.dark-mode .lang-switcher {
-        background: rgba(255,255,255,0.03);
-        border-color: rgba(255,255,255,0.06);
+    .meeting-list {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding: 15px 0;
+    }
+
+    .meeting-item {
+        min-width: 300px;
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid var(--card-border);
+    }
+
+    .meeting-time {
+        color: var(--btn-bg);
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .meeting-title {
         color: var(--text);
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .meeting-teacher {
+        color: var(--muted);
+        font-size: 0.9rem;
+    }
+
+    .meeting-status {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        margin-top: 5px;
+    }
+
+    .status-scheduled {
+        background: var(--warning);
+        color: white;
+    }
+
+    .status-accepted {
+        background: var(--success);
+        color: white;
+    }
+
+    .join-meeting-btn {
+        background: var(--success);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .join-meeting-btn:hover {
+        background: #0da271;
+    }
+
+    /* Notification Bell */
+    .notification-bell {
+        position: relative;
+        cursor: pointer;
+        font-size: 1.5rem;
+        padding: 10px;
+    }
+
+    .notification-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--danger);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .role-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .quick-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .role-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .quick-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .dashboard-header {
+            flex-direction: column;
+            gap: 20px;
+        }
     }
 </style>
-
 </head>
 <body>
 
     <a href="index.html" class="back-btn">← Back to Home</a>
 
-<style>
-.back-btn {
-    position: absolute;
-    top: 20px;     /* upar se distance */
-    left: 20px;    /* left side se distance */
-    padding: 10px 14px;
-    margin: 0;
-    font-size: 14px;
-    color: white;
-    background: var(--btn-bg);
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.3s;
-    z-index: 1000;
-}
+    <div class="dashboard-header">
+        <div class="user-info">
+            <div class="user-icon">👨‍👩‍👧‍👦</div>
+            <div class="user-details">
+                <h2 id="parentName">Parent Name</h2>
+                <p id="parentId">Parent ID: -</p>
+                <p id="childrenCount">Children: 0</p>
+            </div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div class="notification-bell" onclick="showNotifications()">
+                🔔
+                <div class="notification-count" id="notificationCount">0</div>
+            </div>
+            <button class="proceed-btn" onclick="viewAllMeetings()">📅 View All Meetings</button>
+        </div>
+    </div>
 
-.back-btn:hover {
-    background: var(--btn-hover);
-}
+    <div class="quick-stats">
+        <div class="stat-card">
+            <div class="stat-label">Children in School</div>
+            <div class="stat-value" id="childrenCountValue">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Upcoming Meetings</div>
+            <div class="stat-value" id="upcomingMeetings">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">DBT Active</div>
+            <div class="stat-value" id="dbtActive">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Attendance %</div>
+            <div class="stat-value" id="attendance">0%</div>
+        </div>
+    </div>
 
-body.dark-mode .back-btn {
-    color: var(--text);
-}
-</style>
+    <!-- Upcoming Meetings Section -->
+    <div class="upcoming-meetings" id="upcomingMeetingsSection">
+        <h3 style="margin-top: 0; color: var(--text);">📅 Your Upcoming Meetings</h3>
+        <div class="meeting-list" id="meetingList">
+            <!-- Meetings will be loaded here -->
+        </div>
+    </div>
 
-<div class="role-grid">
+    <div class="role-grid">
+        <!-- Family Overview Card -->
+        <article class="role-card parent" onclick="location.href='family_overview.html'">
+            <div class="role-badge">👨‍👩‍👧‍👦</div>
+            <h3>Family Overview</h3>
+            <p>Get an overview of your family's DBT status and progress.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Family Overview Card -->
-  <article class="role-card parent" onclick="location.href='family_overview.html'">
-    <div class="role-badge">👨‍👩‍👧‍👦</div>
-    <h3>Family Overview</h3>
-    <p>Get an overview of your family's DBT status and progress.</p>
-    <a class="proceed-btn" href="family_overview.html">Proceed →</a>
-  </article>
+        <!-- Parent Action Tools Card -->
+        <article class="role-card parent" onclick="location.href='parents_action.html'">
+            <div class="role-badge">🛠️</div>
+            <h3>Parent Action Tools</h3>
+            <p>Tools and actions to support your child's DBT journey.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Parent Action Tools Card -->
-  <article class="role-card parent" onclick="location.href='parents_action.html'">
-    <div class="role-badge">🛠️</div>
-    <h3>Parent Action Tools</h3>
-    <p>Tools and actions to support your child's DBT journey.</p>
-    <a class="proceed-btn" href="parents_action.html">Proceed →</a>
-  </article>
+        <!-- Awareness Card -->
+        <article class="role-card parent" onclick="location.href='awareness.html'">
+            <div class="role-badge">📚</div>
+            <h3>Awareness</h3>
+            <p>Access resources and materials for DBT awareness.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Awareness Card -->
-  <article class="role-card parent" onclick="location.href='awareness.html'">
-    <div class="role-badge">📚</div>
-    <h3>Awareness</h3>
-    <p>Access resources and materials for DBT awareness.</p>
-    <a class="proceed-btn" href="awareness.html">Proceed →</a>
-  </article>
+        <!-- Family Dashboard Card -->
+        <article class="role-card parent" onclick="location.href='family_dashboard.html'">
+            <div class="role-badge">📊</div>
+            <h3>Family Dashboard</h3>
+            <p>View detailed family statistics and DBT benefits.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Family Dashboard Card -->
-  <article class="role-card parent" onclick="location.href='family_dashboard.html'">
-    <div class="role-badge">📊</div>
-    <h3>Family Dashboard</h3>
-    <p>View detailed family statistics and DBT benefits.</p>
-    <a class="proceed-btn" href="family_dashboard.html">Proceed →</a>
-  </article>
+        <!-- Community Impact Card -->
+        <article class="role-card parent" onclick="location.href='community_impact.html'">
+            <div class="role-badge">🌍</div>
+            <h3>Community Impact</h3>
+            <p>See the broader impact of DBT in your community.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
-  <!-- Community Impact Card -->
-  <article class="role-card parent" onclick="location.href='community_impact.html'">
-    <div class="role-badge">🌍</div>
-    <h3>Community Impact</h3>
-    <p>See the broader impact of DBT in your community.</p>
-    <a class="proceed-btn" href="community_impact.html">Proceed →</a>
-  </article>
+        <!-- Teacher Meetings Card -->
+        <article class="role-card parent" onclick="location.href='parent_meetings.html'">
+            <div class="role-badge">🤝</div>
+            <h3>Teacher Meetings</h3>
+            <p>Schedule and join meetings with teachers.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
+        <!-- Live Meetings Card -->
+        <article class="role-card parent" onclick="location.href='parent_live_meetings.html'">
+            <div class="role-badge">🎥</div>
+            <h3>Live Meetings</h3>
+            <p>Join live video meetings with teachers.</p>
+            <button class="proceed-btn">Proceed →</button>
+        </article>
 
- 
+    </div>
 
-</div>
+    <!-- Notifications Modal -->
+    <div id="notificationsModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: var(--card-bg); padding: 20px; border-radius: 15px; max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <h3 style="margin-top: 0; color: var(--text);">🔔 Notifications</h3>
+            <div id="notificationsList">
+                <!-- Notifications will be loaded here -->
+            </div>
+            <button onclick="closeNotifications()" style="padding: 10px 20px; background: var(--btn-bg); color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 15px;">Close</button>
+        </div>
+    </div>
 
 <script>
-// Check for dark mode preference on page load
+// Load parent data and meetings
 document.addEventListener('DOMContentLoaded', function() {
+    // Check for dark mode preference
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
         document.body.classList.add('dark-mode');
+    } else {
+        document.body.classList.remove('dark-mode');
     }
+
+    // Load parent data from localStorage
+    const parentName = localStorage.getItem('parentName') || 'Parent Name';
+    const parentId = localStorage.getItem('parentId') || 'PAR-001';
+    const children = JSON.parse(localStorage.getItem('children') || '[]');
+    
+    document.getElementById('parentName').textContent = parentName;
+    document.getElementById('parentId').textContent = `Parent ID: ${parentId}`;
+    document.getElementById('childrenCount').textContent = `Children: ${children.length}`;
+    document.getElementById('childrenCountValue').textContent = children.length;
+    
+    // Fetch parent stats and meetings
+    fetchParentStats();
+    fetchUpcomingMeetings();
+    fetchNotifications();
 });
+
+function fetchParentStats() {
+    // Simulate API call for stats
+    setTimeout(() => {
+        const children = JSON.parse(localStorage.getItem('children') || '[]');
+        document.getElementById('upcomingMeetings').textContent = '2';
+        document.getElementById('dbtActive').textContent = children.length;
+        document.getElementById('attendance').textContent = '95%';
+    }, 500);
+}
+
+function fetchUpcomingMeetings() {
+    // Simulate API call for meetings
+    const meetings = [
+        {
+            id: 'MEET-001',
+            title: 'Parent-Teacher Meeting: Rahul Sharma',
+            time: '2024-01-15T14:00:00',
+            teacher: 'Mr. Rajesh Kumar',
+            duration: 30,
+            status: 'accepted'
+        },
+        {
+            id: 'MEET-002',
+            title: 'DBT Progress Review',
+            time: '2024-01-18T16:00:00',
+            teacher: 'Ms. Priya Sharma',
+            duration: 45,
+            status: 'scheduled'
+        }
+    ];
+    
+    const meetingList = document.getElementById('meetingList');
+    meetingList.innerHTML = '';
+    
+    meetings.forEach(meeting => {
+        const meetingDate = new Date(meeting.time);
+        const formattedTime = meetingDate.toLocaleString('en-IN', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        const meetingItem = document.createElement('div');
+        meetingItem.className = 'meeting-item';
+        meetingItem.innerHTML = `
+            <div class="meeting-time">${formattedTime}</div>
+            <div class="meeting-title">${meeting.title}</div>
+            <div class="meeting-teacher">Teacher: ${meeting.teacher}</div>
+            <div class="meeting-status status-${meeting.status}">
+                ${meeting.status.charAt(0).toUpperCase() + meeting.status.slice(1)}
+            </div>
+            <button class="join-meeting-btn" onclick="joinMeeting('${meeting.id}')">
+                Join Meeting (${meeting.duration} mins)
+            </button>
+        `;
+        meetingList.appendChild(meetingItem);
+    });
+    
+    document.getElementById('upcomingMeetings').textContent = meetings.length;
+}
+
+function fetchNotifications() {
+    // Simulate notifications
+    const notifications = [
+        { id: 1, message: 'New meeting scheduled with Mr. Rajesh Kumar', time: '2 hours ago' },
+        { id: 2, message: 'DBT status updated for Rahul Sharma', time: '1 day ago' },
+        { id: 3, message: 'Meeting reminder: Tomorrow at 2 PM', time: '2 days ago' }
+    ];
+    
+    document.getElementById('notificationCount').textContent = notifications.length;
+    
+    // Store notifications for modal
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+}
+
+function showNotifications() {
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const notificationsList = document.getElementById('notificationsList');
+    notificationsList.innerHTML = '';
+    
+    if (notifications.length === 0) {
+        notificationsList.innerHTML = '<p style="color: var(--muted); text-align: center;">No notifications</p>';
+    } else {
+        notifications.forEach(notification => {
+            const notificationItem = document.createElement('div');
+            notificationItem.style.padding = '10px';
+            notificationItem.style.borderBottom = '1px solid var(--card-border)';
+            notificationItem.innerHTML = `
+                <div style="color: var(--text); font-weight: bold;">${notification.message}</div>
+                <div style="color: var(--muted); font-size: 0.8rem;">${notification.time}</div>
+            `;
+            notificationsList.appendChild(notificationItem);
+        });
+    }
+    
+    document.getElementById('notificationsModal').style.display = 'flex';
+}
+
+function closeNotifications() {
+    document.getElementById('notificationsModal').style.display = 'none';
+}
+
+function joinMeeting(meetingId) {
+    // Redirect to live meeting page
+    window.location.href = `live_meeting.html?meetingId=${meetingId}&userType=parent`;
+}
+
+function viewAllMeetings() {
+    window.location.href = 'parent_meetings.html';
+}
+
+// Real-time updates
+setInterval(() => {
+    fetchUpcomingMeetings();
+    fetchNotifications();
+}, 30000); // Update every 30 seconds
 </script>
 </body>
 </html>
