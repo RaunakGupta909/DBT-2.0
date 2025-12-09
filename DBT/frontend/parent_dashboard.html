@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Parent Dashboard</title>
@@ -602,5 +603,61 @@ setInterval(() => {
     fetchNotifications();
 }, 30000); // Update every 30 seconds
 </script>
+=======
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="auth.css">
+  <style>
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; }
+    .dash-wrap { max-width: 1200px; margin: 60px auto; padding: 0 20px 40px; }
+    h1 { margin: 0 0 10px; color: var(--gov-blue); }
+    p.sub { margin: 0 0 24px; color: var(--muted); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 16px; }
+    .card { background: var(--card, #fff); border: 1px solid var(--border-color, #e5e7eb); border-radius: 12px; padding: 18px; box-shadow: var(--shadow); }
+    .card h3 { margin: 0 0 6px; }
+    .list { list-style: none; padding: 0; margin: 0; }
+    .list li { padding: 10px 0; border-bottom: 1px solid var(--border-color, #e5e7eb); }
+    .list li:last-child { border-bottom: none; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: var(--gov-light-blue, #e6f2ff); color: var(--gov-blue); font-weight: 700; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="dash-wrap">
+    <h1>Parent Dashboard</h1>
+    <p class="sub">View your child's DBT status, PTM invites, and communications.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Child Summary</h3>
+        <p><strong>Name:</strong> <span id="child-name">Student</span></p>
+        <p><strong>Class:</strong> <span id="child-class">N/A</span></p>
+        <p><span class="badge">DBT Active</span></p>
+      </div>
+      <div class="card">
+        <h3>Upcoming PTMs</h3>
+        <ul class="list" id="ptm-list">
+          <li>No upcoming PTMs</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Recent Notifications</h3>
+        <ul class="list">
+          <li>Digital consent submitted</li>
+          <li>Benefit disbursed last week</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script src="auth.js"></script>
+  <script>
+    requireAuth('parent', 'parent_login.html');
+    AuthUI.attachProfileMenu();
+    const session = AuthSession.get();
+    if (session) {
+      document.getElementById('child-name').textContent = session.name || 'Student';
+    }
+  </script>
+>>>>>>> 350b87a236a98902fb5dbdb3d446ab7e2ef6bb92
 </body>
 </html>

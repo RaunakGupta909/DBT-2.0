@@ -18,7 +18,36 @@ app.use(express.static(path.join(__dirname, '..', 'frontend')));
 // MongoDB connection string
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/dbt_portal_demo';
 
+<<<<<<< HEAD
 async function createMongoConnection() {
+=======
+mongoose.connect(MONGO_URI, {useNewUrlParser:true, useUnifiedTopology:true})
+  .then(()=>console.log('Connected to MongoDB'))
+  .catch(err=>console.error('MongoDB connection error',err));
+
+// Routes - keep modular
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/students', require('./routes/students'));
+app.use('/api/volunteers', require('./routes/volunteers'));
+app.use('/api/admin', require('./routes/admin'));
+// Scam reports route
+app.use('/api/scams', require('./routes/scams'));
+app.use('/api/teachers', require('./routes/teachers'));
+// Parents route
+app.use('/api/parents', require('./routes/parents'));
+app.use('/api/ptm', require('./routes/ptm'));
+// Meetings route (scheduling, joining, attendance)
+app.use('/api/meetings', require('./routes/meetings'));
+
+// Simple stats endpoint for frontend counters
+app.get('/api/stats', async (req,res)=>{
+  // In a real app, compute from DB. Return dummy for demo.
+  res.json({totalStudents:1200, dbtEnabled:842, volunteers:56, annualAmount:'₹12,40,000'});
+});
+
+// Visitor count endpoint
+app.get('/api/visitor-count', async (req, res) => {
+>>>>>>> 350b87a236a98902fb5dbdb3d446ab7e2ef6bb92
   try {
     await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,

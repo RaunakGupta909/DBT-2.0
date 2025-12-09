@@ -6,310 +6,46 @@
     <title>Campaign Tracking System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            padding: 30px 0;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-        }
-        
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .filter-section {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-        }
-        
-        .filter-section h2 {
-            color: #1e3c72;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-        
-        .dropdown-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .dropdown-group {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .dropdown-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
-        }
-        
-        .dropdown-group select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            background-color: white;
-            transition: border-color 0.3s;
-        }
-        
-        .dropdown-group select:focus {
-            border-color: #2a5298;
-            outline: none;
-        }
-        
-        .dropdown-group select:disabled {
-            background-color: #f9f9f9;
-            color: #999;
-        }
-        
-        .button-group {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 25px;
-        }
-        
-        .campaign-btn {
-            padding: 14px 28px;
-            background-color: #f0f4ff;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #2a5298;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .campaign-btn:hover {
-            background-color: #e1e8ff;
-            transform: translateY(-2px);
-        }
-        
-        .campaign-btn.active {
-            background-color: #2a5298;
-            color: white;
-            box-shadow: 0 4px 8px rgba(42, 82, 152, 0.3);
-        }
-        
-        .campaign-btn i {
-            font-size: 1.2rem;
-        }
-        
-        .campaign-section {
-            margin-top: 30px;
-        }
-        
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #1e3c72;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #eaeaea;
-        }
-        
-        .section-title i {
-            font-size: 1.5rem;
-        }
-        
-        .campaign-table {
-            width: 100%;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 40px;
-            display: none;
-        }
-        
-        .campaign-table.active {
-            display: table;
-        }
-        
-        .campaign-table th {
-            background-color: #1e3c72;
-            color: white;
-            padding: 18px 15px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .campaign-table td {
-            padding: 16px 15px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .campaign-table tr:last-child td {
-            border-bottom: none;
-        }
-        
-        .campaign-table tr:hover {
-            background-color: #f9fbff;
-        }
-        
-        .campaign-moto {
-            max-width: 250px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .people-count {
-            display: inline-block;
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-        
-        .verification-pic {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 2px solid #ddd;
-            transition: transform 0.3s;
-            cursor: pointer;
-        }
-        
-        .verification-pic:hover {
-            transform: scale(1.8);
-            z-index: 10;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 60px 20px;
-            color: #777;
-            font-size: 1.2rem;
-        }
-        
-        .no-data i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #ccc;
-        }
-        
-        .location-indicator {
-            background-color: #e8f4ff;
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            color: #1e3c72;
-            border-left: 4px solid #2a5298;
-        }
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            padding: 10px 14px;
-            margin: 0 0 20px 0;
-            font-size: 14px;
-            color: white;
-            background: #005bbb;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: 0.3s;
-            z-index: 1000;
-        }
-
-        .back-btn:hover {
-            background: #004a99;
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
-        }
-        
-        @media (max-width: 992px) {
-            .dropdown-row {
-                flex-direction: column;
-            }
-            
-            .campaign-table {
-                display: block;
-                overflow-x: auto;
-            }
-            
-            .campaign-btn {
-                padding: 12px 20px;
-                font-size: 1rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .campaign-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f5f7fa; color: #333; line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { text-align: center; padding: 30px 0; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
+        header h1 { font-size: 2.8rem; margin-bottom: 10px; }
+        header p { font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto; }
+        .filter-section { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); margin-bottom: 30px; }
+        .filter-section h2 { color: #1e3c72; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; }
+        .dropdown-row { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
+        .dropdown-group { flex: 1; min-width: 200px; }
+        .dropdown-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; }
+        .dropdown-group select { width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 6px; font-size: 1rem; background-color: white; transition: border-color 0.3s; }
+        .dropdown-group select:focus { border-color: #2a5298; outline: none; }
+        .dropdown-group select:disabled { background-color: #f9f9f9; color: #999; }
+        .button-group { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 25px; }
+        .campaign-btn { padding: 14px 28px; background-color: #f0f4ff; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; color: #2a5298; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; }
+        .campaign-btn:hover { background-color: #e1e8ff; transform: translateY(-2px); }
+        .campaign-btn.active { background-color: #2a5298; color: white; box-shadow: 0 4px 8px rgba(42, 82, 152, 0.3); }
+        .campaign-btn i { font-size: 1.2rem; }
+        .campaign-section { margin-top: 30px; }
+        .section-title { display: flex; align-items: center; gap: 10px; color: #1e3c72; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #eaeaea; }
+        .section-title i { font-size: 1.5rem; }
+        .campaign-table { width: 100%; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08); margin-bottom: 40px; display: none; }
+        .campaign-table.active { display: table; }
+        .campaign-table th { background-color: #1e3c72; color: white; padding: 18px 15px; text-align: left; font-weight: 600; }
+        .campaign-table td { padding: 16px 15px; border-bottom: 1px solid #f0f0f0; }
+        .campaign-table tr:last-child td { border-bottom: none; }
+        .campaign-table tr:hover { background-color: #f9fbff; }
+        .campaign-moto { max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .people-count { display: inline-block; background-color: #e8f5e9; color: #2e7d32; padding: 5px 10px; border-radius: 20px; font-weight: 600; }
+        .verification-pic { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #ddd; transition: transform 0.3s; cursor: pointer; }
+        .verification-pic:hover { transform: scale(1.8); z-index: 10; position: relative; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+        .no-data { text-align: center; padding: 60px 20px; color: #777; font-size: 1.2rem; }
+        .no-data i { font-size: 3rem; margin-bottom: 15px; color: #ccc; }
+        .location-indicator { background-color: #e8f4ff; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 600; color: #1e3c72; border-left: 4px solid #2a5298; }
+        .back-btn { position: absolute; top: 20px; left: 20px; padding: 10px 14px; margin: 0 0 20px 0; font-size: 14px; color: white; background: #005bbb; border-radius: 8px; text-decoration: none; transition: 0.3s; z-index: 1000; }
+        .back-btn:hover { background: #004a99; }
+        footer { text-align: center; margin-top: 40px; padding: 20px; color: #666; font-size: 0.9rem; border-top: 1px solid #eee; }
+        @media (max-width: 992px) { .dropdown-row { flex-direction: column; } .campaign-table { display: block; overflow-x: auto; } .campaign-btn { padding: 12px 20px; font-size: 1rem; } }
+        @media (max-width: 768px) { header h1 { font-size: 2.2rem; } .button-group { flex-direction: column; align-items: center; } .campaign-btn { width: 100%; justify-content: center; } }
     </style>
 </head>
 <body>
@@ -319,10 +55,8 @@
             <h1><i class="fas fa-chart-line"></i> Campaign Tracking System</h1>
             <p>Monitor and track ongoing, previous, and upcoming campaigns across different regions</p>
         </header>
-        
         <section class="filter-section">
             <h2><i class="fas fa-filter"></i> Filter Campaigns by Location</h2>
-            
             <div class="dropdown-row">
                 <div class="dropdown-group">
                     <label for="stateSelect">State</label>
@@ -335,40 +69,102 @@
                         <option value="WB">West Bengal</option>
                     </select>
                 </div>
-                
                 <div class="dropdown-group">
                     <label for="districtSelect">District</label>
-                    <select id="districtSelect" disabled>
-                        <option value="">Select District</option>
-                    </select>
+                    <select id="districtSelect" disabled><option value="">Select District</option></select>
                 </div>
-                
                 <div class="dropdown-group">
                     <label for="blockSelect">Block</label>
-                    <select id="blockSelect" disabled>
-                        <option value="">Select Block</option>
-                    </select>
+                    <select id="blockSelect" disabled><option value="">Select Block</option></select>
                 </div>
-                
                 <div class="dropdown-group">
                     <label for="villageSelect">Village/Casba</label>
-                    <select id="villageSelect" disabled>
-                        <option value="">Select Village/Casba</option>
-                    </select>
+                    <select id="villageSelect" disabled><option value="">Select Village/Casba</option></select>
                 </div>
             </div>
-            
             <div class="location-indicator">
                 <i class="fas fa-map-marker-alt"></i>
                 <span id="locationText">Please select a location to view campaigns</span>
             </div>
-            
             <div class="button-group">
-                <button class="campaign-btn active" id="ongoingBtn">
-                    <i class="fas fa-play-circle"></i> Ongoing Campaigns
-                </button>
-                <button class="campaign-btn" id="previousBtn">
-                    <i class="fas fa-history"></i> Previous Campaigns
+                <button class="campaign-btn active" id="ongoingBtn"><i class="fas fa-play-circle"></i> Ongoing Campaigns</button>
+                <button class="campaign-btn" id="previousBtn"><i class="fas fa-history"></i> Previous Campaigns</button>
+                <button class="campaign-btn" id="upcomingBtn"><i class="fas fa-calendar-alt"></i> Upcoming Campaigns</button>
+            </div>
+        </section>
+        <section class="campaign-section">
+            <h2 class="section-title"><i class="fas fa-list-ul"></i> <span id="tableTitle">Ongoing Campaigns</span></h2>
+            <table class="campaign-table active" id="ongoingTable">
+                <thead><tr><th>Launched By</th><th>Launch Date</th><th>Campaign Motto</th><th>Target Location</th><th>People Attended</th><th>Verification Picture</th></tr></thead>
+                <tbody id="ongoingTableBody"></tbody>
+            </table>
+            <table class="campaign-table" id="previousTable">
+                <thead><tr><th>Launched By</th><th>Launch Date</th><th>Campaign Motto</th><th>Target Location</th><th>People Attended</th><th>Verification Picture</th></tr></thead>
+                <tbody id="previousTableBody"></tbody>
+            </table>
+            <table class="campaign-table" id="upcomingTable">
+                <thead><tr><th>Launched By</th><th>Launch Date</th><th>Campaign Motto</th><th>Target Location</th><th>Expected Attendance</th><th>Verification Picture</th></tr></thead>
+                <tbody id="upcomingTableBody"></tbody>
+            </table>
+            <div class="no-data" id="noDataMessage">
+                <i class="fas fa-search"></i>
+                <p>No campaigns found for the selected location. Please select a different location.</p>
+            </div>
+        </section>
+        <footer><p>Campaign Tracking System © 2023 | All data is for demonstration purposes only</p></footer>
+    </div>
+    <script>
+        const locationData = {"UP": { name: "Uttar Pradesh", districts: { "LK": { name: "Lucknow", blocks: ["Mohanlalganj", "Malihabad", "Bakshi Ka Talab", "Sarojini Nagar"] }, "VP": { name: "Varanasi", blocks: ["Pindra", "Cholapur", "Chiraigaon", "Sevapuri"] }, "GP": { name: "Ghaziabad", blocks: ["Modinagar", "Muradnagar", "Hapur", "Garhmukteshwar"] }, "AG": { name: "Agra", blocks: ["Kheragarh", "Fatehabad", "Bah", "Etmadpur"] } } }, "MH": { name: "Maharashtra", districts: { "MU": { name: "Mumbai", blocks: ["Andheri", "Bandra", "Dadar", "Thane"] }, "PU": { name: "Pune", blocks: ["Haveli", "Mulshi", "Velhe", "Bhor"] }, "NG": { name: "Nagpur", blocks: ["Katol", "Kalameshwar", "Narkhed", "Umred"] }, "NS": { name: "Nashik", blocks: ["Niphad", "Yeola", "Sinnar", "Igatpuri"] } } }, "RJ": { name: "Rajasthan", districts: { "JP": { name: "Jaipur", blocks: ["Amber", "Jamwa Ramgarh", "Kotputli", "Phagi"] }, "UD": { name: "Udaipur", blocks: ["Girwa", "Vallabhnagar", "Kherwara", "Salumbar"] }, "JK": { name: "Jodhpur", blocks: ["Bilara", "Bhopalgarh", "Osian", "Shergarh"] }, "KK": { name: "Kota", blocks: ["Ladpura", "Ramganj Mandi", "Sangod", "Manshipur"] } } }, "KA": { name: "Karnataka", districts: { "BL": { name: "Bengaluru", blocks: ["Anekal", "Bengaluru North", "Bengaluru South", "Devanahalli"] }, "MY": { name: "Mysuru", blocks: ["Hunsur", "Krishnarajanagara", "Nanjangud", "Piriyapatna"] }, "MG": { name: "Mangaluru", blocks: ["Bantwal", "Belthangady", "Mangaluru", "Puttur"] }, "BG": { name: "Belagavi", blocks: ["Athani", "Bailhongal", "Chikodi", "Gokak"] } } }, "WB": { name: "West Bengal", districts: { "KO": { name: "Kolkata", blocks: ["Alipore", "Behala", "Jadavpur", "Tollygunge"] }, "HA": { name: "Howrah", blocks: ["Amta", "Bagnan", "Uluberia", "Shyampur"] }, "PR": { name: "Purulia", blocks: ["Balarampur", "Hura", "Purulia", "Raghunathpur"] }, "DA": { name: "Darjeeling", blocks: ["Darjeeling Pulbazar", "Jorebunglow Sukhiapokhri", "Kalimpong", "Kurseong"] } } } };
+        const villageData = {"Mohanlalganj": ["Bachhara", "Dasauli", "Kakori", "Malihabad"], "Malihabad": ["Auras", "Kakori", "Malihabad", "Mitauli"], "Bakshi Ka Talab": ["Bakshi Ka Talab", "Itaunja", "Kakori", "Chinhat"], "Sarojini Nagar": ["Gosainganj", "Kakori", "Malihabad", "Sarojini Nagar"], "Andheri": ["Andheri East", "Andheri West", "Jogeshwari", "Vile Parle"], "Bandra": ["Bandra East", "Bandra West", "Khar", "Santa Cruz"], "Dadar": ["Dadar", "Matunga", "Prabhadevi", "Wadala"], "Thane": ["Kalwa", "Kopri", "Mumbra", "Wagle Estate"], "Amber": ["Amber", "Jamwa Ramgarh", "Kotputli", "Phagi"], "Jamwa Ramgarh": ["Amber", "Jamwa Ramgarh", "Kotputli", "Phagi"], "Kotputli": ["Amber", "Jamwa Ramgarh", "Kotputli", "Phagi"], "Phagi": ["Amber", "Jamwa Ramgarh", "Kotputli", "Phagi"], "Anekal": ["Anekal", "Bommasandra", "Jigani", "Sarjapur"], "Bengaluru North": ["Devanahalli", "Doddaballapur", "Hesaraghatta", "Yelahanka"], "Bengaluru South": ["Begur", "Bommanahalli", "Krishnarajapuram", "Uttarahalli"], "Devanahalli": ["Devanahalli", "Doddaballapur", "Hesaraghatta", "Yelahanka"], "Bommanahalli": ["Bommanahalli", "Begur", "BTM Layout", "HSR"], "Alipore": ["Alipore", "Bhowanipore", "Kalighat", "Tollygunge"], "Behala": ["Behala", "Garden Reach", "Haridevpur", "Thakurpukur"], "Jadavpur": ["Bagha Jatin", "Jadavpur", "Santoshpur", "Tiljala"], "Tollygunge": ["Bansdroni", "Garia", "Naktala", "Ranikuthi"], "Bagnan": ["Bagnan", "Uluberia", "Amta", "Bagnan II"], "Uluberia": ["Uluberia", "Bagnan", "Shyampur", "Amta"], "Hunsur": ["Hunsur", "Gonikoppal", "Periyapatna", "Kushalnagar"], "Nanjangud": ["Nanjangud", "Tagadur", "T Narasipura", "Badanavalu"] };
+        const campaignData = { ongoing: [{ id: 1, launchedBy: "Health Dept. UP", launchDate: "2023-10-15", motto: "Swachh Uttar Pradesh, Swasth Uttar Pradesh", location: { state: "UP", district: "LK", block: "Mohanlalganj", village: "Bachhara" }, peopleAttended: 1245, verificationPic: "https://picsum.photos/seed/camp1/400/300" }, { id: 2, launchedBy: "Education Ministry", launchDate: "2023-10-10", motto: "Padhega India, Badhega India", location: { state: "UP", district: "VP", block: "Pindra", village: "Kachnar" }, peopleAttended: 876, verificationPic: "https://picsum.photos/seed/camp2/400/300" }, { id: 3, launchedBy: "Women & Child Development", launchDate: "2023-10-05", motto: "Beti Bachao, Beti Padhao", location: { state: "MH", district: "MU", block: "Andheri", village: "Andheri East" }, peopleAttended: 2103, verificationPic: "https://picsum.photos/seed/camp3/400/300" }, { id: 4, launchedBy: "Agriculture Dept. RJ", launchDate: "2023-09-28", motto: "Kisan Samriddhi Yojana", location: { state: "RJ", district: "JP", block: "Amber", village: "Amber" }, peopleAttended: 1542, verificationPic: "https://picsum.photos/seed/camp4/400/300" }, { id: 5, launchedBy: "Rural Development KA", launchDate: "2023-10-01", motto: "Gram Uday, Bharat Uday", location: { state: "KA", district: "BL", block: "Anekal", village: "Anekal" }, peopleAttended: 932, verificationPic: "https://picsum.photos/seed/camp5/400/300" }, { id: 6, launchedBy: "Health Dept. WB", launchDate: "2023-10-12", motto: "Swasthya Suraksha Yojana", location: { state: "WB", district: "KO", block: "Alipore", village: "Alipore" }, peopleAttended: 1876, verificationPic: "https://picsum.photos/seed/camp6/400/300" }, { id: 7, launchedBy: "Skill Development MH", launchDate: "2023-10-03", motto: "Kaushal Bharat, Kushal Bharat", location: { state: "MH", district: "PU", block: "Haveli", village: "Shivane" }, peopleAttended: 654, verificationPic: "https://picsum.photos/seed/camp7/400/300" }, { id: 8, launchedBy: "Environment RJ", launchDate: "2023-09-25", motto: "Harit Rajasthan, Samriddh Rajasthan", location: { state: "RJ", district: "UD", block: "Girwa", village: "Badi" }, peopleAttended: 1123, verificationPic: "https://picsum.photos/seed/camp8/400/300" }, { id: 9, launchedBy: "Youth Affairs WB", launchDate: "2023-10-18", motto: "Sports for All", location: { state: "WB", district: "HA", block: "Bagnan", village: "Uluberia" }, peopleAttended: 980, verificationPic: "https://picsum.photos/seed/camp9/400/300" }, { id: 10, launchedBy: "Women Safety KA", launchDate: "2023-10-19", motto: "Safe Commute Bengaluru", location: { state: "KA", district: "BL", block: "Bengaluru South", village: "Bommanahalli" }, peopleAttended: 1140, verificationPic: "https://picsum.photos/seed/camp10/400/300" }], previous: [{ id: 11, launchedBy: "Health Dept. UP", launchDate: "2023-08-20", motto: "Polio Mukt Uttar Pradesh", location: { state: "UP", district: "LK", block: "Malihabad", village: "Malihabad" }, peopleAttended: 2456, verificationPic: "https://picsum.photos/seed/camp11/400/300" }, { id: 12, launchedBy: "Education Ministry", launchDate: "2023-07-15", motto: "Digital Literacy Campaign", location: { state: "UP", district: "AG", block: "Kheragarh", village: "Fatehabad" }, peopleAttended: 1876, verificationPic: "https://picsum.photos/seed/camp12/400/300" }, { id: 13, launchedBy: "Women & Child Development", launchDate: "2023-06-10", motto: "Poshan Abhiyaan", location: { state: "MH", district: "MU", block: "Bandra", village: "Bandra West" }, peopleAttended: 3120, verificationPic: "https://picsum.photos/seed/camp13/400/300" }, { id: 14, launchedBy: "Agriculture Dept. RJ", launchDate: "2023-05-22", motto: "Krishi Sinchai Yojana", location: { state: "RJ", district: "JP", block: "Jamwa Ramgarh", village: "Jamwa Ramgarh" }, peopleAttended: 1987, verificationPic: "https://picsum.photos/seed/camp14/400/300" }, { id: 15, launchedBy: "Rural Development KA", launchDate: "2023-04-18", motto: "Swachh Gram Yojana", location: { state: "KA", district: "BL", block: "Bengaluru North", village: "Devanahalli" }, peopleAttended: 1423, verificationPic: "https://picsum.photos/seed/camp15/400/300" }, { id: 16, launchedBy: "Health Dept. WB", launchDate: "2023-03-12", motto: "COVID Vaccination Drive", location: { state: "WB", district: "KO", block: "Behala", village: "Behala" }, peopleAttended: 4231, verificationPic: "https://picsum.photos/seed/camp16/400/300" }, { id: 17, launchedBy: "Skill Development MH", launchDate: "2023-02-28", motto: "Rozgar Yukt Bharat", location: { state: "MH", district: "PU", block: "Mulshi", village: "Tamhini" }, peopleAttended: 876, verificationPic: "https://picsum.photos/seed/camp17/400/300" }, { id: 18, launchedBy: "Environment RJ", launchDate: "2023-01-15", motto: "Water Conservation Drive", location: { state: "RJ", district: "UD", block: "Vallabhnagar", village: "Jhadol" }, peopleAttended: 1654, verificationPic: "https://picsum.photos/seed/camp18/400/300" }, { id: 19, launchedBy: "Youth Affairs KA", launchDate: "2023-03-05", motto: "Youth Skilling Hub", location: { state: "KA", district: "MY", block: "Hunsur", village: "Hunsur" }, peopleAttended: 990, verificationPic: "https://picsum.photos/seed/camp19/400/300" }, { id: 20, launchedBy: "Disaster Mgmt WB", launchDate: "2023-02-12", motto: "Cyclone Preparedness", location: { state: "WB", district: "HA", block: "Uluberia", village: "Uluberia" }, peopleAttended: 1340, verificationPic: "https://picsum.photos/seed/camp20/400/300" }], upcoming: [{ id: 21, launchedBy: "Health Dept. UP", launchDate: "2023-11-10", motto: "Winter Health Checkup Camp", location: { state: "UP", district: "LK", block: "Bakshi Ka Talab", village: "Bakshi Ka Talab" }, expectedAttendance: 1500, verificationPic: "https://picsum.photos/seed/camp21/400/300" }, { id: 22, launchedBy: "Education Ministry", launchDate: "2023-11-15", motto: "School Enrollment Drive", location: { state: "UP", district: "GP", block: "Modinagar", village: "Muradnagar" }, expectedAttendance: 2000, verificationPic: "https://picsum.photos/seed/camp22/400/300" }, { id: 23, launchedBy: "Women & Child Development", launchDate: "2023-11-20", motto: "Women Safety Awareness", location: { state: "MH", district: "MU", block: "Dadar", village: "Dadar" }, expectedAttendance: 1800, verificationPic: "https://picsum.photos/seed/camp23/400/300" }, { id: 24, launchedBy: "Agriculture Dept. RJ", launchDate: "2023-11-25", motto: "Organic Farming Workshop", location: { state: "RJ", district: "JP", block: "Kotputli", village: "Kotputli" }, expectedAttendance: 1200, verificationPic: "https://picsum.photos/seed/camp24/400/300" }, { id: 25, launchedBy: "Rural Development KA", launchDate: "2023-12-05", motto: "Rural Entrepreneurship Summit", location: { state: "KA", district: "BL", block: "Bengaluru South", village: "Begur" }, expectedAttendance: 2500, verificationPic: "https://picsum.photos/seed/camp25/400/300" }, { id: 26, launchedBy: "Health Dept. WB", launchDate: "2023-12-10", motto: "Eye Care Camp", location: { state: "WB", district: "KO", block: "Jadavpur", village: "Jadavpur" }, expectedAttendance: 1600, verificationPic: "https://picsum.photos/seed/camp26/400/300" }, { id: 27, launchedBy: "Skill Development MH", launchDate: "2023-12-15", motto: "Digital Skills Training", location: { state: "MH", district: "PU", block: "Velhe", village: "Panshet" }, expectedAttendance: 900, verificationPic: "https://picsum.photos/seed/camp27/400/300" }, { id: 28, launchedBy: "Environment RJ", launchDate: "2023-12-20", motto: "Tree Plantation Drive", location: { state: "RJ", district: "UD", block: "Kherwara", village: "Jaisamand" }, expectedAttendance: 2000, verificationPic: "https://picsum.photos/seed/camp28/400/300" }, { id: 29, launchedBy: "Smart City WB", launchDate: "2023-12-22", motto: "Clean Kolkata Mission", location: { state: "WB", district: "KO", block: "Alipore", village: "Alipore" }, expectedAttendance: 2200, verificationPic: "https://picsum.photos/seed/camp29/400/300" }, { id: 30, launchedBy: "Tourism KA", launchDate: "2023-12-28", motto: "Heritage Trail Mysuru", location: { state: "KA", district: "MY", block: "Nanjangud", village: "Nanjangud" }, expectedAttendance: 1300, verificationPic: "https://picsum.photos/seed/camp30/400/300" }] };
+        const stateSelect = document.getElementById('stateSelect');
+        const districtSelect = document.getElementById('districtSelect');
+        const blockSelect = document.getElementById('blockSelect');
+        const villageSelect = document.getElementById('villageSelect');
+        const locationText = document.getElementById('locationText');
+        const ongoingBtn = document.getElementById('ongoingBtn');
+        const previousBtn = document.getElementById('previousBtn');
+        const upcomingBtn = document.getElementById('upcomingBtn');
+        const ongoingTable = document.getElementById('ongoingTable');
+        const previousTable = document.getElementById('previousTable');
+        const upcomingTable = document.getElementById('upcomingTable');
+        const ongoingTableBody = document.getElementById('ongoingTableBody');
+        const previousTableBody = document.getElementById('previousTableBody');
+        const upcomingTableBody = document.getElementById('upcomingTableBody');
+        const tableTitle = document.getElementById('tableTitle');
+        const noDataMessage = document.getElementById('noDataMessage');
+        let selectedLocation = { state: '', district: '', block: '', village: '' };
+        let activeTableType = 'ongoing';
+        function init() { renderCampaignTable('ongoing', campaignData.ongoing); renderCampaignTable('previous', campaignData.previous); renderCampaignTable('upcoming', campaignData.upcoming); noDataMessage.style.display = 'none'; setupEventListeners(); updateLocationText(); }
+        function setupEventListeners() {
+            stateSelect.addEventListener('change', () => { selectedLocation.state = stateSelect.value; updateDistrictDropdown(); updateLocationText(); filterAndDisplayCampaigns(); });
+            districtSelect.addEventListener('change', () => { selectedLocation.district = districtSelect.value; updateBlockDropdown(); updateLocationText(); filterAndDisplayCampaigns(); });
+            blockSelect.addEventListener('change', () => { selectedLocation.block = blockSelect.value; updateVillageDropdown(); updateLocationText(); filterAndDisplayCampaigns(); });
+            villageSelect.addEventListener('change', () => { selectedLocation.village = villageSelect.value; updateLocationText(); filterAndDisplayCampaigns(); });
+            ongoingBtn.addEventListener('click', () => { setActiveButton('ongoing'); showTable('ongoing'); filterAndDisplayCampaigns(); });
+            previousBtn.addEventListener('click', () => { setActiveButton('previous'); showTable('previous'); filterAndDisplayCampaigns(); });
+            upcomingBtn.addEventListener('click', () => { setActiveButton('upcoming'); showTable('upcoming'); filterAndDisplayCampaigns(); });
+        }
+        function updateDistrictDropdown() { districtSelect.innerHTML = '<option value="">Select District</option>'; blockSelect.innerHTML = '<option value="">Select Block</option>'; villageSelect.innerHTML = '<option value="">Select Village/Casba</option>'; if (selectedLocation.state && locationData[selectedLocation.state]) { districtSelect.disabled = false; blockSelect.disabled = true; villageSelect.disabled = true; const districts = locationData[selectedLocation.state].districts; for (const code in districts) { const opt = document.createElement('option'); opt.value = code; opt.textContent = districts[code].name; districtSelect.appendChild(opt); } selectedLocation.district = ''; selectedLocation.block = ''; selectedLocation.village = ''; } else { districtSelect.disabled = true; blockSelect.disabled = true; villageSelect.disabled = true; selectedLocation.district = ''; selectedLocation.block = ''; selectedLocation.village = ''; } }
+        function updateBlockDropdown() { blockSelect.innerHTML = '<option value="">Select Block</option>'; villageSelect.innerHTML = '<option value="">Select Village/Casba</option>'; if (selectedLocation.district && locationData[selectedLocation.state]?.districts[selectedLocation.district]) { blockSelect.disabled = false; villageSelect.disabled = true; const blocks = locationData[selectedLocation.state].districts[selectedLocation.district].blocks; blocks.forEach(b => { const opt = document.createElement('option'); opt.value = b; opt.textContent = b; blockSelect.appendChild(opt); }); selectedLocation.block = ''; selectedLocation.village = ''; } else { blockSelect.disabled = true; villageSelect.disabled = true; selectedLocation.block = ''; selectedLocation.village = ''; } }
+        function updateVillageDropdown() { villageSelect.innerHTML = '<option value="">Select Village/Casba</option>'; if (selectedLocation.block && villageData[selectedLocation.block]) { villageSelect.disabled = false; villageData[selectedLocation.block].forEach(v => { const opt = document.createElement('option'); opt.value = v; opt.textContent = v; villageSelect.appendChild(opt); }); selectedLocation.village = ''; } else { villageSelect.disabled = true; selectedLocation.village = ''; } }
+        function updateLocationText() { const parts = []; if (selectedLocation.state) parts.push(locationData[selectedLocation.state].name); if (selectedLocation.district && locationData[selectedLocation.state]) parts.push(locationData[selectedLocation.state].districts[selectedLocation.district].name); if (selectedLocation.block) parts.push(selectedLocation.block); if (selectedLocation.village) parts.push(selectedLocation.village); locationText.textContent = parts.length ? `Showing campaigns for: ${parts.join(' → ')}` : 'Please select a location to view campaigns'; }
+        function setActiveButton(type) { ongoingBtn.classList.remove('active'); previousBtn.classList.remove('active'); upcomingBtn.classList.remove('active'); if (type === 'ongoing') { ongoingBtn.classList.add('active'); tableTitle.textContent = 'Ongoing Campaigns'; activeTableType = 'ongoing'; } else if (type === 'previous') { previousBtn.classList.add('active'); tableTitle.textContent = 'Previous Campaigns'; activeTableType = 'previous'; } else { upcomingBtn.classList.add('active'); tableTitle.textContent = 'Upcoming Campaigns'; activeTableType = 'upcoming'; } }
+        function showTable(type) { ongoingTable.classList.remove('active'); previousTable.classList.remove('active'); upcomingTable.classList.remove('active'); if (type === 'ongoing') ongoingTable.classList.add('active'); else if (type === 'previous') previousTable.classList.add('active'); else upcomingTable.classList.add('active'); }
+        function filterAndDisplayCampaigns() { const campaigns = campaignData[activeTableType]; const filtered = filterCampaignsByLocation(campaigns); renderCampaignTable(activeTableType, filtered); noDataMessage.style.display = filtered.length === 0 ? 'block' : 'none'; }
+        function filterCampaignsByLocation(campaigns) { if (!selectedLocation.state) return campaigns; return campaigns.filter(c => { if (c.location.state !== selectedLocation.state) return false; if (selectedLocation.district && c.location.district !== selectedLocation.district) return false; if (selectedLocation.block && c.location.block !== selectedLocation.block) return false; if (selectedLocation.village && c.location.village !== selectedLocation.village) return false; return true; }); }
+        function renderCampaignTable(type, campaigns) { const body = type === 'ongoing' ? ongoingTableBody : type === 'previous' ? previousTableBody : upcomingTableBody; const isUpcoming = type === 'upcoming'; body.innerHTML = ''; campaigns.forEach(c => { const tr = document.createElement('tr'); const launchDate = new Date(c.launchDate).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); const stateName = locationData[c.location.state]?.name || c.location.state; const districtName = locationData[c.location.state]?.districts[c.location.district]?.name || c.location.district; const locText = `${stateName} > ${districtName} > ${c.location.block} > ${c.location.village}`; tr.innerHTML = `
+                    <td>${c.launchedBy}</td>
+                    <td>${launchDate}</td>
+                    <td class="campaign-moto" title="${c.motto}">${c.motto}</td>
+                    <td>${locText}</td>
+                    <td><span class="people-count">${isUpcoming ? '~' + c.expectedAttendance.toLocaleString() : c.peopleAttended.toLocaleString()}</span></td>
+                    <td><img src="${c.verificationPic}" alt="Verification" class="verification-pic"></td>
+                `; body.appendChild(tr); }); if (campaigns.length === 0) { const tr = document.createElement('tr'); tr.innerHTML = `<td colspan="6" style="text-align:center; padding:40px; color:#777;">No campaigns found for the selected filters</td>`; body.appendChild(tr); } }
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
                 </button>
                 <button class="campaign-btn" id="upcomingBtn">
                     <i class="fas fa-calendar-alt"></i> Upcoming Campaigns
@@ -509,10 +305,15 @@
             "Bengaluru North": ["Devanahalli", "Doddaballapur", "Hesaraghatta", "Yelahanka"],
             "Bengaluru South": ["Begur", "Bommanahalli", "Krishnarajapuram", "Uttarahalli"],
             "Devanahalli": ["Devanahalli", "Doddaballapur", "Hesaraghatta", "Yelahanka"],
+            "Bommanahalli": ["Bommanahalli", "Begur", "BTM Layout", "HSR"],
             "Alipore": ["Alipore", "Bhowanipore", "Kalighat", "Tollygunge"],
             "Behala": ["Behala", "Garden Reach", "Haridevpur", "Thakurpukur"],
             "Jadavpur": ["Bagha Jatin", "Jadavpur", "Santoshpur", "Tiljala"],
             "Tollygunge": ["Bansdroni", "Garia", "Naktala", "Ranikuthi"]
+            ,"Bagnan": ["Bagnan", "Uluberia", "Amta", "Bagnan II"],
+            "Uluberia": ["Uluberia", "Bagnan", "Shyampur", "Amta"],
+            "Hunsur": ["Hunsur", "Gonikoppal", "Periyapatna", "Kushalnagar"],
+            "Nanjangud": ["Nanjangud", "Tagadur", "T Narasipura", "Badanavalu"]
         };
 
         // Dummy data for campaigns
@@ -755,7 +556,7 @@
             }
             
             if (locationParts.length > 0) {
-                locationText.textContent = Showing campaigns for: ${locationParts.join(' → ')};
+                locationText.textContent = `Showing campaigns for: ${locationParts.join(' → ')}`;
             } else {
                 locationText.textContent = 'Please select a location to view campaigns';
             }
@@ -874,16 +675,22 @@
                 });
                 
                 // Get location name
+<<<<<<< HEAD
                 const stateName = locationData[campaign.location.state]?.name || campaign.location.state;
                 const districtName = locationData[campaign.location.state]?.districts[campaign.location.district]?.name || campaign.location.district;
-                const locationText = ${stateName} > ${districtName} > ${campaign.location.block} > ${campaign.location.village};
+                const campaignLocationText = `${stateName} > ${districtName} > ${campaign.location.block} > ${campaign.location.village}`;
+=======
+                const campaignStateName = locationData[campaign.location.state]?.name || campaign.location.state;
+                const campaignDistrictName = locationData[campaign.location.state]?.districts[campaign.location.district]?.name || campaign.location.district;
+                const locationText = `${campaignStateName} > ${campaignDistrictName} > ${campaign.location.block} > ${campaign.location.village}`;
+>>>>>>> b6137953cfea60e828a0972145642985324ddd4a
                 
                 // Create row HTML
                 row.innerHTML = `
                     <td>${campaign.launchedBy}</td>
                     <td>${formattedDate}</td>
                     <td class="campaign-moto" title="${campaign.motto}">${campaign.motto}</td>
-                    <td>${locationText}</td>
+                    <td>${campaignLocationText}</td>
                     <td>
                         <span class="people-count">
                             ${isUpcoming ? '~' : ''}${isUpcoming ? campaign.expectedAttendance.toLocaleString() : campaign.peopleAttended.toLocaleString()}
@@ -899,7 +706,7 @@
             if (campaigns.length === 0) {
                 const row = document.createElement('tr');
                 const colSpan = isUpcoming ? 6 : 6;
-                row.innerHTML = <td colspan="${colSpan}" style="text-align: center; padding: 40px; color: #777;">No campaigns found for the selected filters</td>;
+                row.innerHTML = `<td colspan="${colSpan}" style="text-align: center; padding: 40px; color: #777;">No campaigns found for the selected filters</td>`;
                 tableBody.appendChild(row);
             }
         }
