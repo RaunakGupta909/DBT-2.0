@@ -1001,18 +1001,6 @@
             }
         }
 
-        function loadDashboard() {
-            const village = document.getElementById('village').value;
-            if (village) {
-                showAllSections();
-                loadAwarenessTopics();
-                loadTrackingData();
-                loadProgressData();
-            } else {
-                hideAllSections();
-            }
-        }
-
         function showAllSections() {
             document.getElementById('hierarchySection').style.display = 'block';
             document.getElementById('awarenessSection').style.display = 'block';

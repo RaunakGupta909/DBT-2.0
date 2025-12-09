@@ -755,7 +755,7 @@
             }
             
             if (locationParts.length > 0) {
-                locationText.textContent = Showing campaigns for: ${locationParts.join(' → ')};
+                locationText.textContent = `Showing campaigns for: ${locationParts.join(' → ')}`;
             } else {
                 locationText.textContent = 'Please select a location to view campaigns';
             }
@@ -874,9 +874,9 @@
                 });
                 
                 // Get location name
-                const stateName = locationData[campaign.location.state]?.name || campaign.location.state;
-                const districtName = locationData[campaign.location.state]?.districts[campaign.location.district]?.name || campaign.location.district;
-                const locationText = ${stateName} > ${districtName} > ${campaign.location.block} > ${campaign.location.village};
+                const campaignStateName = locationData[campaign.location.state]?.name || campaign.location.state;
+                const campaignDistrictName = locationData[campaign.location.state]?.districts[campaign.location.district]?.name || campaign.location.district;
+                const locationText = `${campaignStateName} > ${campaignDistrictName} > ${campaign.location.block} > ${campaign.location.village}`;
                 
                 // Create row HTML
                 row.innerHTML = `
@@ -899,7 +899,7 @@
             if (campaigns.length === 0) {
                 const row = document.createElement('tr');
                 const colSpan = isUpcoming ? 6 : 6;
-                row.innerHTML = <td colspan="${colSpan}" style="text-align: center; padding: 40px; color: #777;">No campaigns found for the selected filters</td>;
+                row.innerHTML = `<td colspan="${colSpan}" style="text-align: center; padding: 40px; color: #777;">No campaigns found for the selected filters</td>`;
                 tableBody.appendChild(row);
             }
         }
