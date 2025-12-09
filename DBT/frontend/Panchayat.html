@@ -1,0 +1,1331 @@
+  <!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>पंचायत सचिव डैशबोर्ड - DBT प्रबंधन</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #005bbb;
+            --primary-dark: #004a99;
+            --secondary: #ff6b6b;
+            --success: #51cf66;
+            --warning: #ffd93d;
+            --info: #4ecdc4;
+            --bg: #f5f7fa;
+            --text: #111;
+            --text-light: #666;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.12);
+        }
+
+        body.dark-mode {
+            --bg: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #cccccc;
+            --card-bg: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            transition: background 0.3s;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .location-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 2px solid var(--primary);
+        }
+
+        .location-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .dropdown-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .dropdown-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .dropdown-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .hierarchy-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border-left: 5px solid var(--info);
+        }
+
+        .hierarchy-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .hierarchy-chart {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .hierarchy-level {
+            background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--primary);
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .hierarchy-level::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--primary);
+            border-radius: 10px 0 0 10px;
+        }
+
+        .hierarchy-level h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .hierarchy-level p {
+            margin: 8px 0;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .awareness-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .awareness-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .awareness-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .awareness-card {
+            background: linear-gradient(135deg, #fff9e6, #ffe6cc);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--warning);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .awareness-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .awareness-card .topic-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .campaign-details {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid var(--info);
+        }
+
+        .campaign-details p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        .campaign-details strong {
+            color: var(--primary);
+        }
+
+        .tracking-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .tracking-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .tracking-card {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tracking-card h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .tracking-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--success);
+            margin: 15px 0;
+        }
+
+        .tracking-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .progress-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .progress-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .progress-item {
+            margin-bottom: 25px;
+        }
+
+        .progress-item h4 {
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 25px;
+            background: #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), var(--info));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            transition: width 0.3s;
+        }
+
+        .panchayat-awareness {
+            background: linear-gradient(135deg, #f3e5f5, #ede7f6);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 2px solid #9c27b0;
+        }
+
+        .panchayat-awareness h2 {
+            color: #9c27b0;
+            margin-bottom: 20px;
+        }
+
+        .awareness-tips {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .tip-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #9c27b0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tip-card h4 {
+            color: #9c27b0;
+            margin-bottom: 12px;
+        }
+
+        .tip-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Management Section Styles */
+        .management-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border-left: 5px solid var(--secondary);
+        }
+
+        .management-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .management-grid .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .management-card {
+            background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--info);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .management-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .asha-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .asha-worker-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .asha-worker-item h4 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .asha-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-inactive {
+            background: #ffd93d;
+            color: #333;
+        }
+
+        .live-updates {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .update-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .update-time {
+            font-size: 12px;
+            color: var(--text-light);
+            flex-shrink: 0;
+        }
+
+        .update-content {
+            flex-grow: 1;
+        }
+
+        .update-content p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .activity-feed {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .activity-details {
+            flex-grow: 1;
+        }
+
+        .activity-time {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-btn:last-child {
+            margin-bottom: 0;
+        }
+
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .metric-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-label {
+            color: var(--text-light);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .analytics-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .analytics-card {
+            background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .analytics-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .management-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .management-grid .full-width {
+                grid-column: 1;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="gram.html" class="back-btn">← गांव डैशबोर्ड पर वापस जाएं</a>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏛️ पंचायत सचिव डैशबोर्ड</h1>
+            <p>DBT जागरूकता अभियान प्रबंधन और निरीक्षण</p>
+        </div>
+
+        <!-- Location Selection -->
+        <div class="location-section">
+            <h2>📍 अपना स्थान चुनें</h2>
+            <div class="dropdown-grid">
+                <div class="dropdown-group">
+                    <label for="state">राज्य (State)</label>
+                    <select id="state" onchange="updateDistricts()">
+                        <option value="">-- राज्य चुनें --</option>
+                        <option value="maharashtra">महाराष्ट्र (Maharashtra)</option>
+                        <option value="karnataka">कर्नाटक (Karnataka)</option>
+                        <option value="uttarpradesh">उत्तर प्रदेश (Uttar Pradesh)</option>
+                        <option value="bihar">बिहार (Bihar)</option>
+                    </select>
+                </div>
+
+                <div class="dropdown-group">
+                    <label for="district">जिला (District)</label>
+                    <select id="district" onchange="updateBlocks()">
+                        <option value="">-- जिला चुनें --</option>
+                    </select>
+                </div>
+
+                <div class="dropdown-group">
+                    <label for="block">ब्लॉक (Block)</label>
+                    <select id="block" onchange="updateVillages()">
+                        <option value="">-- ब्लॉक चुनें --</option>
+                    </select>
+                </div>
+
+                <div class="dropdown-group">
+                    <label for="village">गांव/कस्बा (Village/Town)</label>
+                    <select id="village" onchange="loadDashboard()">
+                        <option value="">-- गांव चुनें --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hierarchy Section -->
+        <div class="hierarchy-section" id="hierarchySection" style="display: none;">
+            <h2>📊 DBT Awareness Dissemination Hierarchy</h2>
+            <div class="hierarchy-chart">
+                <div class="hierarchy-level">
+                    <h3>🏛️ Level 1: Block Education Officer (BEO)</h3>
+                    <p><strong>Role:</strong> Oversee DBT awareness programs across the entire block</p>
+                    <p><strong>Responsibility:</strong> Topic assignment, budget allocation, training provision</p>
+                    <p><strong>Target:</strong> 100% village coverage in the block</p>
+                </div>
+
+                <div style="text-align: center; color: var(--primary); font-weight: bold; padding: 10px;">⬇️ Instructions and Coordination ⬇️</div>
+
+                <div class="hierarchy-level">
+                    <h3>👩‍⚕️ Level 2: ASHA Coordinator / ASHA Supervisor</h3>
+                    <p><strong>Role:</strong> Manage ASHA workers at village level</p>
+                    <p><strong>Responsibility:</strong> ASHA training, progress monitoring, resource distribution</p>
+                    <p><strong>Target:</strong> Manage ASHA network in 10-15 villages</p>
+                </div>
+
+                <div style="text-align: center; color: var(--primary); font-weight: bold; padding: 10px;">⬇️ Training and Guidance ⬇️</div>
+
+                <div class="hierarchy-level">
+                    <h3>👥 Level 3: ASHA Workers / Community Workers</h3>
+                    <p><strong>Role:</strong> Spread DBT awareness door-to-door in the village</p>
+                    <p><strong>Responsibility:</strong> House surveys, information dissemination, problem reporting</p>
+                    <p><strong>Target:</strong> Reach every family with DBT benefit information</p>
+                </div>
+
+                <div style="text-align: center; color: var(--primary); font-weight: bold; padding: 10px;">⬇️ Direct Contact and Solutions ⬇️</div>
+
+                <div class="hierarchy-level">
+                    <h3>👨‍👩‍👧‍👦 Level 4: Village Community</h3>
+                    <p><strong>Role:</strong> Benefit from DBT scheme and provide feedback</p>
+                    <p><strong>Responsibility:</strong> Fill applications, submit documents, track status</p>
+                    <p><strong>Target:</strong> All eligible people receive DBT benefits</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BEO Awareness Instructions Section -->
+        <div class="awareness-section" id="awarenessSection" style="display: none;">
+            <h2>📢 Awareness Topics Assigned by BEO</h2>
+            <p style="color: var(--text-light); margin-bottom: 20px;">Block Education Officer (BEO) has instructed the following awareness campaign topics:</p>
+            <div class="awareness-grid" id="awarenessGrid">
+                <!-- Awareness cards will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Tracking Section -->
+        <div class="tracking-section" id="trackingSection" style="display: none;">
+            <h2>📈 DBT Awareness Dissemination Tracking</h2>
+            <div class="tracking-grid">
+                <div class="tracking-card">
+                    <h3>🏠 Total Homes</h3>
+                    <div class="tracking-number" id="totalHomes">0</div>
+                    <p class="tracking-label">Total families in village</p>
+                </div>
+                <div class="tracking-card">
+                    <h3>✅ Aware Families</h3>
+                    <div class="tracking-number" id="awareHomes">0</div>
+                    <p class="tracking-label">Families informed</p>
+                </div>
+                <div class="tracking-card">
+                    <h3>📊 Coverage Percentage</h3>
+                    <div class="tracking-number" id="coveragePercent">0%</div>
+                    <p class="tracking-label">Village coverage</p>
+                </div>
+                <div class="tracking-card">
+                    <h3>👥 Surveyed</h3>
+                    <div class="tracking-number" id="surveyed">0</div>
+                    <p class="tracking-label">ASHA contact</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bars Section -->
+        <div class="progress-section" id="progressSection" style="display: none;">
+            <h2>🎯 Campaign Progress</h2>
+            
+            <div class="progress-item">
+                <h4>📚 Aadhaar Linking Awareness</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="aadharProgress" style="width: 65%;">65%</div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <h4>🏦 Bank Account Awareness</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="bankProgress" style="width: 58%;">58%</div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <h4>💳 Digital Payment Awareness</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="digitalProgress" style="width: 72%;">72%</div>
+                </div>
+            </div>
+
+            <div class="progress-item">
+                <h4>📋 Document Requirement Awareness</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="docsProgress" style="width: 50%;">50%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Management Dashboard Section -->
+        <div class="management-section" id="managementSection" style="display: none;">
+            <h2>⚙️ ASHA Worker Management and Live Tracking</h2>
+            <div class="management-grid">
+                <!-- ASHA Worker Status -->
+                <div class="management-card">
+                    <h3>👥 ASHA Worker Status</h3>
+                    <div id="ashaWorkersList" class="asha-list"></div>
+                </div>
+
+                <!-- Live Campaign Updates -->
+                <div class="management-card">
+                    <h3>🔴 Live Campaign Updates</h3>
+                    <div id="liveUpdates" class="live-updates"></div>
+                    <button onclick="generateNewUpdate()" class="action-btn">📱 Add New Update</button>
+                </div>
+
+                <!-- Real-time Activity -->
+                <div class="management-card full-width">
+                    <h3>📊 Today's Activity (Real-time)</h3>
+                    <div id="activityFeed" class="activity-feed"></div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="management-card">
+                    <h3>⚡ Quick Actions</h3>
+                    <button onclick="scheduleASHAMeeting()" class="action-btn">📅 Schedule ASHA Meeting</button>
+                    <button onclick="sendNotification()" class="action-btn">📢 Send Message to All</button>
+                    <button onclick="updateCampaignStatus()" class="action-btn">🎯 Update Campaign Status</button>
+                    <button onclick="downloadReport()" class="action-btn">📥 Download Report</button>
+                </div>
+
+                <!-- Campaign Performance -->
+                <div class="management-card">
+                    <h3>📈 Campaign Performance Metrics</h3>
+                    <div id="performanceMetrics" class="performance-metrics"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Analytics Section -->
+        <div class="analytics-section" id="analyticsSection" style="display: none;">
+            <h2>📊 DBT Awareness Data Analytics</h2>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>👨‍👩‍👧‍👦 Family Awareness Rate</h3>
+                    <div style="position: relative; width: 100%; max-width: 400px; height: 400px; margin: 0 auto;">
+                        <canvas id="familyAwarenessChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <h3>🎯 Campaign Topic Coverage</h3>
+                    <div style="position: relative; width: 100%; max-width: 400px; height: 400px; margin: 0 auto;">
+                        <canvas id="topicCoverageChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <h3>📅 Weekly Progress</h3>
+                    <div style="position: relative; width: 100%; max-width: 400px; height: 400px; margin: 0 auto;">
+                        <canvas id="weeklyProgressChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <h2>🎓 पंचायत सचिव के लिए DBT जागरूकता मार्गदर्शन</h2>
+            <p style="margin-bottom: 20px; color: var(--text-light);">आप स्वयं को इन महत्वपूर्ण विषयों पर अवगत रखें ताकि आप अपने गांव में प्रभावी नेतृत्व दे सकें:</p>
+            
+            <div class="awareness-tips">
+                <div class="tip-card">
+                    <h4>1️⃣ DBT क्या है और क्यों महत्वपूर्ण है?</h4>
+                    <p>DBT (Direct Benefit Transfer) एक योजना है जिसमें सरकार सीधे लाभार्थियों के बैंक खातों में धनराशि भेजती है। यह भ्रष्टाचार को कम करता है और लाभ सीधे गरीबों तक पहुंचता है।</p>
+                </div>
+
+                <div class="tip-card">
+                    <h4>2️⃣ आधार लिंक्ड vs आधार सीडेड खातों का अंतर</h4>
+                    <p><strong>आधार लिंक्ड:</strong> आधार को मौजूदा बैंक खाते से जोड़ना<br><strong>आधार सीडेड:</strong> आधार नंबर को खाता खोलते समय देना। दोनों से DBT लाभ मिलते हैं।</p>
+                </div>
+
+                <div class="tip-card">
+                    <h4>3️⃣ ASHA भाइयों को कैसे प्रशिक्षित करें</h4>
+                    <p>साप्ताहिक बैठकें करें, सरल भाषा में समझाएं, व्यावहारिक उदाहरण दें, प्रश्नों का उत्तर दें। मुद्राराक्षस गांव में आत्मविश्वास बढ़ाएं।</p>
+                </div>
+
+                <div class="tip-card">
+                    <h4>4️⃣ दरवाजे-दरवाजे जागरूकता कैसे करें</h4>
+                    <p>सरल भाषा में बातें करें, विषय के मुख्य बिंदु बताएं, स्थानीय उदाहरण दें, प्रश्नों को प्रोत्साहित करें और फॉर्म भरने में मदद करें।</p>
+                </div>
+
+                <div class="tip-card">
+                    <h4>5️⃣ सामान्य समस्याओं का समाधान</h4>
+                    <p><strong>समस्या:</strong> खाता नहीं खुला<br><strong>समाधान:</strong> बैंक में जाएं, आवश्यक दस्तावेज लाएं<br><strong>समस्या:</strong> DBT नहीं आया<br><strong>समाधान:</strong> स्थिति जांचें, BEO को रिपोर्ट करें</p>
+                </div>
+
+                <div class="tip-card">
+                    <h4>6️⃣ मासिक प्रगति रिपोर्ट कैसे तैयार करें</h4>
+                    <p>कितने घर दौरा किए, कितने लोगों को जागरूक किया, कितने फॉर्म भरे गए, कौन सी समस्याएं आई और उनका समाधान क्या था - यह सब दर्ज करें।</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Location Data
+        const locationData = {
+            maharashtra: {
+                name: 'महाराष्ट्र',
+                districts: {
+                    pune: {
+                        name: 'पुणे',
+                        blocks: {
+                            punecity: { name: 'पुणे सिटी', villages: ['गणेशखिंड', 'कोंढवा', 'भोसारी'] },
+                            junnar: { name: 'जुन्नर', villages: ['नेरल', 'शिंगारपुर', 'लोनावला'] }
+                        }
+                    },
+                    nagpur: {
+                        name: 'नागपुर',
+                        blocks: {
+                            nagpurcity: { name: 'नागपुर सिटी', villages: ['सोनेगांव', 'चिंचवाड़'] }
+                        }
+                    }
+                }
+            },
+            karnataka: {
+                name: 'कर्नाटक',
+                districts: {
+                    bangalore: {
+                        name: 'बेंगलुरु',
+                        blocks: {
+                            bangalorerural: { name: 'बेंगलुरु ग्रामीण', villages: ['होसकोटे', 'येलहंका', 'विधानराज पेट'] }
+                        }
+                    }
+                }
+            },
+            uttarpradesh: {
+                name: 'उत्तर प्रदेश',
+                districts: {
+                    lucknow: {
+                        name: 'लखनऊ',
+                        blocks: {
+                            lucknowcity: { name: 'लखनऊ शहर', villages: ['अलीगंज', 'गोमतीनगर', 'चारबाग'] }
+                        }
+                    }
+                }
+            },
+            bihar: {
+                name: 'बिहार',
+                districts: {
+                    patna: {
+                        name: 'पटना',
+                        blocks: {
+                            patnacity: { name: 'पटना शहर', villages: ['दीदारगंज', 'कनकपुरा', 'सलेमपुर'] }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Awareness Topics from BEO
+        const awarenessTopics = [
+            {
+                topic: 'Aadhaar Linking Campaign',
+                beo: 'Block Education Officer (BEO)',
+                startDate: 'December 15, 2024',
+                endDate: 'January 31, 2025',
+                target: 'Make all families aware about Aadhaar-Bank linking',
+                keyPoints: ['Aadhaar linking process', 'Required documents', 'Benefits and importance']
+            },
+            {
+                topic: 'Bank Account Awareness',
+                beo: 'Block Education Officer (BEO)',
+                startDate: 'January 1, 2025',
+                endDate: 'February 28, 2025',
+                target: 'Motivate families without bank accounts to open accounts',
+                keyPoints: ['Choose right bank', 'Account opening process', 'Minimum balance']
+            },
+            {
+                topic: 'Digital Payment Security',
+                beo: 'Block Education Officer (BEO)',
+                startDate: 'December 20, 2024',
+                endDate: 'January 15, 2025',
+                target: 'Ensure security and proper use of funds received through DBT',
+                keyPoints: ['Cybersecurity tips', 'Fraud prevention', 'Password security']
+            },
+            {
+                topic: 'Document Requirements and Protection',
+                beo: 'Block Education Officer (BEO)',
+                startDate: 'January 10, 2025',
+                endDate: 'February 10, 2025',
+                target: 'Provide information and protection for important documents',
+                keyPoints: ['Required documents', 'Document protection', 'Importance of copies']
+            }
+        ];
+
+        function updateDistricts() {
+            const state = document.getElementById('state').value;
+            const districtSelect = document.getElementById('district');
+            districtSelect.innerHTML = '<option value="">-- जिला चुनें --</option>';
+            document.getElementById('block').innerHTML = '<option value="">-- ब्लॉक चुनें --</option>';
+            document.getElementById('village').innerHTML = '<option value="">-- गांव चुनें --</option>';
+
+            if (state && locationData[state]) {
+                const districts = locationData[state].districts;
+                for (let key in districts) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = districts[key].name;
+                    districtSelect.appendChild(option);
+                }
+            }
+        }
+
+        function updateBlocks() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const blockSelect = document.getElementById('block');
+            blockSelect.innerHTML = '<option value="">-- ब्लॉक चुनें --</option>';
+            document.getElementById('village').innerHTML = '<option value="">-- गांव चुनें --</option>';
+
+            if (state && district && locationData[state].districts[district]) {
+                const blocks = locationData[state].districts[district].blocks;
+                for (let key in blocks) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = blocks[key].name;
+                    blockSelect.appendChild(option);
+                }
+            }
+        }
+
+        function updateVillages() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const block = document.getElementById('block').value;
+            const villageSelect = document.getElementById('village');
+            villageSelect.innerHTML = '<option value="">-- गांव चुनें --</option>';
+
+            if (state && district && block && locationData[state].districts[district].blocks[block]) {
+                const villages = locationData[state].districts[district].blocks[block].villages;
+                villages.forEach(village => {
+                    const option = document.createElement('option');
+                    option.value = village;
+                    option.textContent = village;
+                    villageSelect.appendChild(option);
+                });
+            }
+        }
+
+        function showAllSections() {
+            document.getElementById('hierarchySection').style.display = 'block';
+            document.getElementById('awarenessSection').style.display = 'block';
+            document.getElementById('trackingSection').style.display = 'block';
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('secretaryAwarenessSection').style.display = 'block';
+            document.getElementById('managementSection').style.display = 'block';
+            document.getElementById('analyticsSection').style.display = 'block';
+        }
+
+        function hideAllSections() {
+            document.getElementById('hierarchySection').style.display = 'none';
+            document.getElementById('awarenessSection').style.display = 'none';
+            document.getElementById('trackingSection').style.display = 'none';
+            document.getElementById('progressSection').style.display = 'none';
+            document.getElementById('secretaryAwarenessSection').style.display = 'none';
+            document.getElementById('managementSection').style.display = 'none';
+            document.getElementById('analyticsSection').style.display = 'none';
+        }
+
+        function loadAwarenessTopics() {
+            const grid = document.getElementById('awarenessGrid');
+            grid.innerHTML = '';
+
+            awarenessTopics.forEach((topic, index) => {
+                const card = document.createElement('div');
+                card.className = 'awareness-card';
+                card.innerHTML = `
+                    <div class="topic-title">${index + 1}. ${topic.topic}</div>
+                    <div class="campaign-details">
+                        <p><strong>🏛️ निर्दिष्ट:</strong> ${topic.beo}</p>
+                        <p><strong>📅 अवधि:</strong> ${topic.startDate} से ${topic.endDate}</p>
+                        <p><strong>🎯 लक्ष्य:</strong> ${topic.target}</p>
+                        <p><strong>📌 मुख्य बिंदु:</strong></p>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            ${topic.keyPoints.map(point => `<li>${point}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function loadTrackingData() {
+            const totalHomes = Math.floor(Math.random() * 50) + 150;
+            const awareHomes = Math.floor(totalHomes * (Math.random() * 0.3 + 0.5));
+            const surveyedHomes = Math.floor(totalHomes * (Math.random() * 0.2 + 0.4));
+            const coveragePercent = Math.round((awareHomes / totalHomes) * 100);
+
+            document.getElementById('totalHomes').textContent = totalHomes;
+            document.getElementById('awareHomes').textContent = awareHomes;
+            document.getElementById('coveragePercent').textContent = coveragePercent + '%';
+            document.getElementById('surveyed').textContent = surveyedHomes;
+        }
+
+        function loadProgressData() {
+            const campaigns = [
+                { id: 'aadharProgress', value: Math.floor(Math.random() * 40) + 40 },
+                { id: 'bankProgress', value: Math.floor(Math.random() * 40) + 30 },
+                { id: 'digitalProgress', value: Math.floor(Math.random() * 50) + 40 },
+                { id: 'docsProgress', value: Math.floor(Math.random() * 40) + 30 }
+            ];
+
+            campaigns.forEach(campaign => {
+                const element = document.getElementById(campaign.id);
+                element.style.width = campaign.value + '%';
+                element.textContent = campaign.value + '%';
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
+        // ASHA Worker Data
+        const ashaWorkers = [
+            { id: 1, name: 'Priya Sharma', village: 'Ganeshhind', status: 'active', homesVisited: 45 },
+            { id: 2, name: 'Sangita Verma', village: 'Ganeshhind', status: 'active', homesVisited: 52 },
+            { id: 3, name: 'Radha Kumar', village: 'Ganeshhind', status: 'active', homesVisited: 38 },
+            { id: 4, name: 'Sunita Patel', village: 'Ganeshhind', status: 'inactive', homesVisited: 25 }
+        ];
+
+        let activityLog = [
+            { time: '2025-12-09 10:30', action: 'Priya completed home visits to 5 families', icon: '✅' },
+            { time: '2025-12-09 09:15', action: 'Sangita registered 3 families for Aadhaar linking', icon: '📝' },
+            { time: '2025-12-09 08:45', action: 'Radha submitted today\'s daily report', icon: '📊' }
+        ];
+
+        let liveUpdates = [
+            { time: '10:45', message: 'Aadhaar linking campaign at 65% progress', icon: '📈' },
+            { time: '09:30', message: '8 new families registered for DBT', icon: '👥' },
+            { time: '08:00', message: 'Today\'s awareness camp launch completed', icon: '🎬' }
+        ];
+
+        // Load ASHA Workers
+        function loadASHAWorkers() {
+            const list = document.getElementById('ashaWorkersList');
+            list.innerHTML = '';
+
+            ashaWorkers.forEach(worker => {
+                const item = document.createElement('div');
+                item.className = 'asha-worker-item';
+                const statusClass = worker.status === 'active' ? 'status-active' : 'status-inactive';
+                const statusText = worker.status === 'active' ? '✅ Active' : '⏸️ Inactive';
+
+                item.innerHTML = `
+                    <div>
+                        <h4>${worker.name}</h4>
+                        <p style="margin: 5px 0; font-size: 12px; color: #666;">🏠 ${worker.homesVisited} homes visited</p>
+                    </div>
+                    <span class="asha-status ${statusClass}">${statusText}</span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Load Live Updates
+        function loadLiveUpdates() {
+            const container = document.getElementById('liveUpdates');
+            container.innerHTML = '';
+
+            liveUpdates.forEach(update => {
+                const item = document.createElement('div');
+                item.className = 'update-item';
+                item.innerHTML = `
+                    <div class="update-time">${update.time}</div>
+                    <div class="update-content">
+                        <p>${update.icon} ${update.message}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Load Activity Feed
+        function loadActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = '';
+
+            activityLog.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                item.innerHTML = `
+                    <div class="activity-icon">${activity.icon}</div>
+                    <div class="activity-details">
+                        <p>${activity.action}</p>
+                        <span class="activity-time">${activity.time}</span>
+                    </div>
+                `;
+                feed.appendChild(item);
+            });
+        }
+
+        // Generate New Update
+        function generateNewUpdate() {
+            const messages = [
+                '12 new families applied for Aadhaar linking',
+                'Personal assistance provided to 5 families',
+                '3 families helped open bank accounts',
+                'Digital literacy session conducted for 25 people'
+            ];
+
+            const times = ['11:30', '11:15', '11:00', '10:45'];
+            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+            const randomTime = times[Math.floor(Math.random() * times.length)];
+            const icon = ['📈', '👥', '🏦', '💻'][Math.floor(Math.random() * 4)];
+
+            const newUpdate = { time: randomTime, message: randomMsg, icon: icon };
+            liveUpdates.unshift(newUpdate);
+            if (liveUpdates.length > 5) liveUpdates.pop();
+
+            loadLiveUpdates();
+            alert('✅ New update added!');
+        }
+
+        // Schedule ASHA Meeting
+        function scheduleASHAMeeting() {
+            const date = new Date();
+            date.setDate(date.getDate() + 2);
+            alert(`📅 ASHA Meeting Scheduled:\n\nDate: ${date.toLocaleDateString('en-IN')}\nTime: 3:00 PM\nLocation: Panchayat Office\n\n✅ Notice sent to all ASHA workers!`);
+        }
+
+        // Send Notification
+        function sendNotification() {
+            const message = prompt('Write message:', 'Please make families aware about Aadhaar linking');
+            if (message) {
+                alert(`📢 Message sent to all ASHA workers:\n\n"${message}"\n\n✅ Message delivered to 4 ASHA workers`);
+            }
+        }
+
+        // Update Campaign Status
+        function updateCampaignStatus() {
+            const campaigns = [
+                'Aadhaar Linking Campaign',
+                'Bank Account Awareness',
+                'Digital Payment Security'
+            ];
+            const campaign = campaigns[Math.floor(Math.random() * campaigns.length)];
+            const newProgress = Math.floor(Math.random() * 30) + 50;
+            alert(`✅ Update Complete!\n\n🎯 ${campaign}\n📊 New Progress: ${newProgress}%`);
+        }
+
+        // Download Report
+        function downloadReport() {
+            alert(`📥 Report is downloading...\n\n📄 File: DBT_Awareness_Report_${new Date().toISOString().split('T')[0]}.pdf\n\n✅ Download successful!`);
+        }
+
+        // Performance Metrics
+        function loadPerformanceMetrics() {
+            const container = document.getElementById('performanceMetrics');
+            const metrics = [
+                { label: 'Total Home Visits', value: `${ashaWorkers.reduce((sum, w) => sum + w.homesVisited, 0)}` },
+                { label: 'New Registrations', value: '28' },
+                { label: 'Success Rate', value: '78%' },
+                { label: 'Pending Tasks', value: '12' }
+            ];
+
+            container.innerHTML = metrics.map(metric => `
+                <div class="metric-box">
+                    <div class="metric-label">${metric.label}</div>
+                    <div class="metric-value">${metric.value}</div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize Charts
+        let charts = {};
+
+        function initializeCharts() {
+            // Family Awareness Chart
+            const ctx1 = document.getElementById('familyAwarenessChart');
+            if (ctx1 && !charts.familyAwareness) {
+                charts.familyAwareness = new Chart(ctx1, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Aware Families', 'Unaware Families'],
+                        datasets: [{
+                            data: [156, 94],
+                            backgroundColor: ['#51cf66', '#ff6b6b'],
+                            borderColor: ['#fff', '#fff'],
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { font: { size: 12 } } }
+                        }
+                    }
+                });
+            }
+
+            // Topic Coverage Chart
+            const ctx2 = document.getElementById('topicCoverageChart');
+            if (ctx2 && !charts.topicCoverage) {
+                charts.topicCoverage = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Aadhaar', 'Bank', 'Digital', 'Docs'],
+                        datasets: [{
+                            label: 'Coverage %',
+                            data: [65, 58, 72, 50],
+                            backgroundColor: ['#005bbb', '#4ecdc4', '#51cf66', '#ffd93d'],
+                            borderColor: ['#005bbb', '#4ecdc4', '#51cf66', '#ffd93d'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        scales: { y: { beginAtZero: true, max: 100 } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            // Weekly Progress Chart
+            const ctx3 = document.getElementById('weeklyProgressChart');
+            if (ctx3 && !charts.weeklyProgress) {
+                charts.weeklyProgress = new Chart(ctx3, {
+                    type: 'line',
+                    data: {
+                        labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                        datasets: [{
+                            label: 'Home Visits',
+                            data: [45, 52, 48, 55, 61],
+                            borderColor: '#005bbb',
+                            backgroundColor: 'rgba(0, 91, 187, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
+        }
+
+        // Update function to load everything
+        function loadDashboard() {
+            const village = document.getElementById('village').value;
+            if (village) {
+                showAllSections();
+                loadAwarenessTopics();
+                loadTrackingData();
+                loadProgressData();
+                loadASHAWorkers();
+                loadLiveUpdates();
+                loadActivityFeed();
+                loadPerformanceMetrics();
+                setTimeout(() => {
+                    initializeCharts();
+                }, 100);
+            } else {
+                hideAllSections();
+            }
+        }
+    </script>
+</body>
+</html>

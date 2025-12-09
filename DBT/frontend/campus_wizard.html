@@ -675,9 +675,15 @@
                 });
                 
                 // Get location name
+<<<<<<< HEAD
                 const stateName = locationData[campaign.location.state]?.name || campaign.location.state;
                 const districtName = locationData[campaign.location.state]?.districts[campaign.location.district]?.name || campaign.location.district;
                 const campaignLocationText = `${stateName} > ${districtName} > ${campaign.location.block} > ${campaign.location.village}`;
+=======
+                const campaignStateName = locationData[campaign.location.state]?.name || campaign.location.state;
+                const campaignDistrictName = locationData[campaign.location.state]?.districts[campaign.location.district]?.name || campaign.location.district;
+                const locationText = `${campaignStateName} > ${campaignDistrictName} > ${campaign.location.block} > ${campaign.location.village}`;
+>>>>>>> b6137953cfea60e828a0972145642985324ddd4a
                 
                 // Create row HTML
                 row.innerHTML = `
