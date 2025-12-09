@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>गांव के लोगों का डैशबोर्ड - जनता</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #005bbb;
+            --primary-dark: #004a99;
+            --secondary: #ff6b6b;
+            --success: #51cf66;
+            --warning: #ffd93d;
+            --bg: #f5f7fa;
+            --text: #111;
+            --text-light: #666;
+            --card-bg: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.12);
+            --shadow-hover: rgba(0, 0, 0, 0.18);
+        }
+
+        body.dark-mode {
+            --bg: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #cccccc;
+            --card-bg: #2d2d2d;
+            --shadow: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.3s ease;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Dropdown Section */
+        .dropdown-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            border: 2px solid var(--primary);
+        }
+
+        .dropdown-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .dropdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .dropdown-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .dropdown-group select {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--card-bg);
+            color: var(--text);
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .dropdown-group select:hover,
+        .dropdown-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Awareness Section */
+        .awareness-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+            overflow: hidden;
+        }
+
+        .awareness-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .notice-board {
+            background: linear-gradient(135deg, #fff9e6, #ffe6e6);
+            border-left: 5px solid var(--secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .notice-board h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .awareness-image {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            margin: 20px 0;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .awareness-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .awareness-content h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .difference-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .difference-table th,
+        .difference-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .difference-table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .difference-table tr:hover {
+            background: var(--bg);
+        }
+
+        /* Campaign Section */
+        .campaign-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .campaign-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .campaign-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .campaign-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .campaign-card h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .campaign-card p {
+            font-size: 14px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .campaign-status {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .status-live {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-upcoming {
+            background: var(--warning);
+            color: #333;
+        }
+
+        /* Polls Section */
+        .polls-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .polls-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .poll-container {
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
+            border-radius: 12px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .poll-question {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+
+        .poll-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .poll-btn {
+            padding: 12px 20px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .poll-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .poll-btn.selected {
+            background: var(--primary);
+            color: white;
+        }
+
+        .poll-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            height: 400px;
+            margin: 20px auto;
+        }
+
+        .poll-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #eee;
+        }
+
+        .stat-box h5 {
+            color: var(--text-light);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .dropdown-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .campaign-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .poll-options {
+                grid-template-columns: 1fr;
+            }
+
+            .difference-table {
+                font-size: 12px;
+            }
+
+            .difference-table th,
+            .difference-table td {
+                padding: 8px;
+            }
+        }
+
+        .refresh-btn {
+            padding: 10px 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .refresh-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .loading-message {
+            color: var(--success);
+            font-weight: 600;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="gram.html" class="back-btn">← गांव डैशबोर्ड पर वापस जाएं</a>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🏘️ जनता डैशबोर्ड</h1>
+            <p>अपने गांव की जानकारी और DBT जागरूकता कार्यक्रमों को देखें</p>
+        </div>
+
+        <!-- Dropdown Section -->
+        <div class="dropdown-section">
+            <h2>📍 अपना स्थान चुनें</h2>
+            <div class="dropdown-grid">
+                <div class="dropdown-group">
+                    <label for="state">राज्य (State)</label>
+                    <select id="state" onchange="updateDistricts()">
+                        <option value="">-- राज्य चुनें --</option>
+                        <option value="maharashtra">महाराष्ट्र (Maharashtra)</option>
+                        <option value="karnataka">कर्नाटक (Karnataka)</option>
+                        <option value="uttarpradesh">उत्तर प्रदेश (Uttar Pradesh)</option>
+                        <option value="bihar">बिहार (Bihar)</option>
+                    </select>
+                </div>
+
+                <div class="dropdown-group">
+                    <label for="district">जिला (District)</label>
+                    <select id="district" onchange="updateBlocks()">
+                        <option value="">-- जिला चुनें --</option>
+                    </select>
+                </div>
+
+                <div class="dropdown-group">
+                    <label for="block">ब्लॉक (Block)</label>
+                    <select id="block" onchange="updateVillages()">
+                        <option value="">-- ब्लॉक चुनें --</option>
+                    </select>
+                </div>
+
+                <div class="dropdown-group">
+                    <label for="village">गांव/कस्बा (Village/Town)</label>
+                    <select id="village" onchange="loadPersonalizedData()">
+                        <option value="">-- गांव चुनें --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Awareness Section -->
+        <div class="awareness-section" id="awarenessSection" style="display: none;">
+            <h2>📢 जागरूकता सूचना बोर्ड</h2>
+            
+            <div class="notice-board">
+                <h3>⚠️ महत्वपूर्ण सूचना</h3>
+                <p>आधार लिंक्ड और आधार सीडेड खातों के बीच अंतर को समझें। यह जानकारी आपके DBT लाभों के लिए बहुत महत्वपूर्ण है।</p>
+            </div>
+
+            <div class="awareness-image">
+                <div style="text-align: center;">
+                    <h3 style="margin-bottom: 20px; font-size: 32px;">🎓 जागरूकता अभियान 🎓</h3>
+                    <p style="font-size: 16px; line-height: 1.6;">
+                        <strong>आधार लिंक्ड बैंक खाता</strong><br>
+                        आपके आधार नंबर को सीधे बैंक खाते से जोड़ा गया है
+                    </p>
+                </div>
+            </div>
+
+            <div class="awareness-content">
+                <h4>📊 आधार लिंक्ड vs आधार सीडेड - मुख्य अंतर</h4>
+                <table class="difference-table">
+                    <thead>
+                        <tr>
+                            <th>विशेषता</th>
+                            <th>आधार लिंक्ड खाता</th>
+                            <th>आधार सीडेड खाता</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>परिभाषा</strong></td>
+                            <td>आधार को बैंक खाते से सीधे जोड़ना</td>
+                            <td>आधार संख्या को खाता खोलते समय देना</td>
+                        </tr>
+                        <tr>
+                            <td><strong>लाभ</strong></td>
+                            <td>DBT सीधे खाते में जाता है</td>
+                            <td>आधार संख्या से पहचान संभव</td>
+                        </tr>
+                        <tr>
+                            <td><strong>प्रक्रिया</strong></td>
+                            <td>बैंक में आवेदन करें</td>
+                            <td>खाता खोलते समय आधार दें</td>
+                        </tr>
+                        <tr>
+                            <td><strong>समय अवधि</strong></td>
+                            <td>3-5 दिन</td>
+                            <td>तुरंत</td>
+                        </tr>
+                        <tr>
+                            <td><strong>आवश्यक दस्तावेज</strong></td>
+                            <td>आधार कार्ड, खाता विवरण</td>
+                            <td>केवल आधार कार्ड</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Campaign Section -->
+        <div class="campaign-section" id="campaignSection" style="display: none;">
+            <h2>🎯 चलने वाले अभियान</h2>
+            <div class="campaign-grid" id="campaignGrid">
+                <!-- Campaigns will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Polls Section -->
+        <div class="polls-section" id="pollsSection" style="display: none;">
+            <h2>📋 गांव की जागरूकता सर्वेक्षण</h2>
+            <p style="margin-bottom: 20px; color: var(--text-light);">कृपया निम्नलिखित प्रश्नों के उत्तर दें (हाँ/नहीं)</p>
+
+            <!-- Poll 1 -->
+            <div class="poll-container">
+                <div class="poll-question">1️⃣ क्या आपके गांव में DBT जागरूकता पोस्टर लगाए गए हैं?</div>
+                <div class="poll-options">
+                    <button class="poll-btn" onclick="recordVote(1, 'yes')">हाँ (Yes)</button>
+                    <button class="poll-btn" onclick="recordVote(1, 'no')">नहीं (No)</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart1"></canvas>
+                </div>
+                <div class="poll-stats" id="stats1"></div>
+                <button class="refresh-btn" onclick="refreshChart(1)">📊 परिणाम ताज़ा करें</button>
+            </div>
+
+            <!-- Poll 2 -->
+            <div class="poll-container">
+                <div class="poll-question">2️⃣ क्या आपके गांव में जागरूकता सत्र आयोजित किए गए हैं?</div>
+                <div class="poll-options">
+                    <button class="poll-btn" onclick="recordVote(2, 'yes')">हाँ (Yes)</button>
+                    <button class="poll-btn" onclick="recordVote(2, 'no')">नहीं (No)</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart2"></canvas>
+                </div>
+                <div class="poll-stats" id="stats2"></div>
+                <button class="refresh-btn" onclick="refreshChart(2)">📊 परिणाम ताज़ा करें</button>
+            </div>
+
+            <!-- Poll 3 -->
+            <div class="poll-container">
+                <div class="poll-question">3️⃣ क्या आशा भाइयों द्वारा आपके परिवार का सर्वेक्षण किया गया है?</div>
+                <div class="poll-options">
+                    <button class="poll-btn" onclick="recordVote(3, 'yes')">हाँ (Yes)</button>
+                    <button class="poll-btn" onclick="recordVote(3, 'no')">नहीं (No)</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart3"></canvas>
+                </div>
+                <div class="poll-stats" id="stats3"></div>
+                <button class="refresh-btn" onclick="refreshChart(3)">📊 परिणाम ताज़ा करें</button>
+            </div>
+
+            <!-- Poll 4 -->
+            <div class="poll-container">
+                <div class="poll-question">4️⃣ क्या आप अपना आधार अपने बैंक खाते से जोड़ चुके हैं?</div>
+                <div class="poll-options">
+                    <button class="poll-btn" onclick="recordVote(4, 'yes')">हाँ (Yes)</button>
+                    <button class="poll-btn" onclick="recordVote(4, 'no')">नहीं (No)</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart4"></canvas>
+                </div>
+                <div class="poll-stats" id="stats4"></div>
+                <button class="refresh-btn" onclick="refreshChart(4)">📊 परिणाम ताज़ा करें</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Location Data
+        const locationData = {
+            maharashtra: {
+                name: 'महाराष्ट्र',
+                districts: {
+                    pune: {
+                        name: 'पुणे',
+                        blocks: {
+                            punecity: {
+                                name: 'पुणे सिटी',
+                                villages: ['गणेशखिंड', 'कोंढवा', 'भोसारी']
+                            },
+                            junnar: {
+                                name: 'जुन्नर',
+                                villages: ['नेरल', 'शिंगारपुर', 'लोनावला']
+                            }
+                        }
+                    },
+                    nagpur: {
+                        name: 'नागपुर',
+                        blocks: {
+                            nagpurcity: {
+                                name: 'नागपुर सिटी',
+                                villages: ['सोनेगांव', 'चिंचवाड़']
+                            }
+                        }
+                    }
+                }
+            },
+            karnataka: {
+                name: 'कर्नाटक',
+                districts: {
+                    bangalore: {
+                        name: 'बेंगलुरु',
+                        blocks: {
+                            bangalorerural: {
+                                name: 'बेंगलुरु ग्रामीण',
+                                villages: ['होसकोटे', 'येलहंका', 'विधानराज पेट']
+                            }
+                        }
+                    }
+                }
+            },
+            uttarpradesh: {
+                name: 'उत्तर प्रदेश',
+                districts: {
+                    lucknow: {
+                        name: 'लखनऊ',
+                        blocks: {
+                            lucknowcity: {
+                                name: 'लखनऊ शहर',
+                                villages: ['अलीगंज', 'गोमतीनगर', 'चारबाग']
+                            }
+                        }
+                    }
+                }
+            },
+            bihar: {
+                name: 'बिहार',
+                districts: {
+                    patna: {
+                        name: 'पटना',
+                        blocks: {
+                            patnacity: {
+                                name: 'पटना शहर',
+                                villages: ['दीदारगंज', 'कनकपुरा', 'सलेमपुर']
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Campaign Data
+        const campaignData = {
+            live: [
+                {
+                    name: 'डिजिटल भुगतान जागरूकता',
+                    description: 'बैंक खातों में DBT स्थानांतरण के बारे में जानें',
+                    startDate: '15 दिसंबर 2024',
+                    endDate: 'चलमान'
+                },
+                {
+                    name: 'आधार लिंकिंग कैंप',
+                    description: 'आपके आधार को बैंक खाते से जोड़ने में मदद',
+                    startDate: '20 दिसंबर 2024',
+                    endDate: 'चलमान'
+                }
+            ],
+            upcoming: [
+                {
+                    name: 'छात्र DBT लाभ शिविर',
+                    description: 'विद्यार्थियों के लिए DBT लाभों की जानकारी',
+                    startDate: '25 दिसंबर 2024',
+                    endDate: '10 जनवरी 2025'
+                },
+                {
+                    name: 'महिला सशक्तिकरण कार्यक्रम',
+                    description: 'महिला उद्यमियों के लिए DBT योजनाएं',
+                    startDate: '1 जनवरी 2025',
+                    endDate: '15 जनवरी 2025'
+                }
+            ]
+        };
+
+        // Poll Data
+        let pollData = {
+            1: { yes: 45, no: 28 },
+            2: { yes: 32, no: 41 },
+            3: { yes: 52, no: 21 },
+            4: { yes: 38, no: 35 }
+        };
+
+        let charts = {};
+
+        // Update Districts
+        function updateDistricts() {
+            const state = document.getElementById('state').value;
+            const districtSelect = document.getElementById('district');
+            districtSelect.innerHTML = '<option value="">-- जिला चुनें --</option>';
+            document.getElementById('block').innerHTML = '<option value="">-- ब्लॉक चुनें --</option>';
+            document.getElementById('village').innerHTML = '<option value="">-- गांव चुनें --</option>';
+
+            if (state && locationData[state]) {
+                const districts = locationData[state].districts;
+                for (let key in districts) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = districts[key].name;
+                    districtSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Update Blocks
+        function updateBlocks() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const blockSelect = document.getElementById('block');
+            blockSelect.innerHTML = '<option value="">-- ब्लॉक चुनें --</option>';
+            document.getElementById('village').innerHTML = '<option value="">-- गांव चुनें --</option>';
+
+            if (state && district && locationData[state].districts[district]) {
+                const blocks = locationData[state].districts[district].blocks;
+                for (let key in blocks) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = blocks[key].name;
+                    blockSelect.appendChild(option);
+                }
+            }
+        }
+
+        // Update Villages
+        function updateVillages() {
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const block = document.getElementById('block').value;
+            const villageSelect = document.getElementById('village');
+            villageSelect.innerHTML = '<option value="">-- गांव चुनें --</option>';
+
+            if (state && district && block && locationData[state].districts[district].blocks[block]) {
+                const villages = locationData[state].districts[district].blocks[block].villages;
+                villages.forEach(village => {
+                    const option = document.createElement('option');
+                    option.value = village;
+                    option.textContent = village;
+                    villageSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Load Personalized Data
+        function loadPersonalizedData() {
+            const village = document.getElementById('village').value;
+            if (village) {
+                document.getElementById('awarenessSection').style.display = 'block';
+                document.getElementById('campaignSection').style.display = 'block';
+                document.getElementById('pollsSection').style.display = 'block';
+                
+                loadCampaigns();
+                initializeCharts();
+            } else {
+                document.getElementById('awarenessSection').style.display = 'none';
+                document.getElementById('campaignSection').style.display = 'none';
+                document.getElementById('pollsSection').style.display = 'none';
+            }
+        }
+
+        // Load Campaigns
+        function loadCampaigns() {
+            const grid = document.getElementById('campaignGrid');
+            grid.innerHTML = '';
+
+            // Live Campaigns
+            campaignData.live.forEach(campaign => {
+                const card = document.createElement('div');
+                card.className = 'campaign-card';
+                card.innerHTML = `
+                    <h4>🔴 ${campaign.name}</h4>
+                    <p>${campaign.description}</p>
+                    <p><strong>शुरुआत:</strong> ${campaign.startDate}</p>
+                    <p><strong>समाप्ति:</strong> ${campaign.endDate}</p>
+                    <span class="campaign-status status-live">🎬 चल रहा है</span>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Upcoming Campaigns
+            campaignData.upcoming.forEach(campaign => {
+                const card = document.createElement('div');
+                card.className = 'campaign-card';
+                card.style.background = 'linear-gradient(135deg, #ffa726, #fb8c00)';
+                card.innerHTML = `
+                    <h4>⏳ ${campaign.name}</h4>
+                    <p>${campaign.description}</p>
+                    <p><strong>शुरुआत:</strong> ${campaign.startDate}</p>
+                    <p><strong>समाप्ति:</strong> ${campaign.endDate}</p>
+                    <span class="campaign-status status-upcoming">📅 आने वाला</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            for (let pollId = 1; pollId <= 4; pollId++) {
+                createChart(pollId);
+                updateStats(pollId);
+            }
+        }
+
+        // Create Chart
+        function createChart(pollId) {
+            const ctx = document.getElementById(`chart${pollId}`);
+            if (!ctx) return;
+
+            const data = pollData[pollId];
+            const total = data.yes + data.no;
+
+            if (charts[pollId]) {
+                charts[pollId].destroy();
+            }
+
+            charts[pollId] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['हाँ (Yes)', 'नहीं (No)'],
+                    datasets: [{
+                        data: [data.yes, data.no],
+                        backgroundColor: ['#51cf66', '#ff6b6b'],
+                        borderColor: ['#fff', '#fff'],
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 14, weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Stats
+        function updateStats(pollId) {
+            const data = pollData[pollId];
+            const total = data.yes + data.no;
+            const yesPercent = total > 0 ? Math.round((data.yes / total) * 100) : 0;
+            const noPercent = total > 0 ? Math.round((data.no / total) * 100) : 0;
+
+            const statsHtml = `
+                <div class="stat-box">
+                    <h5>हाँ (Yes)</h5>
+                    <div class="stat-number">${yesPercent}%</div>
+                    <p style="color: var(--text-light); font-size: 12px;">${data.yes} लोग</p>
+                </div>
+                <div class="stat-box">
+                    <h5>नहीं (No)</h5>
+                    <div class="stat-number">${noPercent}%</div>
+                    <p style="color: var(--text-light); font-size: 12px;">${data.no} लोग</p>
+                </div>
+            `;
+
+            document.getElementById(`stats${pollId}`).innerHTML = statsHtml;
+        }
+
+        // Record Vote
+        function recordVote(pollId, answer) {
+            pollData[pollId][answer]++;
+            
+            const btn = event.target;
+            btn.classList.add('selected');
+            btn.disabled = true;
+            btn.classList.add('disabled');
+            btn.textContent = (answer === 'yes' ? '✓ हाँ (Yes)' : '✓ नहीं (No)');
+            
+            // Disable other button
+            const buttons = btn.parentElement.querySelectorAll('.poll-btn');
+            buttons.forEach(b => {
+                if (b !== btn) {
+                    b.disabled = true;
+                    b.classList.add('disabled');
+                }
+            });
+
+            // Show message
+            const container = btn.closest('.poll-container');
+            const existingMsg = container.querySelector('.loading-message');
+            if (existingMsg) existingMsg.remove();
+            
+            const msg = document.createElement('p');
+            msg.className = 'loading-message';
+            msg.textContent = '✅ आपकी प्रतिक्रिया दर्ज की गई है!';
+            container.appendChild(msg);
+
+            setTimeout(() => {
+                createChart(pollId);
+                updateStats(pollId);
+            }, 500);
+        }
+
+        // Refresh Chart
+        function refreshChart(pollId) {
+            // Add some random variation to dummy data
+            pollData[pollId].yes += Math.floor(Math.random() * 5);
+            pollData[pollId].no += Math.floor(Math.random() * 5);
+            
+            createChart(pollId);
+            updateStats(pollId);
+
+            const btn = event.target;
+            btn.textContent = '✅ अपडेट हुआ!';
+            btn.style.background = '#51cf66';
+            setTimeout(() => {
+                btn.textContent = '📊 परिणाम ताज़ा करें';
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        // Dark Mode Toggle (if needed)
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
+</body>
+</html>
