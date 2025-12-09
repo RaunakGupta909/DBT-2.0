@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Login - DBT Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Consistent styling from student_login.html */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+            background-image: linear-gradient(135deg, var(--gov-light-blue) 0%, var(--bg) 100%);
+        }
+
+        .login-container {
+            background-color: var(--card);
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border-top: 5px solid var(--gov-orange);
+            position: relative;
+        }
+
+        .login-header h2 {
+            margin-bottom: 0.5rem;
+            color: var(--gov-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-header p {
+            margin-bottom: 2rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg);
+            color: var(--text);
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--gov-blue);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--gov-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-login:hover {
+            background-color: #002244;
+        }
+        
+        .btn-secondary {
+            background-color: var(--muted);
+            margin-top: 10px;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .toggle-link {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        .toggle-link a {
+            color: var(--gov-blue);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+            color: var(--gov-orange);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 1rem;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        body.dark-mode .back-link {
+            color: #aaa;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: var(--danger);
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid var(--danger);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .otp-alert {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #fff3cd;
+            color: #664d03;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #ffecb5;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 10;
+            display: none;
+        }
+        .otp-alert p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .otp-display {
+            font-weight: bold;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            color: var(--gov-blue);
+            margin-top: 0.5rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- OTP Alert for Login -->
+        <div id="loginOtpAlert" class="otp-alert">
+            <p>For testing purposes, your OTP is:</p>
+            <span id="loginOtpDisplay" class="otp-display"></span>
+        </div>
+        <!-- OTP Alert for Registration -->
+        <div id="regOtpAlert" class="otp-alert">
+            <p>For testing purposes, your OTP is:</p>
+            <span id="regOtpDisplay" class="otp-display"></span>
+        </div>
+
+        <!-- Login Flow -->
+        <div id="login-form">
+            <!-- Step 1: Enter Teacher ID -->
+            <form id="loginStep1Form" onsubmit="sendLoginOtp(event)">
+                <div class="login-header">
+                    <h2>Teacher Login</h2>
+                    <p>Enter your Teacher ID to receive an OTP</p>
+                </div>
+                <div id="loginError" class="error-message"></div>
+                <div class="form-group">
+                    <label for="login-teacher-id">Teacher ID</label>
+                    <input type="text" id="login-teacher-id" placeholder="Enter your registered Teacher ID" required>
+                </div>
+                <button type="submit" class="btn-login">Send OTP</button>
+            </form>
+
+            <!-- Step 2: Verify OTP -->
+            <form id="loginStep2Form" onsubmit="verifyLoginOtp(event)" class="hidden">
+                <div class="login-header">
+                    <h2>Verify OTP</h2>
+                    <p>An OTP has been sent to your registered device.</p>
+                </div>
+                <div id="loginOtpError" class="error-message"></div>
+                <div class="form-group">
+                    <label for="login-otp">One-Time Password (OTP)</label>
+                    <input type="text" id="login-otp" inputmode="numeric" pattern="[0-9]{6}" placeholder="Enter 6-digit OTP" required>
+                </div>
+                <button type="submit" class="btn-login">Verify & Login</button>
+                <button type="button" class="btn-login btn-secondary" onclick="backToLoginId()">Back</button>
+            </form>
+            
+             
+        </div>
+
+        <!-- Registration Flow -->
+        <div id="register-form" class="hidden">
+            <!-- Step 1: Enter Details -->
+            <form id="regStep1Form" onsubmit="sendRegOtp(event)">
+                <div class="login-header">
+                    <h2>Teacher Registration</h2>
+                    <p>Create your account</p>
+                </div>
+                <div id="regError" class="error-message"></div>
+                <div class="form-group">
+                    <label for="reg-name">Full Name</label>
+                    <input type="text" id="reg-name" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-teacher-id">Teacher ID</label>
+                    <input type="text" id="reg-teacher-id" placeholder="Create a unique Teacher ID" required>
+                </div>
+                <button type="submit" class="btn-login">Send OTP</button>
+            </form>
+
+            <!-- Step 2: Verify OTP -->
+            <form id="regStep2Form" onsubmit="verifyRegOtp(event)" class="hidden">
+                <div class="login-header">
+                    <h2>Verify Registration</h2>
+                    <p>Enter the OTP to complete your registration.</p>
+                </div>
+                <div id="regOtpError" class="error-message"></div>
+                <div class="form-group">
+                    <label for="reg-otp">One-Time Password (OTP)</label>
+                    <input type="text" id="reg-otp" inputmode="numeric" pattern="[0-9]{6}" placeholder="Enter 6-digit OTP" required>
+                </div>
+                <button type="submit" class="btn-login">Verify & Register</button>
+                <button type="button" class="btn-login btn-secondary" onclick="backToRegDetails()">Back</button>
+            </form>
+
+            <div class="toggle-link">
+                Already have an account? <a onclick="toggleForms('login')">Login here</a>
+            </div>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+
+    <script>
+        // Check Dark Mode
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // --- Helper Functions ---
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function toggleForms(show) {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            if (show === 'register') {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                resetRegistrationForm();
+            } else {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                resetLoginForm();
+            }
+        }
+
+        function resetLoginForm() {
+            document.getElementById('loginStep1Form').classList.remove('hidden');
+            document.getElementById('loginStep2Form').classList.add('hidden');
+            document.getElementById('loginOtpAlert').style.display = 'none';
+            document.getElementById('loginError').style.display = 'none';
+            document.getElementById('loginOtpError').style.display = 'none';
+        }
+
+        function resetRegistrationForm() {
+            document.getElementById('regStep1Form').classList.remove('hidden');
+            document.getElementById('regStep2Form').classList.add('hidden');
+            document.getElementById('regOtpAlert').style.display = 'none';
+            document.getElementById('regError').style.display = 'none';
+            document.getElementById('regOtpError').style.display = 'none';
+        }
+
+        // --- Login Flow ---
+        function sendLoginOtp(e) {
+            e.preventDefault();
+            const teacherId = document.getElementById('login-teacher-id').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (!teacherId) {
+                errorDiv.textContent = 'Teacher ID is required.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // In a real app, you'd check if the teacher ID exists in the backend.
+            // For this demo, we'll just proceed.
+
+            const generatedOtp = generateOTP();
+            localStorage.setItem('dbt_teacher_login_otp', generatedOtp);
+            
+            document.getElementById('loginOtpDisplay').textContent = generatedOtp;
+            document.getElementById('loginOtpAlert').style.display = 'block';
+
+            document.getElementById('loginStep1Form').classList.add('hidden');
+            document.getElementById('loginStep2Form').classList.remove('hidden');
+            errorDiv.style.display = 'none';
+        }
+
+        function verifyLoginOtp(e) {
+            e.preventDefault();
+            const otp = document.getElementById('login-otp').value;
+            const errorDiv = document.getElementById('loginOtpError');
+            const storedOtp = localStorage.getItem('dbt_teacher_login_otp');
+
+            if (otp !== storedOtp) {
+                errorDiv.textContent = 'OTP does not match. Please try again.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // OTP is correct, simulate login
+            localStorage.removeItem('dbt_teacher_login_otp');
+            const teacherId = document.getElementById('login-teacher-id').value;
+            const user = { id: teacherId, name: 'Teacher ' + teacherId }; // Demo user
+            localStorage.setItem('dbt_current_user', JSON.stringify(user));
+
+            alert('Login Successful! Redirecting to dashboard...');
+            window.location.href = 'teacher_dashboard.html';
+        }
+
+        function backToLoginId() {
+            resetLoginForm();
+        }
+
+        // --- Registration Flow ---
+        function sendRegOtp(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const teacherId = document.getElementById('reg-teacher-id').value;
+            const errorDiv = document.getElementById('regError');
+
+            if (!name || !teacherId) {
+                errorDiv.textContent = 'All fields are required.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const generatedOtp = generateOTP();
+            localStorage.setItem('dbt_teacher_reg_otp', generatedOtp);
+            localStorage.setItem('dbt_teacher_reg_details', JSON.stringify({ name, teacherId }));
+
+            document.getElementById('regOtpDisplay').textContent = generatedOtp;
+            document.getElementById('regOtpAlert').style.display = 'block';
+
+            document.getElementById('regStep1Form').classList.add('hidden');
+            document.getElementById('regStep2Form').classList.remove('hidden');
+            errorDiv.style.display = 'none';
+        }
+
+        function verifyRegOtp(e) {
+            e.preventDefault();
+            const otp = document.getElementById('reg-otp').value;
+            const errorDiv = document.getElementById('regOtpError');
+            const storedOtp = localStorage.getItem('dbt_teacher_reg_otp');
+
+            if (otp !== storedOtp) {
+                errorDiv.textContent = 'OTP does not match. Please try again.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // OTP is correct, complete registration
+            const userDetails = JSON.parse(localStorage.getItem('dbt_teacher_reg_details'));
+            // In a real app, save userDetails to the backend here.
+            
+            localStorage.removeItem('dbt_teacher_reg_otp');
+            localStorage.removeItem('dbt_teacher_reg_details');
+
+            alert('Registration Successful! Please login to continue.');
+            toggleForms('login');
+            document.getElementById('login-teacher-id').value = userDetails.teacherId;
+        }
+
+        function backToRegDetails() {
+            resetRegistrationForm();
+        }
+
+    </script>
+</body>
+</html>
